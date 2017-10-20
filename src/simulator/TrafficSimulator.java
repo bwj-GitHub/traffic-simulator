@@ -1,5 +1,6 @@
 package simulator;
 
+import java.io.FileNotFoundException;
 import java.util.PriorityQueue;
 import java.util.Random;
 
@@ -18,21 +19,23 @@ import traffic.CarFactory;
  *
  */
 public class TrafficSimulator {
+	
+	Config config;
+	Random random;
+	TrafficGrid grid;
+	TrafficLightScheduler tls;
+	EventQueue eventQueue;
 
 	public TrafficSimulator(Config config){
 		// TODO: Initialize TrafficGrid and TrafficLightScheduler
+		this.config = config;
+		this.random = new Random(config.randomSeed);
+		this.tls = new TrafficLightScheduler(config, random);
+		this.grid = new TrafficGrid(config, random);
+		this.eventQueue = new EventQueue();
 	}
 
 	public void run(){
-		// TODO: Make CLI to get filename and run
-		// TODO: Move this init stuff to the Constructor
-		Config config = Config.readConfigFile(filename);
-		Random random = new Random(config.randomSeed);
-
-		TrafficLightScheduler tls = new TrafficLightScheduler(config, random);
-		TrafficGrid grid = new TrafficGrid(config, random);
-
-		EventQueue eventQueue = new EventQueue();
 		eventQueue.add(new CarSpawnEvent(0.0f));
 
 		float timelimit = config.timelimit;
@@ -50,4 +53,23 @@ public class TrafficSimulator {
 		}
 	}
 
+	public static void main(String[] args) {
+		String configFileName = "./config";
+		if (args.length == 1) {
+			configFileName = args[0];
+		}
+
+		// Create Config:
+		Config config = null;
+		try {
+			config = Config.readConfigFile(configFileName);
+		} catch (FileNotFoundException e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
+		}
+
+		// Start Simulation:
+		TrafficSimulator trafficSimulator = new TrafficSimulator(config);
+		trafficSimulator.run();
+	}
 }
