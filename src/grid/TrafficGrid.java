@@ -99,7 +99,7 @@ public class TrafficGrid implements EventHandler{
 		return 0.0f;
 	}
 
-	void handleCarExitEvent(CarExitEvent event) {
+	private void handleCarExitEvent(CarExitEvent event) {
 		// TODO: handle event
 	}
 
