@@ -5,14 +5,28 @@ import events.carEvents.CarEvent;
 import traffic.Car;
 
 public class Road {
+	int index;
 	boolean isAvenue;
-	
-	public Road() {
-		// TODO: init stuff
+	RoadSegment[] roadSegments;
+	int firstRoadSegmentIndex;
+
+	public Road(int index, boolean isAvenue, RoadSegment[] roadSegments) {
+		this.index = index;
+		this.isAvenue = isAvenue;
+		this.roadSegments = roadSegments;
+		if (index % 2 == 0) {
+			// Even Roads: NS/WE?
+			this.firstRoadSegmentIndex = 0;
+		} else {
+			// Odd Roads: SN/EW?
+			this.firstRoadSegmentIndex = this.roadSegments.length;
+		}
 	}
-	
+
 	public CarEvent[] addCar(Car car) {
-		// TODO: Add car to this Road
+		CarEvent[] nextCarEvents = null;
+		nextCarEvents = roadSegments[this.firstRoadSegmentIndex].addCar(car);
+		return nextCarEvents;
 	}
 
 }

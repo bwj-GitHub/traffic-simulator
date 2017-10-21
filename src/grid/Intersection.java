@@ -8,9 +8,9 @@ public class Intersection {
 	int intersectionRowIndex;
 	int intersectionColIndex;
 
-	TrafficLight streetLight;
 	TrafficLight avenueLight;
-	
+	TrafficLight streetLight;
+
 	public Intersection(int i, int j) {
 		this.intersectionRowIndex = i;
 		this.intersectionColIndex = j;
@@ -20,6 +20,14 @@ public class Intersection {
 	
 	public Event[] handleLightEvent(LightEvent event) {
 		
+	}
+	
+	public TrafficLight getAvenueLight() {
+		return this.avenueLight;
+	}
+
+	public TrafficLight getSvenueLight() {
+		return this.svenueLight;
 	}
 
 }

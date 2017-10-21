@@ -5,6 +5,7 @@ import events.Event;
 public class Car {
 
 	int id;
+	// TODO: What is the Car's position?
 	float enterTime;
 	Path path;
 	Event nextEvent;
@@ -24,6 +25,10 @@ public class Car {
 		this.exitTime = -1.0f;  // has not exited yet
 		this.velocity = 0;
 		this.distance = 0;
+	}
+	
+	public int getLaneIndex() {
+		// TODO: Return the index of the lane that the car should be in
 	}
 	
 	public Path getPath() {
