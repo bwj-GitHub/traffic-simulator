@@ -19,7 +19,7 @@ import traffic.CarFactory;
  *
  */
 public class TrafficSimulator {
-	
+
 	Config config;
 	Random random;
 	TrafficGrid grid;
@@ -47,7 +47,9 @@ public class TrafficSimulator {
 			} else if (nextEvent instanceof LightEvent) {
 				futureEvents = tls.handleEvent(nextEvent);
 			} else {
-				throw new Exception();
+				System.out.println("Unexpected event received!");
+				break;
+//				throw new Exception();
 			}
 			eventQueue.add(futureEvents);
 		}

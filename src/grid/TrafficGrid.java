@@ -10,7 +10,9 @@ import events.carEvents.CarEnterEvent;
 import events.carEvents.CarExitEvent;
 import events.carEvents.CheckIntersectionEvent;
 import simulator.Config;
+import traffic.Car;
 import traffic.CarFactory;
+import traffic.Path;
 
 
 /**
@@ -25,7 +27,11 @@ public class TrafficGrid implements EventHandler{
 	int m;
 	Random random;
 	CarFactory carFactory;
+	Road[] avenues;
+	Road[] streets;
+	Intersection[][] intersections;
 
+	// TODO: Init roads and intersections
 	public TrafficGrid(int n, int m, Random random) {
 		this.n = n;
 		this.m = m;
@@ -33,6 +39,7 @@ public class TrafficGrid implements EventHandler{
 		this.carFactory = new CarFactory(n, m, random);
 	}
 
+	// TODO: Call other constructor!
 	public TrafficGrid(Config config, Random random) {
 		this.n = config.nRows;
 		this.m = config.nCols;
@@ -46,40 +53,53 @@ public class TrafficGrid implements EventHandler{
 		// Determine type of Event:
 		if (event instanceof CarSpawnEvent){
 			// Handle CarSpawnEvent
-			// FIXME: this should spawn 2 events
-			CarSpawnEvent nextCar = handleCarSpawnEvent((CarSpawnEvent) event);
-			nextEvents = new Event[] {nextCar};
-		} else if (event instanceof CarEnterEvent) {
-			// Handle CarEnterEvent
-			CheckIntersectionEvent nextEvent = handleCarEnterEvent(
-					(CarEnterEvent) event);
-			nextEvents = new Event[] {nextEvent};
-		} else if (event instanceof CarExitEvent) {
-			// Handle CarExitEvent
-			handleCarExitEvent((CarExitEvent) event);
+			nextEvents = handleCarSpawnEvent((CarSpawnEvent) event);
 		} else if (event instanceof CheckIntersectionEvent) {
 			// Handle CheckIntersectionEvent
 			CarEvent nextEvent = handleCheckIntersectionEvent(
 					(CheckIntersectionEvent) event);
 			nextEvents = new Event[] {nextEvent};
-		}
+		} else if (event instanceof CarExitEvent) {
+			// Handle CarExitEvent
+			handleCarExitEvent((CarExitEvent) event);
+		} 
+
 		return nextEvents;
 	}
 
 	private CarEvent[] handleCarSpawnEvent(CarSpawnEvent event) {
-		// TODO: What exactly does this do
-		// TODO: handle event
-		// Create a Car
-		// Create CarEnterEvent for it
-		// Calculate the time of the next car spawn
-		// Create next CarSpawnEvent
+		// Create a Car:
+		Car newCar = this.carFactory.newCar(event.time());
+		Path carPath = newCar.getPath();
+		CarEvent[] newCarEvents = null;
+		if (carPath.startAvenue) {
+			// Place newCar in the appropriate Avenue
+			newCarEvents = avenues[carPath.startIndex].addCar(newCar);
+		} else {
+			// Place newCar in the appropriate Street
+			newCarEvents = streets[carPath.startIndex].addCar(newCar);
+		}
+
+		// Create next CarSpawnEvent:
+		float nextArrivalTime = getNextArrivalTime(event.time());
+		CarSpawnEvent nextSpawnEvent = new CarSpawnEvent(nextArrivalTime);
+
+		// Return new Events:
+		int numEvents = 1 + newCarEvents.length;
+		CarEvent[] nextEvents = new CarEvent[numEvents];
+		for (int i = 0; i < numEvents - 1; i++) {
+			nextEvents[i] = newCarEvents[i];
+		}
+		nextEvents[numEvents - 1] = (CarEvent) nextSpawnEvent;
+		return nextEvents;
 	}
 
-	private CheckIntersectionEvent handleCarEnterEvent(CarEnterEvent event) {
-		// TODO: handle event
+	private float getNextArrivalTime(float time) {
+		// TODO: Calculate next arrival time
+		return 0.0f;
 	}
 
-	private void handleCarExitEvent(CarExitEvent event) {
+	void handleCarExitEvent(CarExitEvent event) {
 		// TODO: handle event
 	}
 

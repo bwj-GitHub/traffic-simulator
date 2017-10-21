@@ -25,15 +25,20 @@ public class Car {
 		this.velocity = 0;
 		this.distance = 0;
 	}
+	
+	public Path getPath() {
+		return this.path;
+	}
 
 	/**
 	 * Calculate the amount of time required to reach position in lane.
 	 * @param position
 	 * @param acceleration
 	 */
-	public timeToDistance(float position, float acceleration) {
+	public float timeToDistance(float position, float acceleration) {
 		float distanceToTravel = position - this.distance;
 		// TODO: MATHS
+		return 0.0f;
 	}
 
 }
