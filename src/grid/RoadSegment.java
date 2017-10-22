@@ -12,13 +12,16 @@ public class RoadSegment {
 	Intersection outIntersection;
 
 	public RoadSegment(int roadIndex, int segmentIndex, boolean isAvenue,
-			float length, Lane[] lanes, Intersection outIntersection) {
-		// TODO: Do we really need the inIntersection?
+			float length, Intersection outIntersection) {
 		this.roadIndex = roadIndex;
 		this.segmentIndex = segmentIndex;
 		this.length = length;
-		this.lanes = lanes;
 		this.outIntersection = outIntersection;
+		this.initLanes();
+	}
+	
+	private void initLanes() {
+		// TODO: Write me!
 	}
 	
 	public CarEvent[] addCar(Car car) {
