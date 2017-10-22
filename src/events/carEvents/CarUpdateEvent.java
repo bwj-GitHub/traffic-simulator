@@ -1,11 +1,11 @@
 package events.carEvents;
 
-public class CheckIntersectionEvent extends CarEvent {
+public class CarUpdateEvent extends CarEvent {
 	int carId;
 	int intersectionRowIndex;
 	int intersectionColIndex;
 
-	public CheckIntersectionEvent(int carId, int intersectionRowIndex,
+	public CarUpdateEvent(int carId, int intersectionRowIndex,
 			int intersectionColIndex, float time) {
 		super(time);
 		this.carId = carId;
