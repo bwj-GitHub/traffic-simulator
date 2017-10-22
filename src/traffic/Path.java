@@ -37,6 +37,7 @@ public class Path {
 			int currentIndex = this.currentIndex(pathIndex);
 
 			// TODO: Test this!
+			// TODO: Document this!
 			int[] turnIndices = null;
 			if (currentIndex % 2 == 0) {
 				turnIndices = new int[] {0, 2};

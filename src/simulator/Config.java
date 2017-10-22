@@ -60,7 +60,7 @@ public class Config {
 	}
 
 	public Config(int n, int m, float lambda, float acceleration,
-			float max_velocity, int[] dRows, int[] dCols,
+			float maxVelocity, int[] dRows, int[] dCols,
 			int[] nAvenueLanes, int[] nStreetLanes){
 		this.nRows = n;
 		this.nCols = m;

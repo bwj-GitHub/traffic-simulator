@@ -27,7 +27,6 @@ public class TrafficSimulator {
 	EventQueue eventQueue;
 
 	public TrafficSimulator(Config config){
-		// TODO: Initialize TrafficGrid and TrafficLightScheduler
 		this.config = config;
 		this.random = new Random(config.randomSeed);
 		this.tls = new TrafficLightScheduler(config, random);
