@@ -15,10 +15,10 @@ public class Road {
 		this.isAvenue = isAvenue;
 		this.roadSegments = roadSegments;
 		if (index % 2 == 0) {
-			// Even Roads: NS/WE?
+			// Even Roads: NS/EW?
 			this.firstRoadSegmentIndex = 0;
 		} else {
-			// Odd Roads: SN/EW?
+			// Odd Roads: SN/WE?
 			this.firstRoadSegmentIndex = this.roadSegments.length;
 		}
 	}

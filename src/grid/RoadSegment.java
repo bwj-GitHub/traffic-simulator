@@ -1,5 +1,6 @@
 package grid;
 
+import events.carEvents.CarEvent;
 import traffic.Car;
 
 public class RoadSegment {
