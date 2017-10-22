@@ -28,6 +28,7 @@ public class Path {
 	 * @return the appropriate lane for the Car to be in during the  RoadSegment
 	 * 	indicated by the pathIndex.
 	 */
+	// TODO: does this pathIndex match behavior of that in Car?
 	public int getLaneIndex(int pathIndex) {
 		if (pathIndex == this.turns.length) {
 			return 0;  // No more turns, stay in middle lane

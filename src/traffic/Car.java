@@ -11,7 +11,9 @@ public class Car {
 
 	// Location
 	Path path;
-	int pathIndex;  // Indicates how many segments on its Path it has traveled
+	// TODO: Is this an index into turns or a count of RoadSegments?
+	int pathIndex;
+	
 	int laneIndex;  // 0 is Left, 1 is Middle, 2 is Right
 	float position;  // Distance traveled in current road segment
 
