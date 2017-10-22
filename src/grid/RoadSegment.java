@@ -3,21 +3,20 @@ package grid;
 import traffic.Car;
 
 public class RoadSegment {
-	int i;
-	int j;
+	int roadIndex;
+	int segmentIndex;
+	boolean isAvenue;
 	float length;
 	Lane[] lanes;
-	Intersection inIntersection;
 	Intersection outIntersection;
 
-	public RoadSegment(int i, int j, float length, Lane[] lanes,
-			Intersection inIntersection, Intersection outIntersection) {
+	public RoadSegment(int roadIndex, int segmentIndex, boolean isAvenue,
+			float length, Lane[] lanes, Intersection outIntersection) {
 		// TODO: Do we really need the inIntersection?
-		this.i = i;
-		this.j = j;
+		this.roadIndex = roadIndex;
+		this.segmentIndex = segmentIndex;
 		this.length = length;
 		this.lanes = lanes;
-		this.inIntersection = inIntersection;
 		this.outIntersection = outIntersection;
 	}
 	

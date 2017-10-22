@@ -27,24 +27,44 @@ public class TrafficGrid implements EventHandler{
 	int m;
 	Random random;
 	CarFactory carFactory;
-	Road[] avenues;
+	Road[] avenues;  // NS or SN
 	Road[] streets;
 	Intersection[][] intersections;
 
-	// TODO: Init roads and intersections
-	public TrafficGrid(int n, int m, Random random) {
-		this.n = n;
-		this.m = m;
-		this.random = random;
-		this.carFactory = new CarFactory(n, m, random);
-	}
-
-	// TODO: Call other constructor!
 	public TrafficGrid(Config config, Random random) {
 		this.n = config.nRows;
 		this.m = config.nCols;
 		this.random = random;
 		this.carFactory = new CarFactory(n, m, random);
+
+		this.initIntersections();
+		this.initRoads();
+	}
+
+	private void initIntersections() {
+		intersections = new Intersection[n][m];
+		for (int i = 0; i < n; i++) {
+			for (int j = 0; j < m; j++) {
+				intersections[i][j] = new Intersection(i, j);
+			}
+		}
+	}
+	
+	private void initRoads() {
+		// Init Avenues:
+		avenues = new Road[m];
+		RoadSegment[] avenueSegments = new RoadSegment[n+1];
+		for (int i = 0; i < m; i++){
+			for (int j = 0; i < n+1; j++) {
+				avenueSegments[i] = new RoadSegment(i, j, true, length,
+						lanes, outIntersection);
+			}
+			avenues[i] = new Road(i, true, avenueSegments);
+		}
+		
+		streets = new Road[n];
+		RoadSegment[] streetSegments = new RoadSegment[m+1];
+		
 	}
 
 	@Override

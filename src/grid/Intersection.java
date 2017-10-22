@@ -17,17 +17,17 @@ public class Intersection {
 		this.streetLight = new TrafficLight();
 		this.avenueLight = new TrafficLight();
 	}
-	
+
 	public Event[] handleLightEvent(LightEvent event) {
 		
 	}
-	
+
 	public TrafficLight getAvenueLight() {
 		return this.avenueLight;
 	}
 
 	public TrafficLight getSvenueLight() {
-		return this.svenueLight;
+		return this.streetLight;
 	}
 
 }
