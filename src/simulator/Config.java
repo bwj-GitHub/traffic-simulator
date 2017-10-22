@@ -12,33 +12,34 @@ import java.util.Scanner;
 public class Config {
 
 	// NOTE: Avenues are NS and SN, streets are WE and EW
-	float timelimit;  // TODO: Read timelimit?
-	long randomSeed; // TODO: Read this?
-
 	public int nRows;  // n in project description
 	public int nCols;  // m in project description
+	float timeLimit;  // TODO: Read timelimit?
+	long randomSeed; // TODO: Read this?
+
+	float lambda;  // parameter for car arrival
+	float acceleration;
+	float maxVelocity;
 
 	int[] dRows;  // Distance between rows i and i+1 (in units c)
 	int[] dCols;  // Distance between cols i and i+1
 
 	int[] nAvenueLanes;  // number of lanes in each avenue
 	int[] nStreetLanes;  // number of lanes in each street
-
-	float lambda;  // parameter for car arrival
 	
 	// TODO: Add to config
-	float acceleration;
-	float max_velocity;
 	
 	/* Create a Config with constant distance between roads and 3 lanes. */
-	public Config(int n, int m, float lambda, float acceleration,
-			float velocity, int d){
+	public Config(int n, int m, float timeLimit, long randomSeed, float lambda,
+			float acceleration, float maxVelocity, int d){
 		this.nRows = n;
 		this.nCols = m;
+		this.timeLimit = timeLimit;
+		this.randomSeed = randomSeed;
+
 		this.lambda = lambda;
-		
 		this.acceleration = acceleration;
-		this.max_velocity = velocity;
+		this.maxVelocity = maxVelocity;
 
 		this.dRows = new int[n-1];
 		this.dCols = new int[m-1];
@@ -59,17 +60,22 @@ public class Config {
 		}
 	}
 
-	public Config(int n, int m, float lambda, float acceleration,
-			float maxVelocity, int[] dRows, int[] dCols,
+	public Config(int n, int m, float timeLimit, long randomSeed, float lambda,
+			float acceleration, float maxVelocity, int[] dRows, int[] dCols,
 			int[] nAvenueLanes, int[] nStreetLanes){
 		this.nRows = n;
 		this.nCols = m;
+		this.timeLimit = timeLimit;
+		this.randomSeed = randomSeed;
+
+		this.lambda = lambda;
+		this.acceleration = acceleration;
+		this.maxVelocity = maxVelocity;
+
 		this.dRows = dRows;
 		this.dCols = dCols;
 		this.nAvenueLanes = nAvenueLanes;
 		this.nStreetLanes = nStreetLanes;
-		this.lambda = lambda;
-
 	}
 
 	public static Config readConfigFile(String filename) throws FileNotFoundException{
@@ -78,8 +84,9 @@ public class Config {
 
 		int n = sc.nextInt();
 		int m = sc.nextInt();
+		float timeLimit = sc.nextFloat();
+		long randomSeed = sc.nextLong();
 		float lambda = sc.nextFloat();
-		// TODO: Reorder?
 		float acceleration = sc.nextFloat();
 		float velocity = sc.nextFloat();
 
@@ -106,8 +113,7 @@ public class Config {
 		}
 
 		sc.close();
-		return new Config(n, m, lambda, acceleration, velocity,
-				dRows, dCols, nStreetLanes, nAvenueLanes);
+		return new Config(n, m, timeLimit, randomSeed, lambda, acceleration,
+				velocity, dRows, dCols, nStreetLanes, nAvenueLanes);
 	}
-
 }
