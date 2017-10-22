@@ -26,7 +26,7 @@ public class Car {
 
 		this.path = path;
 		this.pathIndex = 0;
-		this.laneIndex = path.getLane(pathIndex);
+		this.laneIndex = path.getLaneIndex(pathIndex);
 		this.position = 0;
 
 		this.lastEvent = null;
