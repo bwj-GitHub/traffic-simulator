@@ -35,9 +35,12 @@ public class TrafficSimulator {
 	}
 
 	public void run(){
+		// Insert initial Events:
+		Event[] initialLightEvents = tls.initLights();
+		eventQueue.add(initialLightEvents);
 		eventQueue.add(new CarSpawnEvent(0.0f));
 
-		float timelimit = config.timelimit;
+		float timelimit = config.timeLimit;
 		while (((Event) eventQueue.peek()).time() < timelimit) {
 			Event nextEvent = (Event) eventQueue.poll();
 			Event[] futureEvents;

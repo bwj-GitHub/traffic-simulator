@@ -17,5 +17,9 @@ public class TrafficLightScheduler implements EventHandler{
 		// TODO Auto-generated method stub
 		return null;
 	}
+	
+	public Event[] initLights() {
+		// TODO: Write me!
+	}
 
 }
