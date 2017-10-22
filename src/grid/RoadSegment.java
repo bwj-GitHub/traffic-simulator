@@ -22,10 +22,10 @@ public class RoadSegment {
 	}
 	
 	public CarEvent[] addCar(Car car) {
-		// TODO: Write me!
-		int laneIndex = car.getLaneIndex();
 		// Find appropriate lane
-		
+		CarEvent[] nextCarEvents = null;
+		nextCarEvents = lanes[car.getLaneIndex()].addCar(car);
+		return nextCarEvents;
 	}
 
 }
