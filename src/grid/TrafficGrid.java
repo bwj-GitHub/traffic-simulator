@@ -1,20 +1,22 @@
 package grid;
 
+import java.util.HashSet;
+import java.util.HashMap;
 import java.util.Random;
 
 import events.Event;
 import events.EventHandler;
 import events.carEvents.CarEvent;
 import events.carEvents.CarSpawnEvent;
-import events.carEvents.CarEnterEvent;
 import events.carEvents.CarExitEvent;
-import events.carEvents.CheckIntersectionEvent;
+import events.carEvents.CarUpdateEvent;
 import simulator.Config;
 import traffic.Car;
 import traffic.CarFactory;
 import traffic.Path;
 
 
+// TODO: Update doc
 /**
  * A 2-D array of Intersections representing a city?
  * 
@@ -22,14 +24,16 @@ import traffic.Path;
  *
  */
 public class TrafficGrid implements EventHandler{
-
-	int n;
-	int m;
+	int n;  // num Streets
+	int m;  // num Avenues
 	Random random;
 	CarFactory carFactory;
 	Road[] avenues;  // NS or SN
 	Road[] streets;
 	Intersection[][] intersections;
+
+	HashSet<Integer> carIds;
+	HashMap<Integer, Car> cars;
 
 	public TrafficGrid(Config config, Random random) {
 		this.n = config.nRows;
@@ -39,32 +43,44 @@ public class TrafficGrid implements EventHandler{
 
 		this.initIntersections();
 		this.initRoads();
+		this.carIds = new ArrayList<Integer>();
+		this.cars = new HashMap<Integer, Car>();
 	}
 
 	private void initIntersections() {
 		intersections = new Intersection[n][m];
+		
 		for (int i = 0; i < n; i++) {
 			for (int j = 0; j < m; j++) {
 				intersections[i][j] = new Intersection(i, j);
 			}
 		}
 	}
-	
+
 	private void initRoads() {
-		// Init Avenues:
+		// Initialize Avenues:
 		avenues = new Road[m];
-		RoadSegment[] avenueSegments = new RoadSegment[n+1];
-		for (int i = 0; i < m; i++){
-			for (int j = 0; i < n+1; j++) {
-				avenueSegments[i] = new RoadSegment(i, j, true, length,
-						lanes, outIntersection);
+		for (int i = 0; i < m; i++) {
+			// Determine which Intersections belong on the Road
+			Intersection[] roadIntersections = new Intersection[m];
+			for (int j = 0; j < n; j++) {
+				roadIntersections[j] = intersections[j][i];
 			}
-			avenues[i] = new Road(i, true, avenueSegments);
+			Road newRoad = new Road(i, true, roadIntersections);
+			avenues[i] = newRoad;
 		}
-		
+
+		// Initialize Streets:
 		streets = new Road[n];
-		RoadSegment[] streetSegments = new RoadSegment[m+1];
-		
+		for (int i = 0; i < n; i++) {
+			// Determine which Intersections belong on the Road
+			Intersection[] roadIntersections = new Intersection[n];
+			for (int j = 0; j < m; j++) {
+				roadIntersections[j] = intersections[i][j];
+			}
+			Road newRoad = new Road(i, false, roadIntersections);
+			streets[i] = newRoad;
+		}
 	}
 
 	@Override
@@ -74,10 +90,10 @@ public class TrafficGrid implements EventHandler{
 		if (event instanceof CarSpawnEvent){
 			// Handle CarSpawnEvent
 			nextEvents = handleCarSpawnEvent((CarSpawnEvent) event);
-		} else if (event instanceof CheckIntersectionEvent) {
-			// Handle CheckIntersectionEvent
-			CarEvent nextEvent = handleCheckIntersectionEvent(
-					(CheckIntersectionEvent) event);
+		} else if (event instanceof CarUpdateEvent) {
+			// Handle CarUpdateEvent
+			CarEvent nextEvent = handleCarUpdateEvent(
+					(CarUpdateEvent) event);
 			nextEvents = new Event[] {nextEvent};
 		} else if (event instanceof CarExitEvent) {
 			// Handle CarExitEvent
@@ -91,6 +107,10 @@ public class TrafficGrid implements EventHandler{
 		// Create a Car:
 		Car newCar = this.carFactory.newCar(event.time());
 		Path carPath = newCar.getPath();
+
+		carIds.add(newCar.getId());
+		cars.put(newCar.getId(), newCar);
+
 		CarEvent[] newCarEvents = null;
 		if (carPath.startAvenue) {
 			// Place newCar in the appropriate Avenue
@@ -123,7 +143,7 @@ public class TrafficGrid implements EventHandler{
 		// TODO: handle event
 	}
 
-	private CarEvent handleCheckIntersectionEvent(CheckIntersectionEvent event){
+	private CarEvent handleCarUpdateEvent(CarUpdateEvent event){
 		// TODO: handle event
 	}
 
