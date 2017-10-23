@@ -7,4 +7,8 @@ public class TrafficLight {
 	public boolean isRed;
 	public float nextChangeTime;
 	Lane[] lanes;
+	
+	public boolean isGreen() {
+		return isGreen;
+	}
 }

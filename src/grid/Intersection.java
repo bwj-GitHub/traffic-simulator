@@ -9,8 +9,11 @@ public class Intersection {
 	int intersectionColIndex;
 
 	TrafficLight avenueLight;
+	Lane[] avenueLanes;
 	TrafficLight streetLight;
+	Lane[] streetLanes;
 
+	// TODO: Add lanes?
 	public Intersection(int i, int j) {
 		this.intersectionRowIndex = i;
 		this.intersectionColIndex = j;

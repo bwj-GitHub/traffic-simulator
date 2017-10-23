@@ -76,6 +76,13 @@ public class Car {
 	public Event getNextEvent() {
 		return this.nextEvent;
 	}
+	
+	/**
+	 * Return true if the car is currently on an Avenue.
+	 */
+	public boolean isOnAvenue() {
+		// TODO: Write me!
+	}
 
 	// Setters:
 

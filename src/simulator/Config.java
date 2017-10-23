@@ -18,7 +18,7 @@ public class Config {
 	long randomSeed; // TODO: Read this?
 
 	float lambda;  // parameter for car arrival
-	float acceleration;
+	public float acceleration;
 	float maxVelocity;
 
 	int[] dRows;  // Distance between rows i and i+1 (in units c)

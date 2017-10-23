@@ -24,6 +24,7 @@ import traffic.Path;
  *
  */
 public class TrafficGrid implements EventHandler{
+	Config config;
 	int n;  // num Streets
 	int m;  // num Avenues
 	Random random;
@@ -36,6 +37,7 @@ public class TrafficGrid implements EventHandler{
 	HashMap<Integer, Car> cars;
 
 	public TrafficGrid(Config config, Random random) {
+		this.config = config;
 		this.n = config.nRows;
 		this.m = config.nCols;
 		this.random = random;
@@ -43,7 +45,7 @@ public class TrafficGrid implements EventHandler{
 
 		this.initIntersections();
 		this.initRoads();
-		this.carIds = new ArrayList<Integer>();
+		this.carIds = new HashSet<Integer>();
 		this.cars = new HashMap<Integer, Car>();
 	}
 
@@ -92,7 +94,7 @@ public class TrafficGrid implements EventHandler{
 			nextEvents = handleCarSpawnEvent((CarSpawnEvent) event);
 		} else if (event instanceof CarUpdateEvent) {
 			// Handle CarUpdateEvent
-			CarEvent nextEvent = handleCarUpdateEvent(
+			CarEvent nextEvent = handleCheckIntersectionEvent(
 					(CarUpdateEvent) event);
 			nextEvents = new Event[] {nextEvent};
 		} else if (event instanceof CarExitEvent) {
@@ -140,11 +142,51 @@ public class TrafficGrid implements EventHandler{
 	}
 
 	private void handleCarExitEvent(CarExitEvent event) {
-		// TODO: handle event
+		// NOTE: It SHOULD be guaranteed that the car is no longer in
+		//  ANY TrafficQueue, if this Event was produced
+		carIds.remove(event.carId);
+		cars.remove(event.carId);
 	}
 
-	private CarEvent handleCarUpdateEvent(CarUpdateEvent event){
-		// TODO: handle event
+	/**
+	 * Check the status of an intersection and create the next event
+	 * accordingly.
+	 * 
+	 * If the light is green, a new CheckIntersectionEvent will be created
+	 * for the next Intersection that the car will cross (or, a
+	 * CarExitEvent, if there are no more intersections); otherwise, the car
+	 * will be placed in the TrafficQueue for the light.
+	 * 
+	 * @param event
+	 * @return
+	 */
+	private CarEvent handleCheckIntersectionEvent(CarUpdateEvent event) {
+		// NOTE: this ignores any cars on the road (if acceleration and
+		//  decerlation are instant)
+
+		// Determine Intersection indicated by the event:
+		int n = event.intersectionRowIndex;
+		int m = event.intersectionColIndex;
+		Intersection intersection = intersections[n][m];
+
+		// Determine Car indicated by the event:
+		int carId = event.carId;
+		Car car = this.cars.get(carId);
+
+		// Check the color of the light:
+		if ((car.isOnAvenue() && intersection.avenueLight.isGreen()) ||
+				intersection.streetLight.isGreen()) {
+			// Light is green, cross Intersection:
+			CarEvent nextEvent = crossIntersection(car);
+		} else {
+			// Light is red, place car in the TrafficQueue
+			intersection.addToQueue(car);
+		}		
+	}
+
+	private CarEvent crossIntersection(Car car) {
+		// Need to create Event and update the Car's state (?)
+		// TODO: Write me!
 	}
 
 }
