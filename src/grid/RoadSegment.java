@@ -1,33 +1,29 @@
 package grid;
 
-import events.carEvents.CarEvent;
-import traffic.Car;
-
 public class RoadSegment {
-	int roadIndex;
-	int segmentIndex;
-	boolean isAvenue;
-	float length;
-	Intersection outIntersection;
+	public int roadIndex;
+	public int segmentIndex;
+	public float length;
+	public boolean isAvenue;
+	public boolean isExit;
+	private Intersection outIntersection;
 
-	public RoadSegment(int roadIndex, int segmentIndex, boolean isAvenue,
-			float length, Intersection outIntersection) {
+	public RoadSegment(int roadIndex, int segmentIndex, float length,
+			boolean isAvenue, boolean isExit) {
 		this.roadIndex = roadIndex;
 		this.segmentIndex = segmentIndex;
 		this.length = length;
-		this.outIntersection = outIntersection;
-		this.initLanes();
+		this.isAvenue = isAvenue;
+		this.isExit = isExit;
+		this.outIntersection = null;  // will be set during initialization of
+									  //  its outIntersection.
 	}
 	
-	private void initLanes() {
-		// TODO: Write me!
-	}
-	
-	public CarEvent[] addCar(Car car) {
-		// Find appropriate lane
-		CarEvent[] nextCarEvents = null;
-		nextCarEvents = lanes[car.getLaneIndex()].addCar(car);
-		return nextCarEvents;
+	public Intersection getOutIntersection(Intersection intersection) {
+		return this.outIntersection;
 	}
 
+	public void setIntersection(Intersection intersection) {
+		this.outIntersection = intersection;
+	}
 }
