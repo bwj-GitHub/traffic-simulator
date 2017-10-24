@@ -43,46 +43,64 @@ public class TrafficGrid implements EventHandler{
 		this.random = random;
 		this.carFactory = new CarFactory(n, m, random);
 
-		this.initIntersections();
 		this.initRoads();
+		this.initIntersections();
+
 		this.carIds = new HashSet<Integer>();
 		this.cars = new HashMap<Integer, Car>();
-	}
-
-	private void initIntersections() {
-		intersections = new Intersection[n][m];
-		
-		for (int i = 0; i < n; i++) {
-			for (int j = 0; j < m; j++) {
-				intersections[i][j] = new Intersection(i, j);
-			}
-		}
 	}
 
 	private void initRoads() {
 		// Initialize Avenues:
 		avenues = new Road[m];
 		for (int i = 0; i < m; i++) {
-			// Determine which Intersections belong on the Road
-			Intersection[] roadIntersections = new Intersection[m];
-			for (int j = 0; j < n; j++) {
-				roadIntersections[j] = intersections[j][i];
-			}
-			Road newRoad = new Road(i, true, roadIntersections);
-			avenues[i] = newRoad;
+			avenues[i] = new Road(i, true, config.dRows);
 		}
 
 		// Initialize Streets:
 		streets = new Road[n];
 		for (int i = 0; i < n; i++) {
-			// Determine which Intersections belong on the Road
-			Intersection[] roadIntersections = new Intersection[n];
-			for (int j = 0; j < m; j++) {
-				roadIntersections[j] = intersections[i][j];
-			}
-			Road newRoad = new Road(i, false, roadIntersections);
-			streets[i] = newRoad;
+			streets[i] = new Road(i, false, config.dCols);
 		}
+	}
+
+	private void initIntersections() {
+		intersections = new Intersection[n][m];
+		for (int i = 0; i < n; i++) {
+			for (int j = 0; j < m; j++) {
+				RoadSegment[] roadSegments = getIntersectionRoadSegments(i, j);
+				intersections[i][j] = new Intersection(i, j, roadSegments);
+			}
+		}
+	}
+	
+	private RoadSegment[] getIntersectionRoadSegments(int i, int j) {
+		//....|....|....|....|....
+		//--<-#--<-#--<-#--<-#----<
+		//....|....|....|....|....
+		//->--#->--#->--#->--#---->
+		//    v    ^    v    ^
+		// If intersection col is even: inc Av; else dec Av (for out)
+		// If intersection row is even: dec St; else inc St (for out)
+		RoadSegment inAvenue, outAvenue, inStreet, outStreet;
+		// Determine In/Out Avenues:
+		if (j % 2 == 0) {
+			outAvenue = this.avenues[j].roadSegments[i+1];
+			inAvenue = this.avenues[j].roadSegments[i-1];
+		} else {
+			outAvenue = this.avenues[j].roadSegments[i-1];
+			inAvenue = this.avenues[j].roadSegments[i+1];
+		}
+
+		// Determine In/Out Streets:
+		if (i % 2 == 0) {
+			outStreet = this.streets[i].roadSegments[j-1];
+			inStreet = this.streets[i].roadSegments[j+1];
+		} else {
+			outStreet = this.streets[i].roadSegments[j+1];
+			inStreet = this.streets[i].roadSegments[j-1];
+		}
+		return new RoadSegment[] {inAvenue, outAvenue, inStreet, outStreet};
 	}
 
 	@Override
