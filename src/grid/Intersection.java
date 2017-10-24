@@ -9,28 +9,47 @@ public class Intersection {
 	int intersectionColIndex;
 
 	TrafficLight avenueLight;
-	Lane[] avenueLanes;
 	TrafficLight streetLight;
-	Lane[] streetLanes;
+	
+	RoadSegment inAvenue;
+	RoadSegment outAvenue;
+	RoadSegment inStreet;
+	RoadSegment outStreet;
 
-	// TODO: Add lanes?
-	public Intersection(int i, int j) {
-		this.intersectionRowIndex = i;
-		this.intersectionColIndex = j;
+	public Intersection(int row, int col, RoadSegment[] roadSegments) {
+		this.intersectionRowIndex = row;
+		this.intersectionColIndex = col;
+		this.inAvenue = roadSegments[0];
+		this.inAvenue = roadSegments[1];
+		this.inAvenue = roadSegments[2];
+		this.inAvenue = roadSegments[3];
+
 		this.streetLight = new TrafficLight();
 		this.avenueLight = new TrafficLight();
 	}
 
 	public Event[] handleLightEvent(LightEvent event) {
-		
+		// TODO: Write me!
 	}
-
-	public TrafficLight getAvenueLight() {
-		return this.avenueLight;
+	
+	/**
+	 * 
+	 * @param onAvenue indicates that the car is currently on an Avenue.
+	 * @param turn indicates that the car should turn at the intersection.
+	 * @return the RoadSegment that the car will be on after crossing
+	 * 	this Intersection.
+	 */
+	public RoadSegment nextSegment(boolean onAvenue, boolean turn) {
+		if (onAvenue) {
+			if (turn) {
+				return outStreet;
+			}
+			return outAvenue;
+		} else {
+			if (turn) {
+				return outAvenue;
+			}
+			return outStreet;
+		}
 	}
-
-	public TrafficLight getSvenueLight() {
-		return this.streetLight;
-	}
-
 }

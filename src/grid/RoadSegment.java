@@ -8,7 +8,6 @@ public class RoadSegment {
 	int segmentIndex;
 	boolean isAvenue;
 	float length;
-	Lane[] lanes;
 	Intersection outIntersection;
 
 	public RoadSegment(int roadIndex, int segmentIndex, boolean isAvenue,
