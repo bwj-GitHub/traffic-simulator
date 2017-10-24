@@ -21,9 +21,9 @@ public class Intersection {
 		this.intersectionColIndex = col;
 		
 		this.inAvenue = roadSegments[0];
-		this.inAvenue = roadSegments[1];
-		this.inAvenue = roadSegments[2];
-		this.inAvenue = roadSegments[3];
+		this.outAvenue = roadSegments[1];
+		this.inStreet = roadSegments[2];
+		this.outStreet = roadSegments[3];
 		setRoadSegmentIntersections();
 
 		this.streetLight = new TrafficLight();
