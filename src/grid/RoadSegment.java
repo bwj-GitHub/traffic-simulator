@@ -3,11 +3,11 @@ package grid;
 public class RoadSegment {
 	public int roadIndex;
 	public int segmentIndex;
-	public float length;
+	public int length;
 	public boolean isAvenue;
 	public Intersection outIntersection;
 
-	public RoadSegment(int roadIndex, int segmentIndex, float length,
+	public RoadSegment(int roadIndex, int segmentIndex, int length,
 			boolean isAvenue) {
 		this.roadIndex = roadIndex;
 		this.segmentIndex = segmentIndex;

@@ -6,7 +6,7 @@ public class Road {
 	RoadSegment[] roadSegments;
 	int firstRoadSegmentIndex;
 
-	public Road(int index, boolean isAvenue, float[] segmentLengths) {
+	public Road(int index, boolean isAvenue, int[] segmentLengths) {
 		this.index = index;
 		this.isAvenue = isAvenue;
 		this.initRoadSegments(segmentLengths);
@@ -21,7 +21,7 @@ public class Road {
 		}
 	}
 
-	private void initRoadSegments(float[] segmentLengths) {
+	private void initRoadSegments(int[] segmentLengths) {
 		int numSegments = segmentLengths.length;
 		roadSegments = new RoadSegment[numSegments];
 		for (int i = 0; i < numSegments; i++) {

@@ -21,8 +21,8 @@ public class Config {
 	public float acceleration;
 	float maxVelocity;
 
-	int[] dRows;  // Distance between rows i and i+1 (in units c)
-	int[] dCols;  // Distance between cols i and i+1
+	public int[] dRows;  // Distance between rows i and i+1 (in units c)
+	public int[] dCols;  // Distance between cols i and i+1
 
 	int[] nAvenueLanes;  // number of lanes in each avenue
 	int[] nStreetLanes;  // number of lanes in each street
