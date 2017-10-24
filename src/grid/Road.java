@@ -1,21 +1,15 @@
 package grid;
 
-import events.carEvents.CarEvent;
-import traffic.Car;
-
 public class Road {
 	int index;
 	boolean isAvenue;
-	// NOTE: Segments are stored in NS or EW order (regardless of orientation of Road)
-	private Intersection[] intersections;
 	RoadSegment[] roadSegments;
 	int firstRoadSegmentIndex;
 
-	public Road(int index, boolean isAvenue, Intersection[] intersections) {
+	public Road(int index, boolean isAvenue, float[] segmentLengths) {
 		this.index = index;
 		this.isAvenue = isAvenue;
-		this.intersections = intersections;
-		this.initRoadSegments();
+		this.initRoadSegments(segmentLengths);
 
 		// Calculate index of first RoadSegment
 		if (index % 2 == 0) {
@@ -23,18 +17,16 @@ public class Road {
 			this.firstRoadSegmentIndex = 0;
 		} else {
 			// Odd Roads: SN/WE?
-			this.firstRoadSegmentIndex = this.roadSegments.length;
+			this.firstRoadSegmentIndex = this.roadSegments.length - 1;
 		}
 	}
-	
-	private void initRoadSegments() {
-		// TODO: Write me!
-	}
 
-	public CarEvent[] addCar(Car car) {
-		CarEvent[] nextCarEvents = null;
-		nextCarEvents = roadSegments[this.firstRoadSegmentIndex].addCar(car);
-		return nextCarEvents;
+	private void initRoadSegments(float[] segmentLengths) {
+		int numSegments = segmentLengths.length;
+		roadSegments = new RoadSegment[numSegments];
+		for (int i = 0; i < numSegments; i++) {
+			roadSegments[i] = new RoadSegment(index, i, segmentLengths[i],
+					isAvenue);
+		}
 	}
-
 }
