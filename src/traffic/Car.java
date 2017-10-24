@@ -4,121 +4,58 @@ import events.Event;
 
 public class Car {
 
-	int id;
-	float enterTime;
-	float exitTime;
-	float velocity;
+	public int id;
+	public float enterTime;
+	public float exitTime;
+	public float velocity;   // NOTE: not currently being used as we are ignoring acc.
+	public Event lastEvent;  // last Event that was handled
+	public Event nextEvent;  // next Event to be handled
 
 	// Location
+	public boolean onAvenue;
+	public int roadIndex;
+	public int segmentIndex;
+	public int laneIndex;  // 0 is Left, 1 is Middle, 2 is Right
+
+	// Progress towards exit:
 	Path path;
-	// TODO: Is this an index into turns or a count of RoadSegments?
-	int pathIndex;
-	
-	int laneIndex;  // 0 is Left, 1 is Middle, 2 is Right
-	float position;  // Distance traveled in current road segment
+	public int pathIndex;  // Indicates next turn
 
-	Event lastEvent;  // last Event that was handled
-	Event nextEvent;  // next Event to be handled
-
-	public Car(int id, float enterTime, Path path) {
+	public Car(int id, float enterTime, Path path, int segmentIndex) {
 		this.id = id;
 		this.enterTime = enterTime;
 		this.exitTime = -1.0f;  // has not exited yet
 		this.velocity = 0;  // TODO: or maxVelocity?
+		this.lastEvent = null;  // a CarSpawnEvent?
+		this.nextEvent = null;
+
+		this.onAvenue = path.startAvenue;
+		this.roadIndex = path.startIndex;
+		this.segmentIndex = segmentIndex;
+		this.laneIndex = path.getLaneIndex(pathIndex);
 
 		this.path = path;
 		this.pathIndex = 0;
-		this.laneIndex = path.getLaneIndex(pathIndex);
-		this.position = 0;
-
-		this.lastEvent = null;
-		this.nextEvent = null;
 	}
 
 	// Getters:
 
-	public int getId() {
-		return this.id;
-	}
-	
-	public float getEnterTime() {
-		return this.enterTime;
-	}
-	
-	public float getExitTime() {
-		return this.exitTime;
-	}
-	
-	public float getVelocity() {
-		return this.velocity;
-	}
-
 	public Path getPath() {
 		return this.path;
 	}
-
-	public int getPathIndex() {
-		return this.pathIndex;
-	}
-
-	public int getLaneIndex() {
-		return this.laneIndex;
-	}
-
-	public float getPosition() {
-		return this.position;
-	}
-
-	public Event getLastEvent() {
-		return this.lastEvent;
-	}
-
-	public Event getNextEvent() {
-		return this.nextEvent;
-	}
 	
-	/**
-	 * Return true if the car is currently on an Avenue.
+	/** 
+	 * Return true if the car is turning at its next Intersection.
+	 * @return boolean.
 	 */
-	public boolean isOnAvenue() {
+	public boolean isTurning() {
 		// TODO: Write me!
 	}
 
-	// Setters:
-
-	public void setExitTime(float exitTime) {
-		this.exitTime = exitTime;
-	}
-	
-	public void setVelocity(float velocity) {
-		this.velocity = velocity;
-	}
-
-	public void setPathIndex(int pathIndex) {
-		this.pathIndex = pathIndex;
-	}
-
-	public void setLaneIndex(int laneIndex) {
-		this.laneIndex = laneIndex;
-	}
-
-	public void setPosition(float position) {
-		this.position = position;
-	}
-
-	// TODO: Is this necessary? Just update when setting nextEvent.
-	public void setLastEvent(Event lastEvent) {
-		this.lastEvent = lastEvent;
-	}
-
-	public void setNextEvent(Event nextEvent) {
-		this.nextEvent = nextEvent;
-	}
-	
 	// Update methods:
-	// These should generally be used instead of setters:
-	
+
 	public void incrementPathIndex() {
+		// Should only be called after the car completes a turn
 		this.pathIndex += 1;
 	}
 
@@ -134,8 +71,7 @@ public class Car {
 	 * @param position
 	 * @param acceleration
 	 */
-	public float timeToDistance(float position, float acceleration) {
-		float distanceToTravel = position - this.distance;
+	public float timeToDistance(float distance, float acceleration) {
 		// TODO: MATHS
 		return 0.0f;
 	}
