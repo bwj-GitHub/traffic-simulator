@@ -24,14 +24,14 @@ public class Path {
 
 	/**
 	 * Return the appropriate lane, given the progress through the Path.
-	 * @param pathIndex
+	 * @param pathIndex An index into turns array; if out of bounds,
+	 * 	then the car has no turns remaining.
 	 * @return the appropriate lane for the Car to be in during the  RoadSegment
 	 * 	indicated by the pathIndex.
 	 */
-	// TODO: does this pathIndex match behavior of that in Car?
 	public int getLaneIndex(int pathIndex) {
 		if (pathIndex == this.turns.length) {
-			return 0;  // No more turns, stay in middle lane
+			return 1;  // No more turns, stay in middle lane
 		} else {
 			// Determine whether car is on an Avenue or Street
 			boolean onAvenue = this.onAvenue(pathIndex);
@@ -52,7 +52,7 @@ public class Path {
 			}
 		}
 	}
-	
+
 	/**
 	 * Return true if the car should be on an Avenue given the pathIndex.
 	 * @param pathIndex
