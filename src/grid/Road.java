@@ -1,5 +1,9 @@
 package grid;
 
+import events.Event;
+import events.carEvents.CarEvent;
+import traffic.Car;
+
 public class Road {
 	int index;
 	boolean isAvenue;
@@ -28,5 +32,9 @@ public class Road {
 			roadSegments[i] = new RoadSegment(index, i, segmentLengths[i],
 					isAvenue);
 		}
+	}
+
+	public CarEvent[] handleNewCar(Car car) {
+		// TODO: Write me!
 	}
 }
