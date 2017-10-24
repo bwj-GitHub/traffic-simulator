@@ -40,8 +40,8 @@ public class TrafficSimulator {
 		eventQueue.add(initialLightEvents);
 		eventQueue.add(new CarSpawnEvent(0.0f));
 
-		float timelimit = config.timeLimit;
-		while (((Event) eventQueue.peek()).time() < timelimit) {
+		// Handle Events until time limit or no Events are remaining:
+		while (((Event) eventQueue.peek()).time() < config.timeLimit) {
 			Event nextEvent = (Event) eventQueue.poll();
 			Event[] futureEvents;
 			if (nextEvent instanceof CarEvent) {
