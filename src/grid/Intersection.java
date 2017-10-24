@@ -19,13 +19,23 @@ public class Intersection {
 	public Intersection(int row, int col, RoadSegment[] roadSegments) {
 		this.intersectionRowIndex = row;
 		this.intersectionColIndex = col;
+		
 		this.inAvenue = roadSegments[0];
 		this.inAvenue = roadSegments[1];
 		this.inAvenue = roadSegments[2];
 		this.inAvenue = roadSegments[3];
+		setRoadSegmentIntersections();
 
 		this.streetLight = new TrafficLight();
 		this.avenueLight = new TrafficLight();
+	}
+	
+	/**
+	 * Set this Intersection as the outIntersection for its in- Roads.
+	 */
+	private void setRoadSegmentIntersections() {
+		this.inAvenue.outIntersection = this;
+		this.inStreet.outIntersection = this;
 	}
 
 	public Event[] handleLightEvent(LightEvent event) {
