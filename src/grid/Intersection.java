@@ -3,6 +3,7 @@ package grid;
 import events.Event;
 import events.lightEvents.LightEvent;
 import lights.TrafficLight;
+import traffic.Car;
 
 public class Intersection {
 	int intersectionRowIndex;
@@ -42,6 +43,14 @@ public class Intersection {
 		// TODO: Write me!
 	}
 	
+	public TrafficLight getTrafficLight(boolean onAvenue) {
+		if (onAvenue) {
+			return this.avenueLight;
+		} else {
+			return this.streetLight;
+		}
+	}
+
 	/**
 	 * 
 	 * @param onAvenue indicates that the car is currently on an Avenue.
@@ -61,5 +70,9 @@ public class Intersection {
 			}
 			return outStreet;
 		}
+	}
+	
+	public void addToTrafficQueue(Car car) {
+		// TODO: Write me!
 	}
 }
