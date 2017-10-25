@@ -33,7 +33,7 @@ public class TrafficGrid implements EventHandler{
 	CarFactory carFactory;
 	Road[] avenues;  // NS or SN
 	Road[] streets;  // EW or WE
-	Intersection[][] intersections;
+	public Intersection[][] intersections;
 
 	HashSet<Integer> carIds;
 	HashMap<Integer, Car> cars;
