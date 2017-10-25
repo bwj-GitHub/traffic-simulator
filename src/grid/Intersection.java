@@ -11,11 +11,13 @@ public class Intersection {
 
 	TrafficLight avenueLight;
 	TrafficLight streetLight;
-	
+
 	public RoadSegment inAvenue;
 	public RoadSegment outAvenue;
 	public RoadSegment inStreet;
 	public RoadSegment outStreet;
+
+	private float lengthPerLane;
 
 	public Intersection(int row, int col, RoadSegment[] roadSegments) {
 		this.intersectionRowIndex = row;
@@ -29,8 +31,10 @@ public class Intersection {
 
 		this.streetLight = new TrafficLight();
 		this.avenueLight = new TrafficLight();
-	}
 	
+		this.lengthPerLane = 1;  // TODO: Should be function of number of lanes
+	}
+
 	/**
 	 * Set this Intersection as the outIntersection for its in- Roads.
 	 */
@@ -40,9 +44,16 @@ public class Intersection {
 	}
 
 	public Event[] handleLightEvent(LightEvent event) {
-		// TODO: Write me!
+		// When a light changes color, we need to alert their respective trafficQueues
+		TrafficLight light = event.light;
+		return light.updateLight(event);
 	}
-	
+
+	public float getLength(boolean avenue) {
+		// TODO: should allow for variable number of lanes
+		return 3 * lengthPerLane;
+	}
+
 	public TrafficLight getTrafficLight(boolean onAvenue) {
 		if (onAvenue) {
 			return this.avenueLight;

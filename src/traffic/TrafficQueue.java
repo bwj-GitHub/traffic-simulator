@@ -3,15 +3,20 @@ package traffic;
 import java.util.ArrayList;
 
 import events.carEvents.CarEvent;
+import events.carEvents.CarUpdateEvent;
 import events.lightEvents.LightEvent;
+import grid.Intersection;
 
 public class TrafficQueue {
 
 	int maxCars;  // this limit can be exceeded by entry points
+	private Intersection intersection;
 	ArrayList<Car> queue;
 
-	public TrafficQueue(int maxCars) {
+
+	public TrafficQueue(int maxCars, Intersection intersection) {
 		this.maxCars = maxCars;
+		this.intersection = intersection;
 		this.queue = new ArrayList<Car>();
 	}
 
@@ -31,11 +36,24 @@ public class TrafficQueue {
 		}
 	}
 
-	// FIXME: Why not just handle this in TrafficGrid?
 	public CarEvent[] updateCars(LightEvent event) {
 		// Create Create CarUpdateEvents for each car
 		// NOTE: This method assumes that light durations are unavailable
-		// TODO: Write me!
+		int n = intersection.intersectionRowIndex;
+		int m = intersection.intersectionColIndex;
+
+		// Create CarUpdateEvents for each Car (for their CURRENT Intersection):
+		CarUpdateEvent[] updateEvents = new CarUpdateEvent[queue.size()];
+		for (int i = 0; i < queue.size(); i++) {
+			Car car = queue.get(0);
+			float distance = (float) i + intersection.getLength(car.onAvenue());
+			float travelTime = car.timeToDistance(distance);
+			float eventTime = travelTime + event.time();
+			CarUpdateEvent nextEvent = new CarUpdateEvent(car.id, n, m, eventTime);
+			car.updateNextEvent(nextEvent);
+			updateEvents[i] = nextEvent;
+		}
+		return updateEvents;
 	}
 
 }
