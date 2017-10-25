@@ -12,6 +12,7 @@ import events.carEvents.CarExitEvent;
 import events.carEvents.CarUpdateEvent;
 import lights.TrafficLight;
 import simulator.Config;
+import simulator.InterarrivalTimeGenerator;
 import traffic.Car;
 import traffic.CarFactory;
 import traffic.Path;
@@ -28,6 +29,7 @@ public class TrafficGrid implements EventHandler{
 	int n;  // num Streets
 	int m;  // num Avenues
 	Random random;
+	InterarrivalTimeGenerator interArrival;
 	CarFactory carFactory;
 	Road[] avenues;  // NS or SN
 	Road[] streets;  // EW or WE
@@ -36,11 +38,13 @@ public class TrafficGrid implements EventHandler{
 	HashSet<Integer> carIds;
 	HashMap<Integer, Car> cars;
 
-	public TrafficGrid(Config config, Random random) {
+	public TrafficGrid(Config config, Random random,
+			InterarrivalTimeGenerator interArrival) {
 		this.config = config;
 		this.n = config.nRows;
 		this.m = config.nCols;
 		this.random = random;
+		this.interArrival = interArrival;
 		this.carFactory = new CarFactory(n, m, random);
 
 		this.initRoads();
@@ -73,7 +77,7 @@ public class TrafficGrid implements EventHandler{
 			}
 		}
 	}
-	
+
 	/**
 	 * Return the list of RoadSegments that touch the indicated Intersection.
 	 * @param i the row that the Intersection is in.
@@ -124,8 +128,7 @@ public class TrafficGrid implements EventHandler{
 		} else if (event instanceof CarExitEvent) {
 			// Handle CarExitEvent
 			handleCarExitEvent((CarExitEvent) event);
-		} 
-
+		}
 		return nextEvents;
 	}
 
@@ -163,8 +166,7 @@ public class TrafficGrid implements EventHandler{
 	}
 
 	private float getNextArrivalTime(float time) {
-		// TODO: Calculate next arrival time
-		return 0.0f;
+		return time + (float) interArrival.getNextArrivalTime();
 	}
 
 	private void handleCarExitEvent(CarExitEvent event) {
@@ -190,14 +192,17 @@ public class TrafficGrid implements EventHandler{
 		// NOTE: this ignores any cars on the road (if acceleration and
 		//  deceleration are instant)
 
+		// Determine Car indicated by the event:
+		int carId = event.carId;
+		Car car = this.cars.get(carId);
+
 		// Determine Intersection indicated by the event:
 		int n = event.intersectionRowIndex;
 		int m = event.intersectionColIndex;
 		Intersection intersection = intersections[n][m];
-
-		// Determine Car indicated by the event:
-		int carId = event.carId;
-		Car car = this.cars.get(carId);
+		RoadSegment roadSegment = getCurrentRoadSegment(car);
+		TrafficLight trafficLight = intersection.getTrafficLight(
+				roadSegment.isAvenue);
 
 		// Check the color of the light:
 		// TODO: What if light is yellow?
@@ -207,11 +212,8 @@ public class TrafficGrid implements EventHandler{
 		if ((car.onAvenue && intersection.avenueLight.isGreen()) ||
 				(!car.onAvenue && intersection.streetLight.isGreen())) {
 			// Light is green, check if the intersection can be crossed:
-			RoadSegment roadSegment = getCurrentRoadSegment(car);
 			RoadSegment nextRoadSegment = getNextRoadSegment(car, intersection);
 			Intersection nextIntersection = nextRoadSegment.outIntersection;
-			TrafficLight trafficLight = intersection.getTrafficLight(
-					roadSegment.isAvenue);
 			TrafficLight nextTrafficLight = nextIntersection.getTrafficLight(
 					nextRoadSegment.isAvenue);
 			if (trafficLight.trafficQueue.isEmpty() && 
@@ -234,11 +236,16 @@ public class TrafficGrid implements EventHandler{
 		} else {
 			// Light is red, place car in the TrafficQueue
 			car.updateNextEvent(null);  // Car has no nextEvent
-			intersection.addToTrafficQueue(car);
+			trafficLight.trafficQueue.addCar(car);
 			return null;
 		}		
 	}
-	
+
+	/**
+	 * Return the RoadSegment that car is currently on.
+	 * @param car
+	 * @return a RoadSegment.
+	 */
 	private RoadSegment getCurrentRoadSegment(Car car) {
 		int roadIndex = car.roadIndex;
 		int segmentIndex = car.segmentIndex;
@@ -249,6 +256,12 @@ public class TrafficGrid implements EventHandler{
 		}
 	}
 
+	/**
+	 * Return the RoadSegment that the car will be on after crossing intersection.
+	 * @param car
+	 * @param intersection
+	 * @return a RoadSegment.
+	 */
 	private RoadSegment getNextRoadSegment(Car car, Intersection intersection) {
 		// Determine the next RoadSegment and Intersection
 		RoadSegment nextRoadSegment;
@@ -261,6 +274,14 @@ public class TrafficGrid implements EventHandler{
 		return nextRoadSegment;
 	}
 
+	/**
+	 * Update car's state location to the RoadSegment it will arrive at
+	 * after crossing intersection; returns the car's next CarEvent.
+	 * 
+	 * @param car: the car crossing the intersection
+	 * @param intersection: the Intersection to be crossed.
+	 * @return either a CarExitEvent or a CheckIntersectionEvent.
+	 */
 	private CarEvent crossIntersection(Car car, Intersection intersection) {
 		// NOTE: Assumes that there is room available in the next RoadSegment
 		// Need to create Event and update the Car's state (?)
