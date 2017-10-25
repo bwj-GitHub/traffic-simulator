@@ -29,8 +29,9 @@ public class Intersection {
 		this.outStreet = roadSegments[3];
 		setRoadSegmentIntersections();
 
-		this.streetLight = new TrafficLight();
-		this.avenueLight = new TrafficLight();
+		this.avenueLight = new TrafficLight(this, true);
+		this.streetLight = new TrafficLight(this, false);
+
 	
 		this.lengthPerLane = 1;  // TODO: Should be function of number of lanes
 	}
