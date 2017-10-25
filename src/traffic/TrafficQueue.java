@@ -52,6 +52,7 @@ public class TrafficQueue {
 			CarUpdateEvent nextEvent = new CarUpdateEvent(car.id, n, m, eventTime);
 			car.updateNextEvent(nextEvent);
 			updateEvents[i] = nextEvent;
+			queue.remove(0);
 		}
 		return updateEvents;
 	}
