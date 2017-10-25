@@ -135,6 +135,7 @@ public class TrafficGrid implements EventHandler{
 	private CarEvent[] handleCarSpawnEvent(CarSpawnEvent event) {
 		// Create a Car:
 		Car newCar = this.carFactory.newCar(event.time());
+		newCar.updateNextEvent(event);
 		Path carPath = newCar.getPath();
 
 		// Keep track of Car in this:
@@ -142,13 +143,13 @@ public class TrafficGrid implements EventHandler{
 		cars.put(newCar.id, newCar);
 
 		// Generate the Car's next Events (CarUpdateEvent):
-		CarEvent[] newCarEvents = null;
+		CarEvent newCarEvent = null;
 		if (carPath.startAvenue) {
 			// Place newCar in the appropriate Avenue
-			newCarEvents = avenues[carPath.startIndex].handleNewCar(newCar);
+			newCarEvent = avenues[carPath.startIndex].handleNewCar(newCar);
 		} else {
 			// Place newCar in the appropriate Street
-			newCarEvents = streets[carPath.startIndex].handleNewCar(newCar);
+			newCarEvent = streets[carPath.startIndex].handleNewCar(newCar);
 		}
 
 		// Create next CarSpawnEvent:
@@ -156,13 +157,7 @@ public class TrafficGrid implements EventHandler{
 		CarSpawnEvent nextSpawnEvent = new CarSpawnEvent(nextArrivalTime);
 
 		// Return new Events:
-		int numEvents = 1 + newCarEvents.length;
-		CarEvent[] nextEvents = new CarEvent[numEvents];
-		for (int i = 0; i < numEvents - 1; i++) {
-			nextEvents[i] = newCarEvents[i];
-		}
-		nextEvents[numEvents - 1] = (CarEvent) nextSpawnEvent;
-		return nextEvents;
+		return new CarEvent[] {newCarEvent, nextSpawnEvent};
 	}
 
 	private float getNextArrivalTime(float time) {
@@ -299,8 +294,7 @@ public class TrafficGrid implements EventHandler{
 
 		// Calculate the time that the next event will occur:
 		float travelDistance = nextRoadSegment.length;
-		float travelTime = car.timeToDistance(travelDistance,
-				config.acceleration);
+		float travelTime = car.timeToDistance(travelDistance);
 		// Note: nextEvent hasn't been updated yet
 		float nextTime = car.nextEvent.time() + travelTime;
 
