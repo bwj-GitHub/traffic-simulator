@@ -103,7 +103,9 @@ public class Car {
 	}
 
 	public void updateNextEvent(Event nextEvent) {
-		this.lastEvent = this.nextEvent;
+		if (this.nextEvent != null) {
+			this.lastEvent = this.nextEvent;
+		}
 		this.nextEvent = nextEvent;
 	}
 
@@ -135,7 +137,7 @@ public class Car {
 		Intersection nextIntersection = nextRoadSegment.outIntersection;
 
 		// Calculate the time that the next event will occur:
-		float travelDistance = nextRoadSegment.length;  // + size of intersection
+		float travelDistance = nextRoadSegment.length + intersection.getLength(onAvenue());
 		float travelTime = timeToDistance(travelDistance);
 		// Note: nextEvent hasn't been updated yet
 		float nextTime = nextEvent.time() + travelTime;
