@@ -1,7 +1,6 @@
 package simulator;
 
 import java.io.FileNotFoundException;
-import java.util.PriorityQueue;
 import java.util.Random;
 
 import events.Event;
@@ -10,7 +9,6 @@ import events.lightEvents.*;
 import grid.TrafficGrid;
 import lights.TrafficLightScheduler;
 import simulator.Config;
-import traffic.CarFactory;
 
 /**
  * Initialize and run a traffic simulation.
@@ -25,12 +23,14 @@ public class TrafficSimulator {
 	TrafficGrid grid;
 	TrafficLightScheduler tls;
 	EventQueue eventQueue;
+	InterarrivalTimeGenerator interArrival;
 
 	public TrafficSimulator(Config config){
 		this.config = config;
 		this.random = new Random(config.randomSeed);
+		this.interArrival = new InterarrivalTimeGenerator(config.lambda, random);
 		this.tls = new TrafficLightScheduler(config, random);
-		this.grid = new TrafficGrid(config, random);
+		this.grid = new TrafficGrid(config, random, interArrival);
 		this.eventQueue = new EventQueue();
 	}
 
