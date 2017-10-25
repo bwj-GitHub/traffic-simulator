@@ -49,10 +49,12 @@ public class Car {
 	 * @return boolean.
 	 */
 	public boolean isTurning() {
-		// TODO: Write me!
+		if (laneIndex == 1) {
+			return false;
+		} else {
+			return true;
+		}
 	}
-
-	// Update methods:
 
 	public void incrementPathIndex() {
 		// Should only be called after the car completes a turn
