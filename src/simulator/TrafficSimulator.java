@@ -29,8 +29,8 @@ public class TrafficSimulator {
 		this.config = config;
 		this.random = new Random(config.randomSeed);
 		this.interArrival = new InterarrivalTimeGenerator(config.lambda, random);
-		this.tls = new TrafficLightScheduler(config, random);
 		this.grid = new TrafficGrid(config, random, interArrival);
+		this.tls = new TrafficLightScheduler(config, random, grid.intersections);
 		this.eventQueue = new EventQueue();
 	}
 
