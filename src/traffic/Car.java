@@ -8,6 +8,7 @@ public class Car {
 	public float enterTime;
 	public float exitTime;
 	public float velocity;   // NOTE: not currently being used as we are ignoring acc.
+	public float acceleration;  // NOTE: ""
 	public Event lastEvent;  // last Event that was handled
 	public Event nextEvent;  // next Event to be handled
 
@@ -21,27 +22,30 @@ public class Car {
 	Path path;
 	public int pathIndex;  // Indicates next turn
 
-	public Car(int id, float enterTime, Path path, int segmentIndex) {
+	public Car(int id, float enterTime, Path path) {
 		this.id = id;
 		this.enterTime = enterTime;
 		this.exitTime = -1.0f;  // has not exited yet
 		this.velocity = 0;  // TODO: or maxVelocity?
+		this.acceleration = 1;  // TODO: Read from Config
 		this.lastEvent = null;  // a CarSpawnEvent?
 		this.nextEvent = null;
 
 		this.onAvenue = path.startAvenue;
 		this.roadIndex = path.startIndex;
-		this.segmentIndex = segmentIndex;
+		this.segmentIndex = -1;  // to be set latter
 		this.laneIndex = path.getLaneIndex(pathIndex);
 
 		this.path = path;
 		this.pathIndex = 0;
 	}
 
-	// Getters:
-
 	public Path getPath() {
 		return this.path;
+	}
+
+	public void setSegmentIndex(int segmentIndex) {
+		this.segmentIndex = segmentIndex;
 	}
 	
 	/** 
@@ -73,7 +77,7 @@ public class Car {
 	 * @param position
 	 * @param acceleration
 	 */
-	public float timeToDistance(float distance, float acceleration) {
+	public float timeToDistance(float distance) {
 		// TODO: MATHS
 		return 0.0f;
 	}
