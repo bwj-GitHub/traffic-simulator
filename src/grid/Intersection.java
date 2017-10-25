@@ -6,16 +6,16 @@ import lights.TrafficLight;
 import traffic.Car;
 
 public class Intersection {
-	int intersectionRowIndex;
-	int intersectionColIndex;
+	public int intersectionRowIndex;
+	public int intersectionColIndex;
 
 	TrafficLight avenueLight;
 	TrafficLight streetLight;
 	
-	RoadSegment inAvenue;
-	RoadSegment outAvenue;
-	RoadSegment inStreet;
-	RoadSegment outStreet;
+	public RoadSegment inAvenue;
+	public RoadSegment outAvenue;
+	public RoadSegment inStreet;
+	public RoadSegment outStreet;
 
 	public Intersection(int row, int col, RoadSegment[] roadSegments) {
 		this.intersectionRowIndex = row;

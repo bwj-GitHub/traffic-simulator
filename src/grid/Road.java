@@ -44,14 +44,17 @@ public class Road {
 	 * @return CarEvent[]
 	 */
 	public CarEvent handleNewCar(Car car) {
-		// Determine car's next Intersection:
+		// Set car's RoadSegment:
 		RoadSegment roadSegment = roadSegments[firstRoadSegmentIndex];
+		car.roadSegment = roadSegment;
+
+		// Determine car's next Intersection:
 		Intersection intersection = roadSegment.outIntersection;
 		int i = intersection.intersectionRowIndex;
 		int j = intersection.intersectionColIndex;
 
 		// Check if this first RoadSegment is full:
-		TrafficLight trafficLight = intersection.getTrafficLight(car.onAvenue);
+		TrafficLight trafficLight = intersection.getTrafficLight(car.onAvenue());
 		TrafficQueue trafficQueue = trafficLight.trafficQueue;
 		if (trafficQueue.isFull()) {
 			// Place the car in the TrafficQueue -- it is okay for the first segment
@@ -72,8 +75,7 @@ public class Road {
 		float nextTime = car.nextEvent.time() + travelTime;
 		CarUpdateEvent nextEvent = new CarUpdateEvent(car.id, i, j, nextTime);
 
-		// Update car's state:
-		car.setSegmentIndex(firstRoadSegmentIndex);
+		// Update car's nextEvent:
 		car.updateNextEvent(nextEvent);
 
 		return nextEvent;

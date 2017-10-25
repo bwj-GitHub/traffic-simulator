@@ -169,6 +169,7 @@ public class TrafficGrid implements EventHandler{
 		//  ANY TrafficQueue, if this Event was produced
 		carIds.remove(event.carId);
 		cars.remove(event.carId);
+		// TODO: Record car's time in TrafficGrid
 	}
 
 	/**
@@ -195,7 +196,7 @@ public class TrafficGrid implements EventHandler{
 		int n = event.intersectionRowIndex;
 		int m = event.intersectionColIndex;
 		Intersection intersection = intersections[n][m];
-		RoadSegment roadSegment = getCurrentRoadSegment(car);
+		RoadSegment roadSegment = car.roadSegment;
 		TrafficLight trafficLight = intersection.getTrafficLight(
 				roadSegment.isAvenue);
 
@@ -204,21 +205,17 @@ public class TrafficGrid implements EventHandler{
 		// NOTE: Since acceleration is being ignored for now, yellow
 		//  lights should be treated as green lights (just return true with
 		//  isGreen())
-		if ((car.onAvenue && intersection.avenueLight.isGreen()) ||
-				(!car.onAvenue && intersection.streetLight.isGreen())) {
+		if ((car.onAvenue() && intersection.avenueLight.isGreen()) ||
+				(!car.onAvenue() && intersection.streetLight.isGreen())) {
 			// Light is green, check if the intersection can be crossed:
-			RoadSegment nextRoadSegment = getNextRoadSegment(car, intersection);
+			RoadSegment nextRoadSegment = car.getNextRoadSegment();
 			Intersection nextIntersection = nextRoadSegment.outIntersection;
 			TrafficLight nextTrafficLight = nextIntersection.getTrafficLight(
 					nextRoadSegment.isAvenue);
 			if (trafficLight.trafficQueue.isEmpty() && 
 					!nextTrafficLight.trafficQueue.isFull()) {
 				// Space is available, cross Intersection:
-				CarEvent nextEvent = crossIntersection(car, intersection);
-
-				// Update car's pathIndex and nextEvent
-				car.incrementPathIndex();
-				car.updateNextEvent(nextEvent);
+				CarEvent nextEvent = car.crossIntersection();
 				return nextEvent;
 			} else {
 				// No room is available on the next RoadSegment (or there
@@ -235,81 +232,4 @@ public class TrafficGrid implements EventHandler{
 			return null;
 		}		
 	}
-
-	/**
-	 * Return the RoadSegment that car is currently on.
-	 * @param car
-	 * @return a RoadSegment.
-	 */
-	private RoadSegment getCurrentRoadSegment(Car car) {
-		int roadIndex = car.roadIndex;
-		int segmentIndex = car.segmentIndex;
-		if (car.onAvenue) {
-			return this.avenues[roadIndex].roadSegments[segmentIndex];
-		} else {
-			return this.streets[roadIndex].roadSegments[segmentIndex];
-		}
-	}
-
-	/**
-	 * Return the RoadSegment that the car will be on after crossing intersection.
-	 * @param car
-	 * @param intersection
-	 * @return a RoadSegment.
-	 */
-	private RoadSegment getNextRoadSegment(Car car, Intersection intersection) {
-		// Determine the next RoadSegment and Intersection
-		RoadSegment nextRoadSegment;
-		if ((car.onAvenue && car.isTurning())
-				|| (!car.onAvenue && !car.isTurning())) {
-			nextRoadSegment = intersection.outStreet;
-		} else {
-			nextRoadSegment = intersection.outAvenue;
-		}
-		return nextRoadSegment;
-	}
-
-	/**
-	 * Update car's state location to the RoadSegment it will arrive at
-	 * after crossing intersection; returns the car's next CarEvent.
-	 * 
-	 * @param car: the car crossing the intersection
-	 * @param intersection: the Intersection to be crossed.
-	 * @return either a CarExitEvent or a CheckIntersectionEvent.
-	 */
-	private CarEvent crossIntersection(Car car, Intersection intersection) {
-		// NOTE: Assumes that there is room available in the next RoadSegment
-		// Need to create Event and update the Car's state (?)
-		// Find the next Intersection or exit point:
-		// To find the Intersection, we need to know if the car is turning
-
-		// Determine the next RoadSegment and Intersection
-		RoadSegment nextRoadSegment = getNextRoadSegment(car, intersection);
-		Intersection nextIntersection = nextRoadSegment.outIntersection;
-
-		// Update car's location:
-		car.roadIndex = nextRoadSegment.roadIndex;
-		car.segmentIndex = nextRoadSegment.segmentIndex;
-		car.onAvenue = nextRoadSegment.isAvenue;
-
-		// Calculate the time that the next event will occur:
-		float travelDistance = nextRoadSegment.length;
-		float travelTime = car.timeToDistance(travelDistance);
-		// Note: nextEvent hasn't been updated yet
-		float nextTime = car.nextEvent.time() + travelTime;
-
-		// Create next Event:
-		if (nextIntersection == null) {
-			// The car is exiting:
-			CarExitEvent nextEvent = new CarExitEvent(car.id, nextTime);
-			return (CarEvent) nextEvent;
-		} else {
-			// Create the next CarUpdateEvent:
-			int i = intersection.intersectionRowIndex;
-			int j = intersection.intersectionColIndex;
-			CarUpdateEvent nextEvent = new CarUpdateEvent(car.id, i, j, nextTime);
-			return (CarEvent) nextEvent;
-		}
-	}
-
 }

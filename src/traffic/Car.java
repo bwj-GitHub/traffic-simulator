@@ -1,6 +1,11 @@
 package traffic;
 
 import events.Event;
+import events.carEvents.CarEvent;
+import events.carEvents.CarExitEvent;
+import events.carEvents.CarUpdateEvent;
+import grid.Intersection;
+import grid.RoadSegment;
 
 public class Car {
 
@@ -13,13 +18,10 @@ public class Car {
 	public Event nextEvent;  // next Event to be handled
 
 	// Location
-	public boolean onAvenue;
-	public int roadIndex;
-	public int segmentIndex;
-	public int laneIndex;  // 0 is Left, 1 is Middle, 2 is Right
+	public RoadSegment roadSegment;
 
 	// Progress towards exit:
-	Path path;
+	public Path path;
 	public int pathIndex;  // Indicates next turn
 
 	public Car(int id, float enterTime, Path path) {
@@ -31,38 +33,73 @@ public class Car {
 		this.lastEvent = null;  // a CarSpawnEvent?
 		this.nextEvent = null;
 
-		this.onAvenue = path.startAvenue;
-		this.roadIndex = path.startIndex;
-		this.segmentIndex = -1;  // to be set latter
-		this.laneIndex = path.getLaneIndex(pathIndex);
+		this.roadSegment = null;
 
 		this.path = path;
 		this.pathIndex = 0;
+	}
+	
+	public int getLaneIndex() {
+		return path.getLaneIndex(pathIndex);
 	}
 
 	public Path getPath() {
 		return this.path;
 	}
 
-	public void setSegmentIndex(int segmentIndex) {
-		this.segmentIndex = segmentIndex;
+	/**
+	 * Return the RoadSegment that the car will be on after crossing its next
+	 * intersection.
+	 * @return a RoadSegment.
+	 */
+	public RoadSegment getNextRoadSegment() {
+		// Determine the next RoadSegment and Intersection
+		Intersection intersection = roadSegment.outIntersection;
+		RoadSegment nextRoadSegment;
+		if ((onAvenue() && isTurning())
+				|| (!onAvenue() && !isTurning())) {
+			nextRoadSegment = intersection.outStreet;
+		} else {
+			nextRoadSegment = intersection.outAvenue;
+		}
+		return nextRoadSegment;
 	}
-	
+
 	/** 
 	 * Return true if the car is turning at its next Intersection.
 	 * @return boolean.
 	 */
 	public boolean isTurning() {
-		if (laneIndex == 1) {
-			return false;
+		boolean onAvenue = path.onAvenue(pathIndex);
+		Intersection intersection = roadSegment.outIntersection;
+		
+		int outRoadIndex;
+		if (onAvenue) {
+			outRoadIndex = intersection.outStreet.roadIndex;
 		} else {
+			outRoadIndex = intersection.outStreet.roadIndex;
+		}
+		
+		if (outRoadIndex == path.turns[pathIndex]) {
 			return true;
+		} else {
+			return false;
 		}
 	}
+	
+	public boolean onAvenue() {
+		return this.roadSegment.isAvenue;
+	}
 
-	public void incrementPathIndex() {
-		// Should only be called after the car completes a turn
-		this.pathIndex += 1;
+	public void updateState(Event nextEvent, RoadSegment roadSegment) {
+		// Determine if the Car (should have) turned:
+		if (isTurning()) {
+			incrementPathIndex();
+		}
+
+		// Update nextEvent and roadSegment:
+		updateNextEvent(nextEvent);
+		updateRoadSegment(roadSegment);
 	}
 
 	public void updateNextEvent(Event nextEvent) {
@@ -70,16 +107,67 @@ public class Car {
 		this.nextEvent = nextEvent;
 	}
 
+	private void incrementPathIndex() {
+		// Should only be called after the car completes a turn
+		this.pathIndex += 1;
+	}
+
+	private void updateRoadSegment(RoadSegment roadSegment) {
+		this.roadSegment = roadSegment;
+	}
+
+
+	/**
+	 * Update car's state location to the RoadSegment it will arrive at
+	 * after crossing intersection; returns the car's next CarEvent.
+	 * 
+	 * @return either a CarExitEvent or a CheckIntersectionEvent.
+	 */
+	public CarEvent crossIntersection() {
+		// NOTE: Assumes that there is room available in the next RoadSegment
+		// Need to create Event and update the Car's state (?)
+		// Find the next Intersection or exit point:
+		// To find the Intersection, we need to know if the car is turning
+		Intersection intersection = roadSegment.outIntersection;
+
+		// Determine the next RoadSegment and Intersection
+		RoadSegment nextRoadSegment = getNextRoadSegment();
+		Intersection nextIntersection = nextRoadSegment.outIntersection;
+
+		// Calculate the time that the next event will occur:
+		float travelDistance = nextRoadSegment.length;  // + size of intersection
+		float travelTime = timeToDistance(travelDistance);
+		// Note: nextEvent hasn't been updated yet
+		float nextTime = nextEvent.time() + travelTime;
+
+		// Create next Event:
+		CarEvent nextEvent;
+		if (nextIntersection == null) {
+			// The car is exiting:
+			nextEvent = new CarExitEvent(id, nextTime);
+		} else {
+			// Create the next CarUpdateEvent:
+			int i = intersection.intersectionRowIndex;
+			int j = intersection.intersectionColIndex;
+			nextEvent = new CarUpdateEvent(id, i, j, nextTime);
+		}
+
+		// Update car's location:
+		updateState(nextEvent, nextRoadSegment);
+
+		return nextEvent;
+	}
+
+
 	// Mathematical Calculations:
 
 	/**
-	 * Calculate the amount of time required to reach position in lane.
-	 * @param position
-	 * @param acceleration
+	 * Calculate the amount of time required to travel distance.
+	 * @param distance: the distance in unit length to be traveled.
 	 */
 	public float timeToDistance(float distance) {
-		// TODO: MATHS
-		return 0.0f;
+		// TODO: Incorporate acceleration into calculation
+		return distance / velocity;
 	}
 
 }

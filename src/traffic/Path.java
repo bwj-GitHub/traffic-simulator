@@ -58,7 +58,7 @@ public class Path {
 	 * @param pathIndex
 	 * @return
 	 */
-	private boolean onAvenue(int pathIndex) {
+	public boolean onAvenue(int pathIndex) {
 		boolean[] onAvenue;
 		if (startAvenue) {
 			onAvenue = new boolean[] {true, false};
@@ -81,5 +81,4 @@ public class Path {
 			return this.turns[pathIndex - 1];
 		}
 	}
-
 }
