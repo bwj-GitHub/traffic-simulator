@@ -28,7 +28,7 @@ public class Car {
 		this.id = id;
 		this.enterTime = enterTime;
 		this.exitTime = -1.0f;  // has not exited yet
-		this.velocity = 0;  // TODO: or maxVelocity?
+		this.velocity = 5;  // TODO: or maxVelocity?
 		this.acceleration = 1;  // TODO: Read from Config
 		this.lastEvent = null;  // a CarSpawnEvent?
 		this.nextEvent = null;
