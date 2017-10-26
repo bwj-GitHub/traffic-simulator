@@ -214,6 +214,7 @@ public class TrafficGrid implements EventHandler{
 			RoadSegment nextRoadSegment = car.getNextRoadSegment();
 			Intersection nextIntersection = nextRoadSegment.outIntersection;
 			
+			System.out.println("NEXT:");
 			System.out.println(nextRoadSegment);
 			System.out.println(nextIntersection);
 			
@@ -225,11 +226,6 @@ public class TrafficGrid implements EventHandler{
 
 			TrafficLight nextTrafficLight = nextIntersection.getTrafficLight(
 					nextRoadSegment.isAvenue);
-
-			System.out.println("STATUS");
-			System.out.println(String.format("%b %b", trafficLight.trafficQueue.isEmpty(),
-					nextTrafficLight.trafficQueue.isFull()));
-			System.out.println(trafficLight.trafficQueue.queue.size());
 
 			if (!nextTrafficLight.trafficQueue.isFull()) {
 				// Space is available, cross Intersection:

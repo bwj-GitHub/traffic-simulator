@@ -159,8 +159,8 @@ public class Car {
 			nextEvent = new CarExitEvent(id, nextTime);
 		} else {
 			// Create the next CarUpdateEvent:
-			int i = intersection.intersectionRowIndex;
-			int j = intersection.intersectionColIndex;
+			int i = nextIntersection.intersectionRowIndex;
+			int j = nextIntersection.intersectionColIndex;
 			nextEvent = new CarUpdateEvent(id, i, j, nextTime);
 		}
 
