@@ -174,8 +174,8 @@ public class TrafficGrid implements EventHandler{
 	private void handleCarExitEvent(CarExitEvent event) {
 		// NOTE: It SHOULD be guaranteed that the car is no longer in
 		//  ANY TrafficQueue, if this Event was produced
-		carIds.remove(event.carId);
-		cars.remove(event.carId);
+		carIds.remove(event.car.id);
+		cars.remove(event.car.id);
 		// TODO: Record car's time in TrafficGrid
 	}
 

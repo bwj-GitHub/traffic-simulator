@@ -156,7 +156,7 @@ public class Car {
 		CarEvent nextEvent;
 		if (nextIntersection == null) {
 			// The car is exiting:
-			nextEvent = new CarExitEvent(id, nextTime);
+			nextEvent = new CarExitEvent(this, nextTime);
 		} else {
 			// Create the next CarUpdateEvent:
 			int i = nextIntersection.intersectionRowIndex;

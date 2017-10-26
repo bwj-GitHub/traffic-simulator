@@ -1,15 +1,17 @@
 package events.carEvents;
 
-public class CarExitEvent extends CarEvent {
-	public int carId;
+import traffic.Car;
 
-	public CarExitEvent(int carId, float time) {
+public class CarExitEvent extends CarEvent {
+	public Car car;
+
+	public CarExitEvent(Car car, float time) {
 		super(time);
-		this.carId = carId;
+		this.car = car;
 	}
 	
 	public String toString() {
-		return String.format("CarExitEvent(%d %f)", carId, time());
+		return String.format("CarExitEvent(%d %f)", car.id, time());
 	}
 
 }

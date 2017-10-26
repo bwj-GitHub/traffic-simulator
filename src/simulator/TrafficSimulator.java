@@ -24,6 +24,7 @@ public class TrafficSimulator {
 	TrafficLightScheduler tls;
 	EventQueue eventQueue;
 	InterarrivalTimeGenerator interArrival;
+	Statistics statistics;
 	int verbosity;
 
 	public TrafficSimulator(Config config){
@@ -35,6 +36,7 @@ public class TrafficSimulator {
 		// TODO: Set verbosity in config
 		this.verbosity = 1;
 		this.eventQueue = new EventQueue(verbosity);
+		this.statistics = new Statistics();
 	}
 
 	public void run(){
@@ -44,12 +46,16 @@ public class TrafficSimulator {
 
 		// Insert initial Events:
 		Event[] initialLightEvents = tls.initLights();
+		CarSpawnEvent firstCarSpawn = new CarSpawnEvent(0.0f);
+		statistics.log(initialLightEvents);
+		statistics.log(firstCarSpawn);
 		eventQueue.add(initialLightEvents);
-		eventQueue.add(new CarSpawnEvent(0.0f));
+		eventQueue.add(firstCarSpawn);
 
 		// Handle Events until time limit or no Events are remaining:
 		while (((Event) eventQueue.peek()).time() < config.timeLimit) {
 			Event nextEvent = (Event) eventQueue.poll();
+			statistics.log(nextEvent);
 			if (verbosity > 0) {
 				System.out.println("-" + nextEvent.toString());
 			}
@@ -66,6 +72,9 @@ public class TrafficSimulator {
 			}
 			eventQueue.add(futureEvents);
 		}
+		
+		System.out.println("\nFinished the Simulation!");
+		statistics.printStatistics();
 	}
 
 	public static void main(String[] args) {
@@ -84,7 +93,7 @@ public class TrafficSimulator {
 			// Use simple config:
 			// public Config(int n, int m, float timeLimit, long randomSeed, float lambda,
 			// float acceleration, float maxVelocity, int d)
-			config = new Config(2, 2, 150, 0, .10f, 1, 5, 50);
+			config = new Config(2, 2, 150, 0, 2.0f, 1, 5, 50);
 		}
 
 		// Start Simulation:
