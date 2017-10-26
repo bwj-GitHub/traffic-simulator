@@ -50,6 +50,10 @@ public class TrafficSimulator {
 		// Handle Events until time limit or no Events are remaining:
 		while (((Event) eventQueue.peek()).time() < config.timeLimit) {
 			Event nextEvent = (Event) eventQueue.poll();
+			if (verbosity > 0) {
+				System.out.println("-" + nextEvent.toString());
+			}
+			
 			Event[] futureEvents;
 			if (nextEvent instanceof CarEvent) {
 				futureEvents = grid.handleEvent(nextEvent);
