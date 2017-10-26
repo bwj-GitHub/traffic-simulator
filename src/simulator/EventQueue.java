@@ -26,6 +26,9 @@ public class EventQueue {
 	}
 
 	public void add(Event[] events){
+		if (events == null) {
+			return;
+		}
 		for (Event e: events) {
 			this.add(e);
 		}
