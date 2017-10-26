@@ -22,6 +22,11 @@ public class TrafficLight {
 		}
 		this.trafficQueue = new TrafficQueue(maxCars, intersection);
 	}
+	
+	public String toString() {
+		return String.format("TrafficLight(%s, %b)", intersection.toString(),
+				isAvenueLight);
+	}
 
 	public boolean isGreen() {
 		// TODO: Once acceleration is implemented, YELLOW should no longer count
