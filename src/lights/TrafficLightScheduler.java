@@ -80,13 +80,21 @@ public class TrafficLightScheduler implements EventHandler{
 
 				double r = random.nextDouble();
 				if (r < .5) {
+					// Avenue is Green, Street RED
 					avenueLight.color = LightColor.GREEN;
 					lightEvents.add(new LightEvent(greenTime, avenueLight,
 							LightColor.YELLOW));
-					
 					streetLight.color = LightColor.RED;
 					lightEvents.add(new LightEvent(greenTime + yellowTime, streetLight,
 							LightColor.GREEN));
+				} else {
+					// Avenue is Red, Street GREEN
+					avenueLight.color = LightColor.RED;
+					lightEvents.add(new LightEvent(greenTime + yellowTime, avenueLight,
+							LightColor.GREEN));
+					streetLight.color = LightColor.GREEN;
+					lightEvents.add(new LightEvent(greenTime, streetLight,
+							LightColor.YELLOW));
 				}
 			}
 		}
