@@ -75,12 +75,12 @@ public class TrafficGrid implements EventHandler{
 				RoadSegment[] roadSegments = getIntersectionRoadSegments(i, j);
 				intersections[i][j] = new Intersection(i, j, roadSegments);
 				
-				// FIXME: Debugging print:
-				System.out.println(String.format("Debugging Intersection %d, %d",
-						i, j));
-				for (RoadSegment r : roadSegments) {
-					System.out.println(r);
-				}
+//				// FIXME: Debugging print:
+//				System.out.println(String.format("Debugging Intersection %d, %d",
+//						i, j));
+//				for (RoadSegment r : roadSegments) {
+//					System.out.println(r);
+//				}
 			}
 		}
 	}
