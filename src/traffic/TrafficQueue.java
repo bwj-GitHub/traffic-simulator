@@ -11,7 +11,7 @@ public class TrafficQueue {
 
 	int maxCars;  // this limit can be exceeded by entry points
 	private Intersection intersection;
-	ArrayList<Car> queue;
+	public ArrayList<Car> queue;
 
 
 	public TrafficQueue(int maxCars, Intersection intersection) {
@@ -21,13 +21,16 @@ public class TrafficQueue {
 	}
 
 	public void addCar(Car car) {
-		System.out.println(String.format(">TrafficQueue.add(%s)", car.toString()));
+		System.out.println(String.format(">TrafficQueue(%s).add(%s)",
+				intersection.toString(), car.toString()));
 		this.queue.add(car);
 	}
 	
 	public void removeCar(int index) {
+		System.out.println(queue.size());
 		Car car = queue.remove(index);
 		System.out.println(String.format("<TrafficQueue.remove(%s)", car.toString()));
+		System.out.println(queue.size());
 	}
 
 	public boolean isEmpty() {

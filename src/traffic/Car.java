@@ -39,6 +39,11 @@ public class Car {
 		this.pathIndex = 0;
 	}
 	
+	public String toString() {
+		return String.format("CAR.%d(pi=%d,onA=%b,RS=%s,NRS=%s)", id, pathIndex,
+				onAvenue(), roadSegment.toString(), getNextRoadSegment().toString());
+	}
+	
 	public int getLaneIndex() {
 		return path.getLaneIndex(pathIndex);
 	}

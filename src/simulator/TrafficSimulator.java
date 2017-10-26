@@ -84,7 +84,7 @@ public class TrafficSimulator {
 			// Use simple config:
 			// public Config(int n, int m, float timeLimit, long randomSeed, float lambda,
 			// float acceleration, float maxVelocity, int d)
-			config = new Config(2, 2, 100, 0, 1, 1, 5, 50);
+			config = new Config(2, 2, 150, 0, .10f, 1, 5, 50);
 		}
 
 		// Start Simulation:

@@ -222,12 +222,19 @@ public class TrafficGrid implements EventHandler{
 				// Car should exit:
 				return car.crossIntersection();
 			}
-			
+
 			TrafficLight nextTrafficLight = nextIntersection.getTrafficLight(
 					nextRoadSegment.isAvenue);
-			if (trafficLight.trafficQueue.isEmpty() && 
-					!nextTrafficLight.trafficQueue.isFull()) {
+
+			System.out.println("STATUS");
+			System.out.println(String.format("%b %b", trafficLight.trafficQueue.isEmpty(),
+					nextTrafficLight.trafficQueue.isFull()));
+			System.out.println(trafficLight.trafficQueue.queue.size());
+
+			if (!nextTrafficLight.trafficQueue.isFull()) {
 				// Space is available, cross Intersection:
+				System.out.println("Crossing Intersection!");
+				
 				CarEvent nextEvent = car.crossIntersection();
 				return nextEvent;
 			} else {
