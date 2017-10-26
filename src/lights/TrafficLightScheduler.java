@@ -76,6 +76,6 @@ public class TrafficLightScheduler implements EventHandler{
 				}
 			}
 		}
-		return (Event[]) lightEvents.toArray();
+		return lightEvents.toArray(new LightEvent[lightEvents.size()]);
 	}
 }
