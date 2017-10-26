@@ -27,7 +27,8 @@ public class Config {
 	int[] nAvenueLanes;  // number of lanes in each avenue
 	int[] nStreetLanes;  // number of lanes in each street
 	
-	// TODO: Add to config
+	public float greenTime;   // For dumb-scheduling
+	public float yellowTime;  // "
 	
 	/* Create a Config with constant distance between roads and 3 lanes. */
 	public Config(int n, int m, float timeLimit, long randomSeed, float lambda,
@@ -58,6 +59,9 @@ public class Config {
 		for (int i = 0; i < n; ++i){
 			this.nStreetLanes[i] = 3;
 		}
+
+		this.greenTime = 25.0f;
+		this.yellowTime = 5.0f;
 	}
 
 	public Config(int n, int m, float timeLimit, long randomSeed, float lambda,
@@ -76,6 +80,9 @@ public class Config {
 		this.dCols = dCols;
 		this.nAvenueLanes = nAvenueLanes;
 		this.nStreetLanes = nStreetLanes;
+
+		this.greenTime = 25.0f;
+		this.yellowTime = 5.0f;
 	}
 
 	public static Config readConfigFile(String filename) throws FileNotFoundException{

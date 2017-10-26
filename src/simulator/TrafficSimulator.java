@@ -24,6 +24,7 @@ public class TrafficSimulator {
 	TrafficLightScheduler tls;
 	EventQueue eventQueue;
 	InterarrivalTimeGenerator interArrival;
+	int verbosity;
 
 	public TrafficSimulator(Config config){
 		this.config = config;
@@ -31,10 +32,16 @@ public class TrafficSimulator {
 		this.interArrival = new InterarrivalTimeGenerator(config.lambda, random);
 		this.grid = new TrafficGrid(config, random, interArrival);
 		this.tls = new TrafficLightScheduler(config, random, grid.intersections);
-		this.eventQueue = new EventQueue();
+		// TODO: Set verbosity in config
+		this.verbosity = 1;
+		this.eventQueue = new EventQueue(verbosity);
 	}
 
 	public void run(){
+		if (verbosity > 0) {
+			System.out.println("Beginning simulation!");
+		}
+
 		// Insert initial Events:
 		Event[] initialLightEvents = tls.initLights();
 		eventQueue.add(initialLightEvents);
@@ -58,18 +65,22 @@ public class TrafficSimulator {
 	}
 
 	public static void main(String[] args) {
-		String configFileName = "./config";
-		if (args.length == 1) {
-			configFileName = args[0];
-		}
-
-		// Create Config:
+//		String configFileName = "./config";
 		Config config = null;
-		try {
-			config = Config.readConfigFile(configFileName);
-		} catch (FileNotFoundException e) {
-			// TODO Auto-generated catch block
-			e.printStackTrace();
+		if (args.length == 1) {
+			// Create Config from file:
+			try {
+				config = Config.readConfigFile(args[0]);
+			} catch (FileNotFoundException e) {
+				// TODO Auto-generated catch block
+				e.printStackTrace();
+				System.exit(-1);
+			}
+		} else {
+			// Use simple config:
+			// public Config(int n, int m, float timeLimit, long randomSeed, float lambda,
+			// float acceleration, float maxVelocity, int d)
+			config = new Config(10, 10, 100, 0, 1, 1, 5, 100);
 		}
 
 		// Start Simulation:

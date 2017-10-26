@@ -35,12 +35,12 @@ public class Path {
 		} else {
 			// Determine whether car is on an Avenue or Street
 			boolean onAvenue = this.onAvenue(pathIndex);
-			int currentIndex = this.currentIndex(pathIndex);
+			int currentRoadIndex = this.currentIndex(pathIndex);
 
 			// TODO: Test this!
 			// TODO: Document this!
 			int[] turnIndices = null;
-			if (currentIndex % 2 == 0) {
+			if (currentRoadIndex % 2 == 0) {
 				turnIndices = new int[] {0, 2};
 			} else {
 				turnIndices = new int[] {2, 0};
@@ -50,6 +50,10 @@ public class Path {
 			} else {
 				return turnIndices[this.turns[pathIndex] % 2];
 			}
+			// OnEvenIndexedAvenue: RLRLRL...
+			// OnOddIndexedAvenue : LRLRLR...
+			// OnEvenIndexedStreet: LRLRLR...
+			// OnOddIndexedStreet : RLRLRL...
 		}
 	}
 

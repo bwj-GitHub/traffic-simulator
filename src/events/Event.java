@@ -17,5 +17,9 @@ public class Event implements Comparable<Event> {
 		return ((Float) this.time()).compareTo(other.time());
 	}
 	
+	public String toString() {
+		return "Event(" + time + ")";
+	}
+	
 	
 }
