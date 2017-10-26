@@ -165,7 +165,6 @@ public class Car {
 		return nextEvent;
 	}
 
-
 	// Mathematical Calculations:
 
 	/**

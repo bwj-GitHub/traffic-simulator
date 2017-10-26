@@ -213,8 +213,16 @@ public class TrafficGrid implements EventHandler{
 			// Light is green, check if the intersection can be crossed:
 			RoadSegment nextRoadSegment = car.getNextRoadSegment();
 			Intersection nextIntersection = nextRoadSegment.outIntersection;
+			
 			System.out.println(nextRoadSegment);
 			System.out.println(nextIntersection);
+			
+			// Check if the nextRoadSegment is an Exit point:
+			if (nextIntersection == null) {
+				// Car should exit:
+				return car.crossIntersection();
+			}
+			
 			TrafficLight nextTrafficLight = nextIntersection.getTrafficLight(
 					nextRoadSegment.isAvenue);
 			if (trafficLight.trafficQueue.isEmpty() && 
