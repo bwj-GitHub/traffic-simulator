@@ -111,11 +111,11 @@ public class TrafficGrid implements EventHandler{
 
 		// Determine In/Out Streets:
 		if (i % 2 == 0) {
-			inStreet = this.streets[i].roadSegments[j];
-			outStreet = this.streets[i].roadSegments[j+1];
-		} else {
 			inStreet = this.streets[i].roadSegments[j+1];
 			outStreet = this.streets[i].roadSegments[j];
+		} else {
+			inStreet = this.streets[i].roadSegments[j];
+			outStreet = this.streets[i].roadSegments[j+1];
 		}
 		return new RoadSegment[] {inAvenue, outAvenue, inStreet, outStreet};
 	}
