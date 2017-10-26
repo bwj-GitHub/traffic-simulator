@@ -16,6 +16,11 @@ public class RoadSegment {
 		this.outIntersection = null;  // will be set during initialization of
 									  //  its outIntersection.
 	}
+	
+	public String toString() {
+		return String.format("RoadSegment(%d %d %d %b %s)", roadIndex, segmentIndex,
+				length, isAvenue, outIntersection);
+	}
 
 	public boolean isExit() {
 		if (outIntersection == null) {

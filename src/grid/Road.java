@@ -18,11 +18,11 @@ public class Road {
 		this.initRoadSegments(segmentLengths);
 
 		// Calculate index of first RoadSegment
-		if (index % 2 == 0) {
-			// Even Roads: NS/EW?
+		if ((isAvenue && index % 2 == 0) || (!isAvenue && index % 2 == 1)) {
+			// Even Avenues/ Odd Streets
 			this.firstRoadSegmentIndex = 0;
 		} else {
-			// Odd Roads: SN/WE?
+			// Odd Avenues / Even Streets
 			this.firstRoadSegmentIndex = this.roadSegments.length - 1;
 		}
 	}
@@ -50,6 +50,7 @@ public class Road {
 
 		// Determine car's next Intersection:
 		Intersection intersection = roadSegment.outIntersection;
+		System.out.println(roadSegment);  // FIXME: debugging!
 		int i = intersection.intersectionRowIndex;
 		int j = intersection.intersectionColIndex;
 
