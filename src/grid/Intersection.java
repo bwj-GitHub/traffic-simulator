@@ -35,6 +35,11 @@ public class Intersection {
 	
 		this.lengthPerLane = 1;  // TODO: Should be function of number of lanes
 	}
+	
+	public String toString() {
+		return String.format("Intersection(%d, %d)", intersectionRowIndex,
+				intersectionColIndex);
+	}
 
 	/**
 	 * Set this Intersection as the outIntersection for its in- Roads.
