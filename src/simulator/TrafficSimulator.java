@@ -53,7 +53,7 @@ public class TrafficSimulator {
 			if (verbosity > 0) {
 				System.out.println("-" + nextEvent.toString());
 			}
-			
+
 			Event[] futureEvents;
 			if (nextEvent instanceof CarEvent) {
 				futureEvents = grid.handleEvent(nextEvent);
@@ -84,7 +84,7 @@ public class TrafficSimulator {
 			// Use simple config:
 			// public Config(int n, int m, float timeLimit, long randomSeed, float lambda,
 			// float acceleration, float maxVelocity, int d)
-			config = new Config(10, 10, 100, 0, 1, 1, 5, 100);
+			config = new Config(5, 5, 500, 0, 1, 1, 5, 100);
 		}
 
 		// Start Simulation:

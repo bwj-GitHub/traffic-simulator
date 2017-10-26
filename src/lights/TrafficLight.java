@@ -7,9 +7,9 @@ import traffic.TrafficQueue;
 
 public class TrafficLight {
 	public boolean isAvenueLight;
-	public LightColor color;
 	public TrafficQueue trafficQueue;
 	public Intersection intersection;
+	public LightColor color;
 	
 	public TrafficLight(Intersection intersection, boolean isAvenueLight) {
 		this.isAvenueLight = isAvenueLight;
@@ -39,6 +39,7 @@ public class TrafficLight {
 	}
 
 	public CarEvent[] updateLight(LightEvent event) {
+		this.color = event.color;
 		if (event.color == LightColor.GREEN) {
 			return trafficQueue.updateCars(event);
 		} else {

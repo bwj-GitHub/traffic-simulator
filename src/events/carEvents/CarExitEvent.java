@@ -7,5 +7,9 @@ public class CarExitEvent extends CarEvent {
 		super(time);
 		this.carId = carId;
 	}
+	
+	public String toString() {
+		return String.format("CarExitEvent(%d %f)", carId, time());
+	}
 
 }

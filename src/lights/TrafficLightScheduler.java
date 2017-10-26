@@ -5,6 +5,7 @@ import java.util.Random;
 
 import events.Event;
 import events.EventHandler;
+import events.carEvents.CarEvent;
 import events.lightEvents.LightEvent;
 import grid.Intersection;
 import simulator.Config;
@@ -33,21 +34,34 @@ public class TrafficLightScheduler implements EventHandler{
 		LightEvent curEvent = (LightEvent) event;
 		LightEvent nextEvent;
 		TrafficLight light = curEvent.light;
+
+		// Update Light color (and TrafficQueue):
+		CarEvent[] carEvents = light.updateLight((LightEvent) event);
+
+		// Generate next LightEvent
 		if (curEvent.color == LightColor.GREEN) {
-			// Set light green:
-			light.color = LightColor.GREEN;
+			// Green turns to Yellow next
 			nextEvent = new LightEvent(event.time() + greenTime, light, LightColor.YELLOW);
 		} else if (curEvent.color == LightColor.YELLOW) {
-			// Set light yellow:
-			light.color = LightColor.YELLOW;
+			// Yellow to Red
 			nextEvent = new LightEvent(event.time() + yellowTime, light, LightColor.RED);
 		} else {
-			// Set light red:
-			light.color = LightColor.RED;
+			// Red to Green
 			nextEvent = new LightEvent(event.time() + greenTime + yellowTime,
 					light, LightColor.GREEN);
 		}
-		return new Event[] {nextEvent};
+		
+		// Combine CarEvents with LightEvent:
+		if (carEvents != null) {
+			Event[] nextEvents = new Event[carEvents.length + 1];
+			nextEvents[0] = nextEvent;
+			for (int i = 0; i < carEvents.length; i++) {
+				nextEvents[i+1] = carEvents[i];
+			}
+			return nextEvents;
+		} else {
+			return new Event[] {nextEvent};
+		}
 	}
 	
 	/**
