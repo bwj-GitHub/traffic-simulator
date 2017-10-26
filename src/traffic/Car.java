@@ -70,6 +70,11 @@ public class Car {
 	 * @return boolean.
 	 */
 	public boolean isTurning() {
+		if (path.turns.length == 0) {
+			// Car's Path has no turns
+			return false;
+		}
+
 		boolean onAvenue = path.onAvenue(pathIndex);
 		Intersection intersection = roadSegment.outIntersection;
 		
@@ -79,7 +84,7 @@ public class Car {
 		} else {
 			outRoadIndex = intersection.outStreet.roadIndex;
 		}
-		
+
 		if (outRoadIndex == path.turns[pathIndex]) {
 			return true;
 		} else {
