@@ -17,7 +17,7 @@ public class EventQueue {
 	
 	public void add(Event e) {
 		if (verbosity > 0) {
-			System.out.println(e.toString());
+			System.out.println("+" + e.toString());
 		}
 		queue.add(e);
 	}
