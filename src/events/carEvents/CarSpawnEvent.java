@@ -11,5 +11,9 @@ public class CarSpawnEvent extends CarEvent {
 	public CarSpawnEvent(float time) {
 		super(time);
 	}
+	
+	public String toString() {
+		return "CarSpawnEvent(" + time() + ")";
+	}
 
 }
