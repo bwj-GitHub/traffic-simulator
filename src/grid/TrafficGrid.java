@@ -75,12 +75,12 @@ public class TrafficGrid implements EventHandler{
 				RoadSegment[] roadSegments = getIntersectionRoadSegments(i, j);
 				intersections[i][j] = new Intersection(i, j, roadSegments);
 				
-//				// FIXME: Debugging print:
-//				System.out.println(String.format("Debugging Intersection %d, %d",
-//						i, j));
-//				for (RoadSegment r : roadSegments) {
-//					System.out.println(r);
-//				}
+				// FIXME: Debugging print:
+				System.out.println(String.format("Debugging Intersection %d, %d",
+						i, j));
+				for (RoadSegment r : roadSegments) {
+					System.out.println(r);
+				}
 			}
 		}
 	}
@@ -102,20 +102,20 @@ public class TrafficGrid implements EventHandler{
 		RoadSegment inAvenue, outAvenue, inStreet, outStreet;
 		// Determine In/Out Avenues:
 		if (j % 2 == 0) {
-			outAvenue = this.avenues[j].roadSegments[i+1];
 			inAvenue = this.avenues[j].roadSegments[i];
+			outAvenue = this.avenues[j].roadSegments[i+1];
 		} else {
-			outAvenue = this.avenues[j].roadSegments[i];
 			inAvenue = this.avenues[j].roadSegments[i+1];
+			outAvenue = this.avenues[j].roadSegments[i];
 		}
 
 		// Determine In/Out Streets:
 		if (i % 2 == 0) {
-			outStreet = this.streets[i].roadSegments[j];
-			inStreet = this.streets[i].roadSegments[j+1];
-		} else {
-			outStreet = this.streets[i].roadSegments[j+1];
 			inStreet = this.streets[i].roadSegments[j];
+			outStreet = this.streets[i].roadSegments[j+1];
+		} else {
+			inStreet = this.streets[i].roadSegments[j+1];
+			outStreet = this.streets[i].roadSegments[j];
 		}
 		return new RoadSegment[] {inAvenue, outAvenue, inStreet, outStreet};
 	}
@@ -213,6 +213,8 @@ public class TrafficGrid implements EventHandler{
 			// Light is green, check if the intersection can be crossed:
 			RoadSegment nextRoadSegment = car.getNextRoadSegment();
 			Intersection nextIntersection = nextRoadSegment.outIntersection;
+			System.out.println(nextRoadSegment);
+			System.out.println(nextIntersection);
 			TrafficLight nextTrafficLight = nextIntersection.getTrafficLight(
 					nextRoadSegment.isAvenue);
 			if (trafficLight.trafficQueue.isEmpty() && 
