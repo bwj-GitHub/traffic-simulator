@@ -75,8 +75,8 @@ public class Car {
 	 * @return boolean.
 	 */
 	public boolean isTurning() {
-		if (path.turns.length == 0) {
-			// Car's Path has no turns
+		if (path.turns.length == 0 || pathIndex == path.turns.length) {
+			// Car's Path has no turns (or no turns remaining
 			return false;
 		}
 
