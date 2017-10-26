@@ -14,8 +14,8 @@ public class CarUpdateEvent extends CarEvent {
 	}
 
 	public String toString() {
-		return String.format("CarUpdateEvent(%d, %d, %d, %f)", carId,
-				intersectionRowIndex, intersectionColIndex, time());
+		return String.format("CarUpdateEvent(%fs, %d, Intersection(%d, %d))", time(), carId,
+				intersectionRowIndex, intersectionColIndex);
 	}
 
 }

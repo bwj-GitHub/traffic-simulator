@@ -36,7 +36,7 @@ public class TrafficSimulator {
 		// TODO: Set verbosity in config
 		this.verbosity = 1;
 		this.eventQueue = new EventQueue(verbosity);
-		this.statistics = new Statistics();
+		this.statistics = new Statistics("./eventLog.txt");
 	}
 
 	public void run(){
@@ -47,8 +47,6 @@ public class TrafficSimulator {
 		// Insert initial Events:
 		Event[] initialLightEvents = tls.initLights();
 		CarSpawnEvent firstCarSpawn = new CarSpawnEvent(0.0f);
-		statistics.log(initialLightEvents);
-		statistics.log(firstCarSpawn);
 		eventQueue.add(initialLightEvents);
 		eventQueue.add(firstCarSpawn);
 
@@ -72,7 +70,7 @@ public class TrafficSimulator {
 			}
 			eventQueue.add(futureEvents);
 		}
-		
+
 		System.out.println("\nFinished the Simulation!");
 		statistics.printStatistics();
 	}

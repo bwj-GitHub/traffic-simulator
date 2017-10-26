@@ -16,7 +16,7 @@ public class LightEvent extends Event {
 	}
 
 	public String toString() {
-		return "LightEvent(" + time() + ", " + light.toString() + ", " + color +")";
+		return "LightEvent(" + time() + "s, " + light.toString() + ", " + color +")";
 	}
 
 

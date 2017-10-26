@@ -1,5 +1,7 @@
 package events.carEvents;
 
+import traffic.Car;
+
 /**
  * An Event indicating that a car should be generated at `time` and placed
  * in the TrafficGrid.
@@ -13,7 +15,7 @@ public class CarSpawnEvent extends CarEvent {
 	}
 	
 	public String toString() {
-		return "CarSpawnEvent(" + time() + ")";
+		return "CarSpawnEvent(" + time() + "s)";
 	}
 
 }
