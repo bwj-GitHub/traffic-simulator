@@ -96,19 +96,19 @@ public class TrafficGrid implements EventHandler{
 		// Determine In/Out Avenues:
 		if (j % 2 == 0) {
 			outAvenue = this.avenues[j].roadSegments[i+1];
-			inAvenue = this.avenues[j].roadSegments[i-1];
+			inAvenue = this.avenues[j].roadSegments[i];
 		} else {
-			outAvenue = this.avenues[j].roadSegments[i-1];
+			outAvenue = this.avenues[j].roadSegments[i];
 			inAvenue = this.avenues[j].roadSegments[i+1];
 		}
 
 		// Determine In/Out Streets:
 		if (i % 2 == 0) {
-			outStreet = this.streets[i].roadSegments[j-1];
+			outStreet = this.streets[i].roadSegments[j];
 			inStreet = this.streets[i].roadSegments[j+1];
 		} else {
 			outStreet = this.streets[i].roadSegments[j+1];
-			inStreet = this.streets[i].roadSegments[j-1];
+			inStreet = this.streets[i].roadSegments[j];
 		}
 		return new RoadSegment[] {inAvenue, outAvenue, inStreet, outStreet};
 	}

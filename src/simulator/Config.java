@@ -21,6 +21,9 @@ public class Config {
 	public float acceleration;
 	float maxVelocity;
 
+	// TODO: This should also include distance of edge Roads
+	// NOTE: I updated in the constant distance config, but I have not changed
+	//  documentation
 	public int[] dRows;  // Distance between rows i and i+1 (in units c)
 	public int[] dCols;  // Distance between cols i and i+1
 
@@ -42,15 +45,15 @@ public class Config {
 		this.acceleration = acceleration;
 		this.maxVelocity = maxVelocity;
 
-		this.dRows = new int[n-1];
-		this.dCols = new int[m-1];
+		this.dRows = new int[n+1];
+		this.dCols = new int[m+1];
 		this.nAvenueLanes = new int[n];
 		this.nStreetLanes = new int[m];
 
-		for (int i = 0; i < n-1; ++i){
+		for (int i = 0; i < n+1; ++i){
 			this.dRows[i] = d;
 		}
-		for (int i = 0; i < m-1; ++i){
+		for (int i = 0; i < m+1; ++i){
 			this.dCols[i] = d;
 		}
 		for (int i = 0; i < n; ++i){
