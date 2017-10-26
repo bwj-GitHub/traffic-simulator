@@ -13,4 +13,8 @@ public class CarUpdateEvent extends CarEvent {
 		this.intersectionColIndex = intersectionColIndex;
 	}
 
+	public String toString() {
+		return "CarUpdateEvent(" + time() + ")";
+	}
+
 }
