@@ -56,11 +56,11 @@ public class Road {
 
 		// Check if this first RoadSegment is full:
 		TrafficLight trafficLight = intersection.getTrafficLight(car.onAvenue());
-		TrafficQueue trafficQueue = trafficLight.trafficQueue;
-		if (trafficQueue.isFull()) {
+		// TODO: Determine car's lane index
+		if (trafficLight.isQueueFull(1)) {
 			// Place the car in the TrafficQueue -- it is okay for the first segment
 			//  to be over-full:
-			trafficQueue.addCar(car);
+			trafficLight.addCarToTrafficQueue(car);
 
 			// Update car's state:
 			car.updateNextEvent(null);

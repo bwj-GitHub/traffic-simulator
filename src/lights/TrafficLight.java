@@ -3,13 +3,14 @@ package lights;
 import events.carEvents.CarEvent;
 import events.lightEvents.LightEvent;
 import grid.Intersection;
+import traffic.Car;
 import traffic.TrafficQueue;
 
 public class TrafficLight {
 	public boolean isAvenueLight;
-	public TrafficQueue trafficQueue;
 	public Intersection intersection;
 	public LightColor color;
+	private TrafficQueue[] trafficQueues;
 	
 	public TrafficLight(Intersection intersection, boolean isAvenueLight) {
 		this.isAvenueLight = isAvenueLight;
@@ -20,7 +21,12 @@ public class TrafficLight {
 		} else {
 			maxCars = intersection.inStreet.length;
 		}
-		this.trafficQueue = new TrafficQueue(maxCars, intersection);
+		
+		// Initialize trafficQueues (L, M, R):
+		trafficQueues = new TrafficQueue[3];  // Assumes 3 lanes.
+		for (int i = 0; i < trafficQueues.length; i++) {
+			trafficQueues[i] = new TrafficQueue(maxCars, intersection);
+		}
 	}
 	
 	public String toString() {
@@ -37,11 +43,23 @@ public class TrafficLight {
 			return false;
 		}
 	}
+	
+	public boolean isQueueFull(int laneIndex) {
+		// TODO: Check size of appropriate queue:
+		return trafficQueues[1].isFull();
+	}
+	
+	public void addCarToTrafficQueue(Car car) {
+		// TODO: Determine lane and place car in appropriate TrafficQueue:
+		trafficQueues[1].addCar(car);
+		// TODO: Write me!
+	}
 
 	public CarEvent[] updateLight(LightEvent event) {
 		this.color = event.color;
 		if (event.color == LightColor.GREEN) {
-			return trafficQueue.updateCars(event);
+			// TODO: update each TrafficQueue
+			return trafficQueues[1].updateCars(event);
 		} else {
 			return null;
 		}

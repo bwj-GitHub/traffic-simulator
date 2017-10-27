@@ -227,7 +227,8 @@ public class TrafficGrid implements EventHandler{
 			TrafficLight nextTrafficLight = nextIntersection.getTrafficLight(
 					nextRoadSegment.isAvenue);
 
-			if (!nextTrafficLight.trafficQueue.isFull()) {
+			int laneIndex = 1;  // TODO: Determine correct laneIndex
+			if (!nextTrafficLight.isQueueFull(laneIndex)) {
 				// Space is available, cross Intersection:
 				System.out.println("Crossing Intersection!");
 				
@@ -237,7 +238,7 @@ public class TrafficGrid implements EventHandler{
 				// No room is available on the next RoadSegment (or there
 				//  are still cars on this RoadSegment),
 				//  place car in TrafficQueue
-				nextTrafficLight.trafficQueue.addCar(car);
+				nextTrafficLight.addCarToTrafficQueue(car);
 				car.updateNextEvent(null);
 				return null;
 			}
@@ -245,7 +246,7 @@ public class TrafficGrid implements EventHandler{
 		} else {
 			// Light is red, place car in the TrafficQueue
 			car.updateNextEvent(null);  // Car has no nextEvent
-			trafficLight.trafficQueue.addCar(car);
+			trafficLight.addCarToTrafficQueue(car);
 			return null;
 		}		
 	}
