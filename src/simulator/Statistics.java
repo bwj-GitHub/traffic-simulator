@@ -9,6 +9,7 @@ import java.util.HashSet;
 import events.Event;
 import events.carEvents.CarExitEvent;
 import events.carEvents.CarSpawnEvent;
+import events.carEvents.CarUpdateEvent;
 import traffic.Car;
 
 public class Statistics {
@@ -49,10 +50,15 @@ public class Statistics {
 			float exitTime = exitEvent.time();
 			float timeInGrid = exitTime - enterTime;
 			this.timesInGrid.add(timeInGrid);
+			this.cars.add(exitEvent.car);
 			sumOfTimes += timeInGrid;
 			numOfExits += 1;
 		}
+		// TODO: Log events differently?
 		if (loggedEvents != null) {
+			if (loggedEvents.size() > 5000) {
+				return;  // Logging too many Events will eat up Memory!
+			}
 			if (filterCarSpawn && event instanceof CarSpawnEvent) {
 				return;
 			}
@@ -74,6 +80,14 @@ public class Statistics {
 		if (loggedEvents != null) {
 			try {
 				BufferedWriter writer = new BufferedWriter(new FileWriter(logFileName));
+				// Print Cars:
+				writer.write("Cars (that exited):");
+				for (Car car: this.cars) {
+					writer.write("Car " + car.id + ", Path=" + car.getPath().toString() + "\n");
+				}
+
+				// Print Event Log:
+				writer.write("\nEvent Log:");
 				for (Event e: loggedEvents) {
 					writer.write(e.toString() + "\n");
 				}
