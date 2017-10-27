@@ -4,7 +4,6 @@ import events.carEvents.CarEvent;
 import events.carEvents.CarUpdateEvent;
 import lights.TrafficLight;
 import traffic.Car;
-import traffic.TrafficQueue;
 
 public class Road {
 	int index;
