@@ -1,5 +1,7 @@
 package lights;
 
+import java.util.ArrayList;
+
 import events.carEvents.CarEvent;
 import events.lightEvents.LightEvent;
 import grid.Intersection;
@@ -53,10 +55,16 @@ public class TrafficLight {
 	}
 
 	public CarEvent[] updateLight(LightEvent event) {
+		ArrayList<CarEvent> carEvents = new ArrayList<CarEvent>();
 		this.color = event.color;
 		if (event.color == LightColor.GREEN) {
-			// TODO: update each TrafficQueue
-			return trafficQueues[1].updateCars(event);
+			for (int i = 0; i < trafficQueues.length; i++) {
+				CarEvent[] queueEvents = trafficQueues[i].updateCars(event);
+				for (CarEvent ce: queueEvents) {
+					carEvents.add(ce);
+				}
+			}
+			return carEvents.toArray(new CarEvent[carEvents.size()]);
 		} else {
 			return null;
 		}
