@@ -10,19 +10,21 @@ import grid.Intersection;
 public class TrafficQueue {
 
 	int maxCars;  // this limit can be exceeded by entry points
+	int laneIndex;
 	private Intersection intersection;
 	public ArrayList<Car> queue;
 
 
-	public TrafficQueue(int maxCars, Intersection intersection) {
+	public TrafficQueue(int maxCars, Intersection intersection, int laneIndex) {
 		this.maxCars = maxCars;
+		this.laneIndex = laneIndex;
 		this.intersection = intersection;
 		this.queue = new ArrayList<Car>();
 	}
 
 	public void addCar(Car car) {
-		System.out.println(String.format(">TrafficQueue(%s).add(%s)",
-				intersection.toString(), car.toString()));
+		System.out.println(String.format(">TrafficQueue(%s, %d).add(%s)",
+				intersection.toString(), laneIndex, car.toString()));
 		this.queue.add(car);
 	}
 	

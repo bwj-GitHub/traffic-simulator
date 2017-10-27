@@ -25,7 +25,7 @@ public class TrafficLight {
 		// Initialize trafficQueues (L, M, R):
 		trafficQueues = new TrafficQueue[3];  // Assumes 3 lanes.
 		for (int i = 0; i < trafficQueues.length; i++) {
-			trafficQueues[i] = new TrafficQueue(maxCars, intersection);
+			trafficQueues[i] = new TrafficQueue(maxCars, intersection, i);
 		}
 	}
 	
@@ -45,14 +45,11 @@ public class TrafficLight {
 	}
 	
 	public boolean isQueueFull(int laneIndex) {
-		// TODO: Check size of appropriate queue:
-		return trafficQueues[1].isFull();
+		return trafficQueues[laneIndex].isFull();
 	}
 	
 	public void addCarToTrafficQueue(Car car) {
-		// TODO: Determine lane and place car in appropriate TrafficQueue:
-		trafficQueues[1].addCar(car);
-		// TODO: Write me!
+		trafficQueues[car.getLaneIndex()].addCar(car);
 	}
 
 	public CarEvent[] updateLight(LightEvent event) {

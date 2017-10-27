@@ -176,7 +176,6 @@ public class TrafficGrid implements EventHandler{
 		//  ANY TrafficQueue, if this Event was produced
 		carIds.remove(event.car.id);
 		cars.remove(event.car.id);
-		// TODO: Record car's time in TrafficGrid
 	}
 
 	/**
@@ -227,7 +226,7 @@ public class TrafficGrid implements EventHandler{
 			TrafficLight nextTrafficLight = nextIntersection.getTrafficLight(
 					nextRoadSegment.isAvenue);
 
-			int laneIndex = 1;  // TODO: Determine correct laneIndex
+			int laneIndex = car.getLaneIndex();
 			if (!nextTrafficLight.isQueueFull(laneIndex)) {
 				// Space is available, cross Intersection:
 				System.out.println("Crossing Intersection!");
