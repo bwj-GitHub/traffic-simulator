@@ -56,7 +56,8 @@ public class TrafficQueue {
 
 		// Create CarUpdateEvents for each Car (for their CURRENT Intersection):
 		CarUpdateEvent[] updateEvents = new CarUpdateEvent[queue.size()];
-		for (int i = 0; i < queue.size(); i++) {
+		int carsInQueue = queue.size();
+		for (int i = 0; i < carsInQueue; i++) {
 			Car car = queue.get(0);
 			float distance = (float) i + intersection.getLength(car.onAvenue());
 			float travelTime = car.timeToDistance(distance);

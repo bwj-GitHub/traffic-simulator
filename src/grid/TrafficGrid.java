@@ -31,6 +31,8 @@ public class TrafficGrid implements EventHandler{
 	Random random;
 	InterarrivalTimeGenerator interArrival;
 	CarFactory carFactory;
+	int carSpawnLimit;
+	int numCarsSpawned;
 	Road[] avenues;  // NS or SN
 	Road[] streets;  // EW or WE
 	public Intersection[][] intersections;
@@ -46,6 +48,8 @@ public class TrafficGrid implements EventHandler{
 		this.random = random;
 		this.interArrival = interArrival;
 		this.carFactory = new CarFactory(n, m, random);
+		this.carSpawnLimit = 10;  // TODO: Set in config
+		this.numCarsSpawned = 0;
 
 		this.initRoads();
 		this.initIntersections();
@@ -140,6 +144,13 @@ public class TrafficGrid implements EventHandler{
 	}
 
 	private CarEvent[] handleCarSpawnEvent(CarSpawnEvent event) {
+		// Check if the car spawn limit has been reached:
+		if (numCarsSpawned > this.carSpawnLimit) {
+			return null;
+		} else {
+			numCarsSpawned += 1;
+		}
+		
 		// Create a Car:
 		Car newCar = this.carFactory.newCar(event.time());
 		newCar.updateNextEvent(event);
