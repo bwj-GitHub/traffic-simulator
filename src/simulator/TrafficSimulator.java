@@ -54,7 +54,7 @@ public class TrafficSimulator {
 		while (((Event) eventQueue.peek()).time() < config.timeLimit) {
 			Event nextEvent = (Event) eventQueue.poll();
 			statistics.log(nextEvent);
-			if (verbosity > 0) {
+			if (verbosity > 1) {
 				System.out.println("-" + nextEvent.toString());
 			}
 
@@ -91,7 +91,7 @@ public class TrafficSimulator {
 			// Use simple config:
 			// public Config(int n, int m, float timeLimit, long randomSeed, float lambda,
 			// float acceleration, float maxVelocity, int d)
-			config = new Config(2, 2, 150, 0, 2.0f, 1, 5, 50);
+			config = new Config(100, 100, 10000, 0, 30.0f, 1, 5, 50);
 		}
 
 		// Start Simulation:

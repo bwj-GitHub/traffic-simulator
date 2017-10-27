@@ -23,16 +23,11 @@ public class TrafficQueue {
 	}
 
 	public void addCar(Car car) {
-		System.out.println(String.format(">TrafficQueue(%s, %d).add(%s)",
-				intersection.toString(), laneIndex, car.toString()));
 		this.queue.add(car);
 	}
 	
 	public void removeCar(int index) {
-		System.out.println(queue.size());
 		Car car = queue.remove(index);
-		System.out.println(String.format("<TrafficQueue.remove(%s)", car.toString()));
-		System.out.println(queue.size());
 	}
 
 	public boolean isEmpty() {
@@ -48,7 +43,6 @@ public class TrafficQueue {
 	}
 
 	public CarEvent[] updateCars(LightEvent event) {
-		System.out.println("!!! Updating Cars in TrafficQueue !!!");
 		// Create Create CarUpdateEvents for each car
 		// NOTE: This method assumes that light durations are unavailable
 		int n = intersection.intersectionRowIndex;

@@ -48,7 +48,7 @@ public class TrafficGrid implements EventHandler{
 		this.random = random;
 		this.interArrival = interArrival;
 		this.carFactory = new CarFactory(n, m, random);
-		this.carSpawnLimit = 10;  // TODO: Set in config
+		this.carSpawnLimit = 100;  // TODO: Set in config
 		this.numCarsSpawned = 0;
 
 		this.initRoads();
@@ -79,12 +79,12 @@ public class TrafficGrid implements EventHandler{
 				RoadSegment[] roadSegments = getIntersectionRoadSegments(i, j);
 				intersections[i][j] = new Intersection(i, j, roadSegments);
 				
-				// FIXME: Debugging print:
-				System.out.println(String.format("Debugging Intersection %d, %d",
-						i, j));
-				for (RoadSegment r : roadSegments) {
-					System.out.println(r);
-				}
+//				// FIXME: Debugging print:
+//				System.out.println(String.format("Debugging Intersection %d, %d",
+//						i, j));
+//				for (RoadSegment r : roadSegments) {
+//					System.out.println(r);
+//				}
 			}
 		}
 	}
@@ -145,7 +145,7 @@ public class TrafficGrid implements EventHandler{
 
 	private CarEvent[] handleCarSpawnEvent(CarSpawnEvent event) {
 		// Check if the car spawn limit has been reached:
-		if (numCarsSpawned > this.carSpawnLimit) {
+		if (numCarsSpawned >= this.carSpawnLimit) {
 			return null;
 		} else {
 			numCarsSpawned += 1;
@@ -224,10 +224,6 @@ public class TrafficGrid implements EventHandler{
 			RoadSegment nextRoadSegment = car.getNextRoadSegment();
 			Intersection nextIntersection = nextRoadSegment.outIntersection;
 			
-			System.out.println("NEXT:");
-			System.out.println(nextRoadSegment);
-			System.out.println(nextIntersection);
-			
 			// Check if the nextRoadSegment is an Exit point:
 			if (nextIntersection == null) {
 				// Car should exit:
@@ -240,7 +236,6 @@ public class TrafficGrid implements EventHandler{
 			int laneIndex = car.getLaneIndex();
 			if (!nextTrafficLight.isQueueFull(laneIndex)) {
 				// Space is available, cross Intersection:
-				System.out.println("Crossing Intersection!");
 				
 				CarEvent nextEvent = car.crossIntersection();
 				return nextEvent;

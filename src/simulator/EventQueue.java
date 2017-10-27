@@ -19,7 +19,7 @@ public class EventQueue {
 		if (e == null) {
 			return;
 		}
-		if (verbosity > 0) {
+		if (verbosity > 1) {
 			System.out.println("+" + e.toString());
 		}
 		queue.add(e);

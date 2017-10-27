@@ -63,8 +63,8 @@ public class Config {
 			this.nStreetLanes[i] = 3;
 		}
 
-		this.greenTime = 25.0f;
-		this.yellowTime = 5.0f;
+		this.greenTime = 5.0f;
+		this.yellowTime = 3.0f;
 	}
 
 	public Config(int n, int m, float timeLimit, long randomSeed, float lambda,
@@ -84,8 +84,8 @@ public class Config {
 		this.nAvenueLanes = nAvenueLanes;
 		this.nStreetLanes = nStreetLanes;
 
-		this.greenTime = 25.0f;
-		this.yellowTime = 5.0f;
+		this.greenTime = 5.0f;
+		this.yellowTime = 3.0f;
 	}
 
 	public static Config readConfigFile(String filename) throws FileNotFoundException{

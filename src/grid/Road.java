@@ -49,7 +49,6 @@ public class Road {
 
 		// Determine car's next Intersection:
 		Intersection intersection = roadSegment.outIntersection;
-		System.out.println(roadSegment);  // FIXME: debugging!
 		int i = intersection.intersectionRowIndex;
 		int j = intersection.intersectionColIndex;
 
@@ -72,8 +71,6 @@ public class Road {
 		float travelDistance = roadSegment.length;
 		// TODO: Road needs config?
 		float travelTime = car.timeToDistance(travelDistance);
-		System.out.println("travelDistance=" + travelDistance);
-		System.out.println("travelTime=" + travelTime);
 		float nextTime = car.nextEvent.time() + travelTime;
 		CarUpdateEvent nextEvent = new CarUpdateEvent(car.id, i, j, nextTime);
 

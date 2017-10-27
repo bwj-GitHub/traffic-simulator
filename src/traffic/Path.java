@@ -21,6 +21,15 @@ public class Path {
 		this.endIndex = endIndex;
 		this.turns = turns;
 	}
+	
+	public String toString() {
+		String turnString = "";
+		for (int turn: turns) {
+			turnString += turn + ", ";
+		}
+		return String.format("Path(Start=(%b, %d), turns=%s, End=(%b, %d))",
+				startAvenue, startIndex, turnString, endAvenue, endIndex);
+	}
 
 	/**
 	 * Return the appropriate lane, given the progress through the Path.
