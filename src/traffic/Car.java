@@ -40,8 +40,15 @@ public class Car {
 	}
 	
 	public String toString() {
-		return String.format("CAR.%d(pi=%d,onA=%b,RS=%s,NRS=%s)", id, pathIndex,
-				onAvenue(), roadSegment.toString(), getNextRoadSegment().toString());
+		// TODO: Clean up duplicate code
+		if (getNextRoadSegment() == null) {
+			return String.format("CAR.%d(pi=%d,onA=%b,RS=%s)", id, pathIndex,
+					onAvenue(), roadSegment.toString());
+		} else {
+			return String.format("CAR.%d(pi=%d,onA=%b,RS=%s,NRS=%s)", id, pathIndex,
+					onAvenue(), roadSegment.toString(), getNextRoadSegment().toString());
+		}
+
 	}
 	
 	public int getLaneIndex() {
@@ -60,6 +67,9 @@ public class Car {
 	public RoadSegment getNextRoadSegment() {
 		// Determine the next RoadSegment and Intersection
 		Intersection intersection = roadSegment.outIntersection;
+		if (intersection == null) {
+			return null;
+		}
 		RoadSegment nextRoadSegment;
 		if ((onAvenue() && isTurning())
 				|| (!onAvenue() && !isTurning())) {
@@ -75,13 +85,18 @@ public class Car {
 	 * @return boolean.
 	 */
 	public boolean isTurning() {
-		if (path.turns.length == 0 || pathIndex == path.turns.length) {
+		if (path.turns.length == 0 || pathIndex >= path.turns.length) {
 			// Car's Path has no turns (or no turns remaining
 			return false;
 		}
 
 		boolean onAvenue = path.onAvenue(pathIndex);
 		Intersection intersection = roadSegment.outIntersection;
+		
+		if (intersection == null) {
+			// This would only occur if the car is on its last RoadSegment
+			return false;
+		}
 		
 		int outRoadIndex;
 		if (onAvenue) {
