@@ -63,12 +63,24 @@ public class TrafficLightScheduler implements EventHandler{
 			return new Event[] {nextEvent};
 		}
 	}
-	
+
 	/**
-	 * Set initial light colors and return the list of initial LightEvents.
+	 * Randomly set initial light colors and return the list of initial LightEvents.
 	 * @return
 	 */
 	public Event[] initLights() {
+		int n = intersections.length;
+		int m = intersections[0].length;
+		boolean[][] initialLightStatus = new boolean[n][m];
+		for (int i = 0; i < n; i++) {
+			for (int j = 0; j < m; j++) {
+				initialLightStatus[i][j] = random.nextBoolean();
+			}
+		}
+		return initLights(initialLightStatus);
+	}
+
+	public Event[] initLights(boolean[][] initialLightStatus) {
 		int n = intersections.length;
 		int m = intersections[0].length;
 		ArrayList<LightEvent> lightEvents = new ArrayList<LightEvent>();
@@ -78,8 +90,7 @@ public class TrafficLightScheduler implements EventHandler{
 				TrafficLight avenueLight = intersections[i][j].getTrafficLight(true);
 				TrafficLight streetLight = intersections[i][j].getTrafficLight(false);
 
-				double r = random.nextDouble();
-				if (r < .5) {
+				if (initialLightStatus[i][j] == true) {
 					// Avenue is Green, Street RED
 					avenueLight.color = LightColor.GREEN;
 					lightEvents.add(new LightEvent(greenTime, avenueLight,
