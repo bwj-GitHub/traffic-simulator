@@ -76,7 +76,6 @@ public class TrafficSimulator {
 	}
 
 	public static void main(String[] args) {
-//		String configFileName = "./config";
 		Config config = null;
 		if (args.length == 1) {
 			// Create Config from file:
