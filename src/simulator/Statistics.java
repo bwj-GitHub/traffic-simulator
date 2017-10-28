@@ -81,13 +81,13 @@ public class Statistics {
 			try {
 				BufferedWriter writer = new BufferedWriter(new FileWriter(logFileName));
 				// Print Cars:
-				writer.write("Cars (that exited):");
+				writer.write("Cars (that exited):\n");
 				for (Car car: this.cars) {
 					writer.write("Car " + car.id + ", Path=" + car.getPath().toString() + "\n");
 				}
 
 				// Print Event Log:
-				writer.write("\nEvent Log:");
+				writer.write("\nEvent Log:\n");
 				for (Event e: loggedEvents) {
 					writer.write(e.toString() + "\n");
 				}

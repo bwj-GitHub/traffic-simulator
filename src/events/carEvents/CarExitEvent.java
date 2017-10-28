@@ -11,7 +11,9 @@ public class CarExitEvent extends CarEvent {
 	}
 	
 	public String toString() {
-		return String.format("CarExitEvent(%d %f)", car.id, time());
+		float timeInGrid = time() - car.enterTime;
+		return String.format("CarExitEvent   (carId=%3d, t=%.2fs, time-in-grid=%fs)",
+				car.id, time(), timeInGrid);
 	}
 
 }
