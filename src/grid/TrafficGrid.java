@@ -48,7 +48,7 @@ public class TrafficGrid implements EventHandler{
 		this.random = random;
 		this.interArrival = interArrival;
 		this.carFactory = new CarFactory(n, m, random);
-		this.carSpawnLimit = 100;  // TODO: Set in config
+		this.carSpawnLimit = config.carSpawnLimit;
 		this.numCarsSpawned = 0;
 
 		this.initRoads();
