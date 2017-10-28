@@ -9,6 +9,7 @@ import events.lightEvents.*;
 import grid.TrafficGrid;
 import lights.TrafficLightScheduler;
 import simulator.Config;
+import traffic.CarFactory;
 
 /**
  * Initialize and run a traffic simulation.
@@ -21,20 +22,21 @@ public class TrafficSimulator {
 	Config config;
 	Random random;
 	TrafficGrid grid;
+	CarFactory carFactory;
+	InterarrivalTimeGenerator interArrival;
 	TrafficLightScheduler tls;
 	EventQueue eventQueue;
-	InterarrivalTimeGenerator interArrival;
 	Statistics statistics;
 	int verbosity;
 
 	public TrafficSimulator(Config config){
 		this.config = config;
 		this.random = new Random(config.randomSeed);
+		this.carFactory = new CarFactory(config.nRows, config.nCols, random);
 		this.interArrival = new InterarrivalTimeGenerator(config.lambda, random);
-		this.grid = new TrafficGrid(config, random, interArrival);
+		this.grid = new TrafficGrid(config, carFactory, interArrival);
 		this.tls = new TrafficLightScheduler(config, random, grid.intersections);
-		// TODO: Set verbosity in config
-		this.verbosity = 1;
+		this.verbosity = 1;  // TODO: Set verbosity in config
 		this.eventQueue = new EventQueue(verbosity);
 		this.statistics = new Statistics("./eventLog.txt");
 	}

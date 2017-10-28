@@ -40,14 +40,14 @@ public class TrafficGrid implements EventHandler{
 	HashSet<Integer> carIds;
 	HashMap<Integer, Car> cars;
 
-	public TrafficGrid(Config config, Random random,
+	public TrafficGrid(Config config, CarFactory carFactory,
 			InterarrivalTimeGenerator interArrival) {
 		this.config = config;
 		this.n = config.nRows;
 		this.m = config.nCols;
-		this.random = random;
 		this.interArrival = interArrival;
-		this.carFactory = new CarFactory(n, m, random);
+		this.carFactory = carFactory;
+//		this.carFactory = new CarFactory(n, m, random);
 		this.carSpawnLimit = config.carSpawnLimit;
 		this.numCarsSpawned = 0;
 
