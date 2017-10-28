@@ -2,11 +2,10 @@ package lights;
 
 import java.util.ArrayList;
 
+import cars.Car;
 import events.carEvents.CarEvent;
 import events.lightEvents.LightEvent;
 import grid.Intersection;
-import traffic.Car;
-import traffic.TrafficQueue;
 
 public class TrafficLight {
 	public boolean isAvenueLight;

@@ -1,4 +1,4 @@
-package traffic;
+package cars;
 
 import java.util.Random;
 

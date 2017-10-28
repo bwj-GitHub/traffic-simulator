@@ -1,7 +1,8 @@
-package traffic;
+package lights;
 
 import java.util.ArrayList;
 
+import cars.Car;
 import events.carEvents.CarEvent;
 import events.carEvents.CarUpdateEvent;
 import events.lightEvents.LightEvent;

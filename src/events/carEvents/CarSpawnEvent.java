@@ -1,6 +1,6 @@
 package events.carEvents;
 
-import traffic.Car;
+import cars.Car;
 
 /**
  * An Event indicating that a car should be generated at `time` and placed

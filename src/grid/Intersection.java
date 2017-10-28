@@ -1,9 +1,9 @@
 package grid;
 
+import cars.Car;
 import events.Event;
 import events.lightEvents.LightEvent;
 import lights.TrafficLight;
-import traffic.Car;
 
 public class Intersection {
 	public int intersectionRowIndex;

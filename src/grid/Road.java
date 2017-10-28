@@ -1,9 +1,9 @@
 package grid;
 
+import cars.Car;
 import events.carEvents.CarEvent;
 import events.carEvents.CarUpdateEvent;
 import lights.TrafficLight;
-import traffic.Car;
 
 public class Road {
 	int index;

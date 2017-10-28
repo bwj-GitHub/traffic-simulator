@@ -6,11 +6,11 @@ import java.io.IOException;
 import java.util.ArrayList;
 import java.util.HashSet;
 
+import cars.Car;
 import events.Event;
 import events.carEvents.CarExitEvent;
 import events.carEvents.CarSpawnEvent;
 import events.carEvents.CarUpdateEvent;
-import traffic.Car;
 
 public class Statistics {
 	

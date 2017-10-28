@@ -4,6 +4,9 @@ import java.util.HashSet;
 import java.util.HashMap;
 import java.util.Random;
 
+import cars.Car;
+import cars.CarFactory;
+import cars.Path;
 import events.Event;
 import events.EventHandler;
 import events.carEvents.CarEvent;
@@ -13,9 +16,6 @@ import events.carEvents.CarUpdateEvent;
 import lights.TrafficLight;
 import simulator.Config;
 import simulator.InterarrivalTimeGenerator;
-import traffic.Car;
-import traffic.CarFactory;
-import traffic.Path;
 
 
 /**

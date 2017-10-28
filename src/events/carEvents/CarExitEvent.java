@@ -1,6 +1,6 @@
 package events.carEvents;
 
-import traffic.Car;
+import cars.Car;
 
 public class CarExitEvent extends CarEvent {
 	public Car car;

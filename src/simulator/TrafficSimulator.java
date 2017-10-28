@@ -3,13 +3,13 @@ package simulator;
 import java.io.FileNotFoundException;
 import java.util.Random;
 
+import cars.CarFactory;
 import events.Event;
 import events.carEvents.*;
 import events.lightEvents.*;
 import grid.TrafficGrid;
 import lights.TrafficLightScheduler;
 import simulator.Config;
-import traffic.CarFactory;
 
 /**
  * Initialize and run a traffic simulation.
@@ -93,7 +93,7 @@ public class TrafficSimulator {
 			// Config(int n, int m, float timeLimit, long randomSeed,
 			//		int carSpawnLimit, float lambda, float greenTime, float yellowTime,
 			//		float acceleration, float maxVelocity, int d){
-			config = new Config(12, 12, 2000, 0, 200, 2.0f, 20.0f, 5.0f, 1, 5, 20);
+			config = new Config(12, 12, 2000, 0, 200, 5.0f, 20.0f, 5.0f, 1, 5, 20);
 		}
 
 		// Start Simulation:

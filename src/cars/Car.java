@@ -1,4 +1,4 @@
-package traffic;
+package cars;
 
 import events.Event;
 import events.carEvents.CarEvent;
