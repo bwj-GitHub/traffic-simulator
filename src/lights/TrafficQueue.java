@@ -54,7 +54,7 @@ public class TrafficQueue {
 		int carsInQueue = queue.size();
 		for (int i = 0; i < carsInQueue; i++) {
 			Car car = queue.get(0);
-			float distance = (float) i + intersection.getLength(car.onAvenue());
+			float distance = (float) i;  // car is i units from intersection
 			float travelTime = car.timeToDistance(distance);
 			float eventTime = travelTime + event.time();
 			CarUpdateEvent nextEvent = new CarUpdateEvent(car.id, n, m, eventTime);

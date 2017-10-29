@@ -38,7 +38,7 @@ public class TrafficGrid implements EventHandler{
 	public Intersection[][] intersections;
 
 	HashSet<Integer> carIds;
-	HashMap<Integer, Car> cars;
+	public HashMap<Integer, Car> cars;
 
 	public TrafficGrid(Config config, CarFactory carFactory,
 			InterarrivalTimeGenerator interArrival) {
