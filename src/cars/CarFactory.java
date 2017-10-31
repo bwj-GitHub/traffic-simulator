@@ -5,7 +5,12 @@ import java.util.Random;
 public class CarFactory {
 
 	private PathFactory pathFactory;
-	private int next_id;
+	public int next_id;
+
+	public CarFactory(PathFactory pathFactory) {
+		this.pathFactory = pathFactory;
+		this.next_id = 0;
+	}
 
 	public CarFactory(int n, int m, Random random){
 		this.pathFactory = new PathFactory(n, m, random);
