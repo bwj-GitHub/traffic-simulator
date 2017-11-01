@@ -36,12 +36,12 @@ public class TrafficSimulator {
 		this.interArrival = new InterarrivalTimeGenerator(config.lambda, random);
 		this.grid = new TrafficGrid(config, carFactory, interArrival);
 		this.tls = new TrafficLightScheduler(config, random, grid.intersections);
-		this.verbosity = 1;  // TODO: Set verbosity in config
+		this.verbosity = 2;  // TODO: Set verbosity in config
 		this.eventQueue = new EventQueue(verbosity);
 		this.statistics = new Statistics("./eventLog.txt");
 	}
 
-	public void run(){
+	public void run() throws Exception{
 		if (verbosity > 0) {
 			System.out.println("Beginning simulation!");
 		}
@@ -77,7 +77,7 @@ public class TrafficSimulator {
 		statistics.printStatistics();
 	}
 
-	public static void main(String[] args) {
+	public static void main(String[] args) throws Exception {
 		Config config = null;
 		if (args.length == 1) {
 			// Create Config from file:
@@ -93,7 +93,7 @@ public class TrafficSimulator {
 			// Config(int n, int m, float timeLimit, long randomSeed,
 			//		int carSpawnLimit, float lambda, float greenTime, float yellowTime,
 			//		float acceleration, float maxVelocity, int d){
-			config = new Config(20, 20, 2000, 0, 200, 5.0f, 20.0f, 5.0f, 1, 5, 20);
+			config = new Config(2, 2, 50, 0, 20, 5.0f, 20.0f, 5.0f, 1, 5, 20);
 			// 20x20: 258.18
 			// 12x12: 157.97
 		}

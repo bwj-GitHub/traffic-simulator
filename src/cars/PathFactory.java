@@ -6,16 +6,22 @@ public class PathFactory {
 
 	private int n;
 	private int m;
+	private int maxTurns;
 	private Random random;
 
 	public PathFactory(int n, int m, Random random) {
 		this.n = n;
 		this.m = m;
 		this.random = random;
+		
+		maxTurns = 2;
+		if (n == 2 || m == 2) {
+			maxTurns = 1;
+		}
 	}
 
 	// TODO: Simplify this mess!
-	public Path newPath() {
+	public Path newPath() throws Exception {
 		// Randomly select a start point
 		boolean startAvenue = random.nextBoolean();
 		int startIndex;
@@ -26,9 +32,9 @@ public class PathFactory {
 		} else {
 			startIndex = random.nextInt(n);
 		}
-		
+
 		// Randomly select a number of turns:
-		int numTurns = random.nextInt(3);
+		int numTurns = random.nextInt(maxTurns + 1);
 		int[] turns = new int[numTurns];
 		if (numTurns == 0) {
 			endIndex = startIndex;
@@ -53,12 +59,14 @@ public class PathFactory {
 			endAvenue = startAvenue;
 			if (startAvenue) {
 				// start and end on an Avenue (different ones)
-				endIndex = (startIndex + random.nextInt(m-1)) % m;
+				endIndex = (startIndex + random.nextInt(m-1) + 1) % m;
 			} else {
 				// start and end on a Street (different ones)
-				endIndex = (startIndex + random.nextInt(n-1)) % n;
+				endIndex = (startIndex + random.nextInt(n-1) + 1) % n;
 			}
-			assert endIndex != startIndex;  // TODO: Check above equation!
+			if (startIndex == endIndex) {
+				throw new Exception("Path starts and ends on same Road!");
+			}
 			turns[1] = endIndex;
 			
 			// Select location for first turn:

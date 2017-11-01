@@ -38,9 +38,9 @@ public class TestSimulation {
 	public TestSimulation(){
 	}
 
-	private void initGrid(ArrayList<Path> paths) {
+	private void initGrid(int n, int m, ArrayList<Path> paths) {
 		// 3x3, d=50, v = 5
-		this.config = new Config(3, 3, 100, 0, 200, 5.0f, 25.0f, 5.0f, 1, 5, 50);
+		this.config = new Config(n, m, 100, 0, 200, 5.0f, 25.0f, 5.0f, 1, 5, 50);
 		this.random = new Random();
 
 		// Initialize TrafficGrid
@@ -59,12 +59,12 @@ public class TestSimulation {
 	 * path and exits at the correct time.
 	 */
 	// NOTE: Assumes no acceleration
-	public void testSingleCar() {
+	public void testSingleCar() throws Exception {
 		// Create predetermined paths:
 		ArrayList<Path> paths = new ArrayList<Path>();
 		paths.add(new Path(true, true, 1, 1, new int[] {}));   // A
 
-		initGrid(paths);
+		initGrid(3, 3, paths);
 		System.out.println("Testing single car:");
 		// Initialize lights
 		boolean[][] initialLights = new boolean[][] {{false, true, false},
@@ -108,12 +108,12 @@ public class TestSimulation {
 	/* Insert several cars with the same path, check that they queued properly
 	 * and stuff.
 	 */
-	public void testQueuedCars() {
+	public void testQueuedCars() throws Exception {
 		// Create predetermined paths:
 		ArrayList<Path> paths = new ArrayList<Path>();
 		paths.add(new Path(true, true, 1, 1, new int[] {}));   // A
 		paths.add(new Path(true, true, 1, 1, new int[] {}));   // A
-		initGrid(paths);
+		initGrid(3, 3, paths);
 		System.out.println("\nTesting queued cars:");
 
 		// Initialize lights
@@ -160,7 +160,7 @@ public class TestSimulation {
 	/* Insert several cars at the same start point, but with paths that would
 	 * place them in different lanes.
 	 */
-	public void testMultipleQueues() {
+	public void testMultipleQueues() throws Exception {
 		ArrayList<Path> paths = new ArrayList<Path>();
 		paths.add(new Path(true, true, 1, 1, new int[] {}));  // A
 		paths.add(new Path(true, false, 1, 2, new int[] {2})); // B
@@ -168,7 +168,7 @@ public class TestSimulation {
 		paths.add(new Path(true, true, 1, 1, new int[] {}));  // A
 		paths.add(new Path(true, true, 1, 1, new int[] {}));  // A
 		paths.add(new Path(true, true, 1, 1, new int[] {}));  // A
-		initGrid(paths);
+		initGrid(3, 3, paths);
 		System.out.println("\nTesting multiple queues:");
 
 		// Initialize lights
@@ -256,8 +256,9 @@ public class TestSimulation {
 	 * CarUpdateEvents (future CarSpawnEvents are ignored).
 	 * @param events
 	 * @return the list of CarUpdateEvents corresponding to events.
+	 * @throws Exception 
 	 */
-	private CarUpdateEvent[] processCarSpawnEvents(CarSpawnEvent[] events) {
+	private CarUpdateEvent[] processCarSpawnEvents(CarSpawnEvent[] events) throws Exception {
 		int nCars = events.length;
 		CarUpdateEvent[] updateEvents = new CarUpdateEvent[nCars];
 		for (int i = 0; i < nCars; i++) {
@@ -296,7 +297,7 @@ public class TestSimulation {
 		return updateEvent;
 	}
 
-	public static void main(String[] args) {
+	public static void main(String[] args) throws Exception {
 		TestSimulation test = new TestSimulation();
 		test.testSingleCar();
 		test.testQueuedCars();

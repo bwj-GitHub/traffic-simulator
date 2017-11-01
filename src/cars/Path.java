@@ -14,7 +14,7 @@ public class Path {
 	public int[] turns;  // Indices of Avenues/Streets to turn down
 
 	public Path(boolean startAvenue, boolean endAvenue,
-			int startIndex, int endIndex, int[] turns) {
+			int startIndex, int endIndex, int[] turns){
 		this.startAvenue = startAvenue;
 		this.endAvenue = endAvenue;
 		this.startIndex = startIndex;
@@ -27,7 +27,7 @@ public class Path {
 		for (int turn: turns) {
 			turnString += turn + ", ";
 		}
-		return String.format("Path(Start=(%b, %d), turns=%s, End=(%b, %d))",
+		return String.format("Path(Start=(%b, %d), turns=[%s], End=(%b, %d))",
 				startAvenue, startIndex, turnString, endAvenue, endIndex);
 	}
 
@@ -39,7 +39,7 @@ public class Path {
 	 * 	indicated by the pathIndex.
 	 */
 	public int getLaneIndex(int pathIndex) {
-		if (pathIndex == this.turns.length) {
+		if (pathIndex >= this.turns.length) {
 			return 1;  // No more turns, stay in middle lane
 		} else {
 			// Determine whether car is on an Avenue or Street

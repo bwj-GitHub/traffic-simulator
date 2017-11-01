@@ -21,7 +21,7 @@ public class CarFactory {
 		this(n, m, new Random());
 	}
 
-	public Car newCar(float time) {
+	public Car newCar(float time) throws Exception {
 		// Randomly generate: a start point, an end point, and up to two turns.
 		int id = next_id;
 		next_id++;

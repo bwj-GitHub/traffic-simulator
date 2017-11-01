@@ -125,7 +125,7 @@ public class TrafficGrid implements EventHandler{
 	}
 
 	@Override
-	public Event[] handleEvent(Event event) {
+	public Event[] handleEvent(Event event) throws Exception {
 		Event[] nextEvents = null;
 		// Determine type of Event:
 		if (event instanceof CarSpawnEvent){
@@ -143,7 +143,7 @@ public class TrafficGrid implements EventHandler{
 		return nextEvents;
 	}
 
-	private CarEvent[] handleCarSpawnEvent(CarSpawnEvent event) {
+	private CarEvent[] handleCarSpawnEvent(CarSpawnEvent event) throws Exception {
 		// Check if the car spawn limit has been reached:
 		if (numCarsSpawned >= this.carSpawnLimit) {
 			return null;
@@ -169,6 +169,8 @@ public class TrafficGrid implements EventHandler{
 			// Place newCar in the appropriate Street
 			newCarEvent = streets[carPath.startIndex].handleNewCar(newCar);
 		}
+		
+		System.out.println("\nNew Car: " + newCar + " Path=" + newCar.path);
 
 		// Create next CarSpawnEvent:
 		float nextArrivalTime = getNextArrivalTime(event.time());
@@ -185,6 +187,11 @@ public class TrafficGrid implements EventHandler{
 	private void handleCarExitEvent(CarExitEvent event) {
 		// NOTE: It SHOULD be guaranteed that the car is no longer in
 		//  ANY TrafficQueue, if this Event was produced
+		// An Exception should be raised if the car still has turns remaining:
+		if (event.car.getLaneIndex() != 1) {
+			System.err.println("Car " + event.car + " still has turns remaining!");
+//			throw new Exception();
+		}
 		carIds.remove(event.car.id);
 		cars.remove(event.car.id);
 	}
