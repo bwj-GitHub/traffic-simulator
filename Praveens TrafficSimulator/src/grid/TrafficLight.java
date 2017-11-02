@@ -1,6 +1,8 @@
 package grid;
 
 import java.util.ArrayList;
+import events.Event;
+
 
 public class TrafficLight {
 	
@@ -8,17 +10,115 @@ public class TrafficLight {
 	private int redtime=5;
 	private int greentime=5;
 	private int yellowtime=3;
+	private int threshold=3;//Number of cars which turn light to green for traffic light.
+	private int counter=0; // Number of cars at intersection at that current traffic light. 
+	private int lanelimit=10;
 	private int xpos;
 	private int ypos;
+	private int llcarstomove=0;
+	private int mlcarstomove=0;
+	private int rlcarstomove=0;
+	private int otherlightcounter=0;
+	private boolean flag=false;
 	private lightcolor currentlight;
 	private int remainingtime;
 	private trafficdirection direction;
 	private TrafficLight otherlight;
+	private Event otherlightevent;
 	private ArrayList<Car> list1=new ArrayList<Car>();
 	private ArrayList<Car> list2=new ArrayList<Car>();
 	private ArrayList<Car> list3=new ArrayList<Car>();
 	
 	//methods.
+	public int getYellowTime()
+	{
+		return yellowtime;
+	}
+	
+	public int getLaneLimit()
+	{
+		return lanelimit;
+	}
+	
+	public void setLLCarsToMove(int n)
+	{
+		llcarstomove=n;
+	}
+	
+	public int getLLCarsToMove()
+	{
+		return llcarstomove;
+	}
+	
+	public void setOtherLightCounter(int n)
+	{
+		otherlightcounter=n;
+	}
+	
+	public void setFlag()
+	{
+		flag=true;
+	}
+	
+	public void unsetFlag()
+	{
+		flag=false;
+	}
+	
+	public void setOtherLightEvent(Event e)
+	{
+		otherlightevent=e;
+	}
+	
+	public Event getOtherLightEvent()
+	{
+		return otherlightevent;
+	}
+	
+	public int getOtherLightCounter()
+	{
+		return otherlightcounter;
+	}
+	
+	public boolean getFlag()
+	{
+		return flag;
+	}
+	
+	public void decLLCarsToMove()
+	{
+		llcarstomove--;
+	}
+	
+	public void setMLCarsToMove(int n)
+	{
+		mlcarstomove=n;
+	}
+	
+	public int getMLCarsToMove()
+	{
+		return mlcarstomove;
+	}
+	
+	public void decMLCarsToMove()
+	{
+		mlcarstomove--;
+	}
+	
+	public void setRLCarsToMove(int n)
+	{
+		rlcarstomove=n;
+	}
+	
+	public int getRLCarsToMove()
+	{
+		return rlcarstomove;
+	}
+	
+	public void decRLCarsToMove()
+	{
+		rlcarstomove--;
+	}
 	
 	public TrafficLight(Config c)
 	{
@@ -47,6 +147,27 @@ public class TrafficLight {
 	}
 	
 	//initialize light to red
+	public int getThreshold()
+	{
+		return threshold;
+	}
+	
+	public void incrementCounter()
+	{
+		counter++;
+	}
+	
+	public void decrementCounter()
+	{
+		counter--;
+	}
+	
+	public int getCounter()
+	{
+		return counter;
+	}
+	
+	
 	public void setlighttored()
 	{
 		currentlight=lightcolor.red;
@@ -126,6 +247,7 @@ public class TrafficLight {
 	
 	public int removecar(Car c,int time)
 	{
+		c.getCurrentLight().decrementCounter();
 		switch(c.getCurrentLane()) //We first remove car from current traffic light's lane.
 		{	
 		case left: list1.remove(c);
@@ -155,6 +277,12 @@ public class TrafficLight {
 			return 1;// Return 1 if car did not complete its path.
 		}
 		
+	}
+	
+	
+	public int getNumberOfTurningCars()
+	{
+		return list1.size()+list3.size();
 	}
 	
 	public int getLeftLaneSize()
