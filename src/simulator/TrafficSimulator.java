@@ -36,7 +36,7 @@ public class TrafficSimulator {
 		this.interArrival = new InterarrivalTimeGenerator(config.lambda, random);
 		this.grid = new TrafficGrid(config, carFactory, interArrival);
 		this.tls = new TrafficLightScheduler(config, random, grid.intersections);
-		this.verbosity = 2;  // TODO: Set verbosity in config
+		this.verbosity = 0;  // TODO: Set verbosity in config
 		this.eventQueue = new EventQueue(verbosity);
 		this.statistics = new Statistics("./eventLog.txt");
 	}
@@ -93,7 +93,7 @@ public class TrafficSimulator {
 			// Config(int n, int m, float timeLimit, long randomSeed,
 			//		int carSpawnLimit, float lambda, float greenTime, float yellowTime,
 			//		float acceleration, float maxVelocity, int d){
-			config = new Config(2, 2, 50, 0, 20, 5.0f, 20.0f, 5.0f, 1, 5, 20);
+			config = new Config(3, 3, 200, 0, 5, 5.0f, 20.0f, 5.0f, 1, 5, 20);
 			// 20x20: 258.18
 			// 12x12: 157.97
 		}

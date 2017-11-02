@@ -71,6 +71,7 @@ public class Car {
 			return null;
 		}
 		RoadSegment nextRoadSegment;
+//		System.out.println(String.format("Id=%d, A=%b, T=%b", id, onAvenue(), isTurning()));
 		if ((onAvenue() && isTurning())
 				|| (!onAvenue() && !isTurning())) {
 			nextRoadSegment = intersection.outStreet;
@@ -102,9 +103,11 @@ public class Car {
 		if (onAvenue) {
 			outRoadIndex = intersection.outStreet.roadIndex;
 		} else {
-			outRoadIndex = intersection.outStreet.roadIndex;
+			outRoadIndex = intersection.outAvenue.roadIndex;
 		}
 
+//		System.out.println(String.format("oRI=%d, pi=%d, turnI=%d",
+//				outRoadIndex, pathIndex, path.turns[pathIndex]));
 		if (outRoadIndex == path.turns[pathIndex]) {
 			return true;
 		} else {
@@ -171,6 +174,7 @@ public class Car {
 		CarEvent nextEvent;
 		if (nextIntersection == null) {
 			// The car is exiting:
+			System.out.println("EXITING: " + this.toString() + ", LI=" + getLaneIndex());
 			nextEvent = new CarExitEvent(this, nextTime);
 		} else {
 			// Create the next CarUpdateEvent:

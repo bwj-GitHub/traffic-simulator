@@ -134,7 +134,7 @@ public class TrafficGrid implements EventHandler{
 		} else if (event instanceof CarUpdateEvent) {
 			// Handle CarUpdateEvent
 			CarEvent nextEvent = handleCheckIntersectionEvent(
-					(CarUpdateEvent) event);
+					(CarUpdateEvent) event);			
 			nextEvents = new Event[] {nextEvent};
 		} else if (event instanceof CarExitEvent) {
 			// Handle CarExitEvent
@@ -169,8 +169,6 @@ public class TrafficGrid implements EventHandler{
 			// Place newCar in the appropriate Street
 			newCarEvent = streets[carPath.startIndex].handleNewCar(newCar);
 		}
-		
-		System.out.println("\nNew Car: " + newCar + " Path=" + newCar.path);
 
 		// Create next CarSpawnEvent:
 		float nextArrivalTime = getNextArrivalTime(event.time());
