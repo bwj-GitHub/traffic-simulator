@@ -33,7 +33,7 @@ public class Config {
 
 	// TODO: Add to Constructor:
 	public boolean selfManagedLights = true;
-	public int queueThreshold = 50;  // For self-managed lights
+	public int queueThreshold = 15;  // For self-managed lights
 	
 	/* Create a Config with constant distance between roads and 3 lanes. */
 	public Config(int n, int m, float timeLimit, long randomSeed,

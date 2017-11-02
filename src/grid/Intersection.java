@@ -19,6 +19,7 @@ public class Intersection {
 	public RoadSegment inStreet;
 	public RoadSegment outStreet;
 
+	public int numGreenExtensions;
 	private float lengthPerLane;
 
 	public Intersection(int row, int col, RoadSegment[] roadSegments) {
@@ -34,7 +35,7 @@ public class Intersection {
 		this.avenueLight = new TrafficLight(this, true);
 		this.streetLight = new TrafficLight(this, false);
 
-	
+		this.numGreenExtensions = 0;
 		this.lengthPerLane = 1;  // TODO: Should be function of number of lanes
 	}
 	

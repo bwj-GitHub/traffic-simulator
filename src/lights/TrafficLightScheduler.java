@@ -85,10 +85,12 @@ public class TrafficLightScheduler implements EventHandler{
 	 * Handles LightEvents when using self-managed lights.
 	 * 
 	 * Algorithm:
-	 * 	When a LightEvent is received, the queue size for each light is checked;
-	 * 	if the light that is currently green exceeds the limit, and the other does not,
-	 * 	then it will remain Green for another greenTime; otherwise, the light will
-	 * 	change as planned.
+	 * 	When a LightEvent is received, the queue size for the light that is currently
+	 *   RED will be checked, if it is above some threshold, the lights will proceed
+	 *   to change; otherwise, the intersection will increment its `numGreenExtensions`,
+	 *   if it is below 5, the light will remain unchanged, otherwise, the light will
+	 *   change -- this is to prevent a small number of cars to get stuck at an
+	 *   unchanging red light.
 	 * 
 	 * To make the TrafficLights more efficient, a RED light will not be turned GREEN
 	 *  if it has 0 Cars waiting in its queue.
@@ -97,40 +99,28 @@ public class TrafficLightScheduler implements EventHandler{
 	 */
 	private Event[] handleSelfManagedLights(LightEvent event) {
 		Intersection intersection = event.intersection;
-		TrafficLight greenLight = intersection.getGreenLight();
 		TrafficLight redLight = intersection.getRedLight();
+		int redQueueSize = redLight.getTotalQueueSize();
 
 		// If TrafficLight is yellow, update lights:
 		if (intersection.hasYellowLight()) {
 			return handleLightChange(event);
 		}
 
-		// Determine which queues exceed the queueThreshold (if any):
-		int greenQueueSize = greenLight.getTotalQueueSize();
-		int redQueueSize = redLight.getTotalQueueSize();
-		System.out.println(String.format("%d, %d", greenQueueSize, redQueueSize));
-
-		// Adjust Light colors based on which Light(s) exceeded the threshold:
-		if (greenQueueSize == 0) {
-			// Change light, as planned
+		if (redQueueSize == 0) {
+			// Keep lights as is:
+			intersection.numGreenExtensions += 1;
+			return handleSkipLightUpdate(event);
+		}
+		else if (intersection.numGreenExtensions > 3 || redQueueSize > queueThreshold) {
+			// Lights must change if they have been extended more than 5 times
+			//  or the RED light's queue size is greater than the threshold.
+			intersection.numGreenExtensions = 0;
 			return handleLightChange(event);
-		} else if (redQueueSize == 0) {
-				// Keep lights as is:
-				System.out.println("Keeping Lights the same!");
-				return handleSkipLightUpdate(event);
 		} else {
-			if (greenQueueSize > queueThreshold) {
-				if (redQueueSize > queueThreshold) {
-					// Change light, as planned:
-					return handleLightChange(event);
-				} else {
-					// Keep lights as is:
-					return handleSkipLightUpdate(event);
-				}
-			} else {
-				// Change light, as planned:
-				return handleLightChange(event);
-			}
+			// Keep light the same:
+			intersection.numGreenExtensions += 1;
+			return handleSkipLightUpdate(event);
 		}
 	}
 	
