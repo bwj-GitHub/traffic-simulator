@@ -10,6 +10,11 @@ public class EventQueue {
 		queue.add(e);
 	}
 	
+	public void remove(Event e)
+	{
+		queue.remove(e);
+	}
+	
 	public Event peek()
 	{
 		return queue.peek();
