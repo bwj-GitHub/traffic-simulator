@@ -38,7 +38,15 @@ public class TrafficLight {
 	public boolean isGreen() {
 		// TODO: Once acceleration is implemented, YELLOW should no longer count
 		//  as GREEN.
-		if (color == LightColor.GREEN || color == LightColor.YELLOW) {
+		if (color == LightColor.GREEN) {
+			return true;
+		} else {
+			return false;
+		}
+	}
+	
+	public boolean isRed() {
+		if (color == LightColor.RED) {
 			return true;
 		} else {
 			return false;

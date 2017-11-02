@@ -223,8 +223,9 @@ public class TrafficGrid implements EventHandler{
 				roadSegment.isAvenue);
 
 		// Determine car's next Event, based on trafficLight's color:
-		if ((car.onAvenue() && intersection.avenueLight.isGreen()) ||
-				(!car.onAvenue() && intersection.streetLight.isGreen())) {
+		// TODO: Once acceleration is implemented, yellow should behave differently
+		if ((car.onAvenue() && !intersection.avenueLight.isRed()) ||
+				(!car.onAvenue() && !intersection.streetLight.isRed())) {
 			// Light is green, check if the intersection can be crossed:
 			RoadSegment nextRoadSegment = car.getNextRoadSegment();
 			Intersection nextIntersection = nextRoadSegment.outIntersection;

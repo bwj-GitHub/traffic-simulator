@@ -26,6 +26,7 @@ public class TrafficLightScheduler implements EventHandler{
 		this.yellowTime = config.yellowTime;
 	}
 
+	// TODO: Refactor for simultaneous light updates
 	@Override
 	public Event[] handleEvent(Event event) {
 		// NOTE: Light's colors change independently of one another;
@@ -80,6 +81,7 @@ public class TrafficLightScheduler implements EventHandler{
 		return initLights(initialLightStatus);
 	}
 
+	// TODO: Refactor for simultaneous light updates
 	public Event[] initLights(boolean[][] initialLightStatus) {
 		int n = intersections.length;
 		int m = intersections[0].length;
