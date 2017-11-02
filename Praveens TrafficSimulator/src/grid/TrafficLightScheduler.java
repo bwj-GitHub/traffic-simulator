@@ -15,18 +15,79 @@ public class TrafficLightScheduler {
 			for(int j=0;j<numstreets;j++)
 			{
 			//	System.out.println("Inside loop with i"+i+" j "+j);
-				// Three cases : Light is red,green,yellow.
-				// We need to do additional things when light changes from one color to another.
 				TrafficLight light1=grid.getIntersection(i, j).getlight1();
 				TrafficLight light2=grid.getIntersection(i, j).getlight2();
+				light1.unsetFlag();
+				light2.unsetFlag();
 				if(light1.getCurrentLightColor()==lightcolor.green)
 				{
 					light1.decRemainingtime();
+					if(light1.getLLCarsToMove()>0)
+					{
+						if(light1.getLeftLaneSize()!=0)
+						{
+						Car c=light1.getLeftLane().get(0);
+						if(c.getState()==0)
+						{
+							if( c.getNextLightIndex()==c.path.size() ||(c.getCurrentLane()==lane.middle && c.path.get(c.getNextLightIndex()).getMiddleLaneSize()<=c.getCurrentLight().getLaneLimit()) || ( c.getCurrentLane()!=lane.middle &&(c.path.get(c.getNextLightIndex()).getNumberOfTurningCars()<=c.getCurrentLight().getLaneLimit())))
+							{
+								int check=c.getCurrentLight().removecar(c, currenttime);
+								c.moving();
+								if(check==1)
+									eventqueue.add(c.generateCarUpdateEvent(currenttime));
+							}
+						}
+						light1.decLLCarsToMove();
+						}
+					}
+					
+					if(light1.getMLCarsToMove()>0)
+					{
+						if(light1.getMiddleLaneSize()!=0)
+						{
+						Car c=light1.getMiddleLane().get(0);
+						if(c.getState()==0)
+						{
+							if( c.getNextLightIndex()==c.path.size() ||(c.getCurrentLane()==lane.middle && c.path.get(c.getNextLightIndex()).getMiddleLaneSize()<=c.getCurrentLight().getLaneLimit()) || ( c.getCurrentLane()!=lane.middle &&(c.path.get(c.getNextLightIndex()).getNumberOfTurningCars()<=c.getCurrentLight().getLaneLimit())))
+							{
+								int check=c.getCurrentLight().removecar(c, currenttime);
+								c.moving();
+								if(check==1)
+									eventqueue.add(c.generateCarUpdateEvent(currenttime));
+							}
+						}
+						light1.decMLCarsToMove();
+						}
+					}
+					
+					if(light1.getRLCarsToMove()>0)
+					{
+						if(light1.getRightLaneSize()!=0)
+						{
+						Car c=light1.getRightLane().get(0);
+						if(c.getState()==0)
+						{
+							if( c.getNextLightIndex()==c.path.size() ||(c.getCurrentLane()==lane.middle && c.path.get(c.getNextLightIndex()).getMiddleLaneSize()<=c.getCurrentLight().getLaneLimit()) || ( c.getCurrentLane()!=lane.middle &&(c.path.get(c.getNextLightIndex()).getNumberOfTurningCars()<=c.getCurrentLight().getLaneLimit())))
+							{
+								int check=c.getCurrentLight().removecar(c, currenttime);
+								c.moving();
+								if(check==1)
+									eventqueue.add(c.generateCarUpdateEvent(currenttime));
+							}
+						}
+						light1.decRLCarsToMove();
+						}
+					}
 					if(light1.getRemainingTime()==0) // Change light to yellow.
 					{
-						// Set light to yellow and move the front car of each lane to next traffic light.
-					//	System.out.println("Changing light1 to yellow at time:"+currenttime);
 						light1.setlighttoyellow();
+					}
+				}
+				else if(light1.getCurrentLightColor()==lightcolor.yellow)
+				{
+					light1.decRemainingtime();
+					if(light1.getRemainingTime()==light1.getYellowTime()-1)
+					{
 						ArrayList<Car> leftlane=light1.getLeftLane();
 						ArrayList<Car> middlelane=light1.getMiddleLane();
 						ArrayList<Car> rightlane=light1.getRightLane();
@@ -35,10 +96,13 @@ public class TrafficLightScheduler {
 						Car c1=leftlane.get(0);
 						if(c1.getState()==0)
 						{
-						int check=c1.getCurrentLight().removecar(c1, currenttime);
-						c1.moving();
-						if(check==1)
-						eventqueue.add(c1.generateCarUpdateEvent(currenttime));
+							if( c1.getNextLightIndex()==c1.path.size() ||(c1.getCurrentLane()==lane.middle && c1.path.get(c1.getNextLightIndex()).getMiddleLaneSize()<=c1.getCurrentLight().getLaneLimit()) || ( c1.getCurrentLane()!=lane.middle &&(c1.path.get(c1.getNextLightIndex()).getNumberOfTurningCars()<=c1.getCurrentLight().getLaneLimit())))
+							{
+								int check=c1.getCurrentLight().removecar(c1, currenttime);
+								c1.moving();
+								if(check==1) //If car is not exiting grid.
+									eventqueue.add(c1.generateCarUpdateEvent(currenttime));
+							}
 						}
 						}
 						if(middlelane.size()!=0)
@@ -46,10 +110,13 @@ public class TrafficLightScheduler {
 						Car c2=middlelane.get(0);
 						if(c2.getState()==0)
 						{
-						int check=c2.getCurrentLight().removecar(c2, currenttime);
-						c2.moving();
-						if(check==1)
-						eventqueue.add(c2.generateCarUpdateEvent(currenttime));
+							if( c2.getNextLightIndex()==c2.path.size() ||(c2.getCurrentLane()==lane.middle && c2.path.get(c2.getNextLightIndex()).getMiddleLaneSize()<=c2.getCurrentLight().getLaneLimit()) || ( c2.getCurrentLane()!=lane.middle &&(c2.path.get(c2.getNextLightIndex()).getNumberOfTurningCars()<=c2.getCurrentLight().getLaneLimit())))
+							{
+								int check=c2.getCurrentLight().removecar(c2, currenttime);
+								c2.moving();
+								if(check==1)
+									eventqueue.add(c2.generateCarUpdateEvent(currenttime));
+							}
 						}
 						}
 						if(rightlane.size()!=0)
@@ -57,17 +124,16 @@ public class TrafficLightScheduler {
 						Car c3=rightlane.get(0);
 						if(c3.getState()==0)
 						{
-						int check=c3.getCurrentLight().removecar(c3, currenttime);
-						c3.moving();
-						if(check==1)
-						eventqueue.add(c3.generateCarUpdateEvent(currenttime));
+							if( c3.getNextLightIndex()==c3.path.size() ||(c3.getCurrentLane()==lane.middle && c3.path.get(c3.getNextLightIndex()).getMiddleLaneSize()<=c3.getCurrentLight().getLaneLimit()) || ( c3.getCurrentLane()!=lane.middle &&(c3.path.get(c3.getNextLightIndex()).getNumberOfTurningCars()<=c3.getCurrentLight().getLaneLimit())))
+							{
+								int check=c3.getCurrentLight().removecar(c3, currenttime);
+								c3.moving();
+								if(check==1)
+									eventqueue.add(c3.generateCarUpdateEvent(currenttime));
+							}
 						}
 						}
 					}
-				}
-				else if(light1.getCurrentLightColor()==lightcolor.yellow)
-				{
-					light1.decRemainingtime();
 					if(light1.getRemainingTime()==0) // Change light to red.
 					{
 						// Set light to red.
@@ -94,114 +160,29 @@ public class TrafficLightScheduler {
 						int numcars=((remainingtime*carspeed)+carspacing)/(carlength+carspacing);
 						if(numcars<num1)
 						{
-							int index=0;
-							for(int temp=0;temp<numcars;temp++)
-							{
-								int t=((carlength+carspacing)*temp)/carspeed;
-								
-								Car c=light1.getLeftLane().get(index);
-								index++;
-								if(c.getState()==0)
-								{
-								index=0; // If a car in queue is moving we should not process it and in next iteration we should retrieve next index car,otherwise retrieve car at index 0.	
-								int check=c.getCurrentLight().removecar(c, currenttime+t);
-								c.moving();
-								if(check==1)
-								eventqueue.add(c.generateCarUpdateEvent(currenttime+t));
-								}
-							}
+							light1.setLLCarsToMove(numcars);
 						}
 						else
 						{
-							int index=0;
-							for(int temp=0;temp<num1;temp++)
-							{
-								int t=((carlength+carspacing)*temp)/carspeed;
-								Car c=light1.getLeftLane().get(index);
-								index++;
-								if(c.getState()==0)
-								{
-								index=0;	
-								int check=c.getCurrentLight().removecar(c, currenttime+t);
-								c.moving();
-								if(check==1)
-								eventqueue.add(c.generateCarUpdateEvent(currenttime+t));
-								}
-							}
+							light1.setLLCarsToMove(num1);
 						}
 						
 						if(numcars<num2)
 						{
-							int index=0;
-							for(int temp=0;temp<numcars;temp++)
-							{
-								int t=((carlength+carspacing)*temp)/carspeed;
-								Car c=light1.getMiddleLane().get(index);
-								index++;
-								if(c.getState()==0)
-								{
-								index=0;	
-								int check=c.getCurrentLight().removecar(c, currenttime+t);
-								c.moving();
-								if(check==1)
-								eventqueue.add(c.generateCarUpdateEvent(currenttime+t));
-								}
-							}
+							light1.setMLCarsToMove(numcars);
 						}
 						else
 						{
-							int index=0;
-							for(int temp=0;temp<num2;temp++)
-							{
-								int t=((carlength+carspacing)*temp)/carspeed;
-								Car c=light1.getMiddleLane().get(index);
-								index++;
-								if(c.getState()==0)
-								{
-								index=0;	
-								int check=c.getCurrentLight().removecar(c, currenttime+t);
-								c.moving();
-								if(check==1)
-								eventqueue.add(c.generateCarUpdateEvent(currenttime+t));
-								}
-							}
+							light1.setMLCarsToMove(num2);
 						}
 						
 						if(numcars<num3)
 						{
-							int  index=0;
-							for(int temp=0;temp<numcars;temp++)
-							{
-								int t=((carlength+carspacing)*temp)/carspeed;
-								Car c=light1.getRightLane().get(index);
-								index++;
-								if(c.getState()==0)
-								{
-								index=0;	
-								int check=c.getCurrentLight().removecar(c, currenttime+t);
-								c.moving();
-								if(check==1)
-								eventqueue.add(c.generateCarUpdateEvent(currenttime+t));
-								}
-							}
+							light1.setRLCarsToMove(numcars);
 						}
 						else
 						{
-							int index=0;
-							for(int temp=0;temp<num3;temp++)
-							{
-								int t=((carlength+carspacing)*temp)/carspeed;
-								Car c=light1.getRightLane().get(index);
-								index++;
-								if(c.getState()==0)
-								{
-								index=0;	
-								int check=c.getCurrentLight().removecar(c, currenttime+t);
-								c.moving();
-								if(check==1)
-								eventqueue.add(c.generateCarUpdateEvent(currenttime+t));
-								}
-							}
+							light1.setRLCarsToMove(num3);
 						}
 					}
 				}
@@ -209,10 +190,78 @@ public class TrafficLightScheduler {
 				if(light2.getCurrentLightColor()==lightcolor.green)
 				{
 					light2.decRemainingtime();
+					
+					if(light2.getLLCarsToMove()>0)
+					{
+						if(light2.getLeftLaneSize()!=0)
+						{
+						Car c=light2.getLeftLane().get(0);
+						if(c.getState()==0)
+						{	
+							if( c.getNextLightIndex()==c.path.size() ||(c.getCurrentLane()==lane.middle && c.path.get(c.getNextLightIndex()).getMiddleLaneSize()<=c.getCurrentLight().getLaneLimit()) || ( c.getCurrentLane()!=lane.middle &&(c.path.get(c.getNextLightIndex()).getNumberOfTurningCars()<=c.getCurrentLight().getLaneLimit())))
+							{
+								int check=c.getCurrentLight().removecar(c, currenttime);
+								c.moving();
+								if(check==1)
+									eventqueue.add(c.generateCarUpdateEvent(currenttime));
+							}
+						}
+						light2.decLLCarsToMove();
+						}
+					}
+					
+					if(light2.getMLCarsToMove()>0)
+					{
+						if(light2.getMiddleLaneSize()!=0)
+						{
+						Car c=light2.getMiddleLane().get(0);
+						if(c.getState()==0)
+						{	
+							if( c.getNextLightIndex()==c.path.size() ||(c.getCurrentLane()==lane.middle && c.path.get(c.getNextLightIndex()).getMiddleLaneSize()<=c.getCurrentLight().getLaneLimit()) || ( c.getCurrentLane()!=lane.middle &&(c.path.get(c.getNextLightIndex()).getNumberOfTurningCars()<=c.getCurrentLight().getLaneLimit())))
+							{
+								int check=c.getCurrentLight().removecar(c, currenttime);
+								c.moving();
+								if(check==1)
+									eventqueue.add(c.generateCarUpdateEvent(currenttime));
+							}
+						}
+						light2.decMLCarsToMove();
+						}
+					}
+					
+					if(light2.getRLCarsToMove()>0)
+					{
+						if(light2.getRightLaneSize()!=0)
+						{
+						Car c=light2.getRightLane().get(0);
+						if(c.getState()==0)
+						{	
+							if( c.getNextLightIndex()==c.path.size() ||(c.getCurrentLane()==lane.middle && c.path.get(c.getNextLightIndex()).getMiddleLaneSize()<=c.getCurrentLight().getLaneLimit()) || ( c.getCurrentLane()!=lane.middle &&(c.path.get(c.getNextLightIndex()).getNumberOfTurningCars()<=c.getCurrentLight().getLaneLimit())))
+							{
+								int check=c.getCurrentLight().removecar(c, currenttime);
+								c.moving();
+								if(check==1)
+									eventqueue.add(c.generateCarUpdateEvent(currenttime));
+							}
+						}
+						light2.decRLCarsToMove();
+						}
+					}
+					
+					//We need to move cars from front of each lane.
+					
 					if(light2.getRemainingTime()==0) // Change light to yellow.
 					{
 						// Set light to yellow and move the front car of each lane to next traffic light.
 						light2.setlighttoyellow();
+						
+					}
+				}
+				else if(light2.getCurrentLightColor()==lightcolor.yellow)
+				{
+					light2.decRemainingtime();
+					if(light2.getRemainingTime()==light2.getYellowTime()-1)
+					{
 						ArrayList<Car> leftlane=light2.getLeftLane();
 						ArrayList<Car> middlelane=light2.getMiddleLane();
 						ArrayList<Car> rightlane=light2.getRightLane();
@@ -221,10 +270,13 @@ public class TrafficLightScheduler {
 						Car c1=light2.getLeftLane().get(0);
 						if(c1.getState()==0)
 						{
-						int check=c1.getCurrentLight().removecar(c1, currenttime);
-						c1.moving();
-						if(check==1)
-						eventqueue.add(c1.generateCarUpdateEvent(currenttime));
+							if( c1.getNextLightIndex()==c1.path.size() ||(c1.getCurrentLane()==lane.middle && c1.path.get(c1.getNextLightIndex()).getMiddleLaneSize()<=c1.getCurrentLight().getLaneLimit()) || ( c1.getCurrentLane()!=lane.middle &&(c1.path.get(c1.getNextLightIndex()).getNumberOfTurningCars()<=c1.getCurrentLight().getLaneLimit())))
+							{
+								int check=c1.getCurrentLight().removecar(c1, currenttime);
+								c1.moving();
+								if(check==1)
+									eventqueue.add(c1.generateCarUpdateEvent(currenttime));
+							}
 						}
 						}
 						if(middlelane.size()!=0)
@@ -232,10 +284,13 @@ public class TrafficLightScheduler {
 						Car c2=middlelane.get(0);
 						if(c2.getState()==0)
 						{
-						int check=c2.getCurrentLight().removecar(c2, currenttime);
-						c2.moving();
-						if(check==1)
-						eventqueue.add(c2.generateCarUpdateEvent(currenttime));
+							if( c2.getNextLightIndex()==c2.path.size() ||(c2.getCurrentLane()==lane.middle && c2.path.get(c2.getNextLightIndex()).getMiddleLaneSize()<=c2.getCurrentLight().getLaneLimit()) || ( c2.getCurrentLane()!=lane.middle &&(c2.path.get(c2.getNextLightIndex()).getNumberOfTurningCars()<=c2.getCurrentLight().getLaneLimit())))
+							{
+								int check=c2.getCurrentLight().removecar(c2, currenttime);
+								c2.moving();
+								if(check==1)
+									eventqueue.add(c2.generateCarUpdateEvent(currenttime));
+							}
 						}
 						}
 						if(rightlane.size()!=0)
@@ -243,18 +298,17 @@ public class TrafficLightScheduler {
 						Car c3=rightlane.get(0);
 						if(c3.getState()==0)
 						{
-						int check=c3.getCurrentLight().removecar(c3, currenttime);
-						c3.moving();
-						if(check==1)
-						eventqueue.add(c3.generateCarUpdateEvent(currenttime));
+							if( c3.getNextLightIndex()==c3.path.size() ||(c3.getCurrentLane()==lane.middle && c3.path.get(c3.getNextLightIndex()).getMiddleLaneSize()<=c3.getCurrentLight().getLaneLimit()) || ( c3.getCurrentLane()!=lane.middle &&(c3.path.get(c3.getNextLightIndex()).getNumberOfTurningCars()<=c3.getCurrentLight().getLaneLimit())))
+							{
+								int check=c3.getCurrentLight().removecar(c3, currenttime);
+								c3.moving();
+								if(check==1)
+									eventqueue.add(c3.generateCarUpdateEvent(currenttime));
+							}
 						
 						}
 						}
 					}
-				}
-				else if(light2.getCurrentLightColor()==lightcolor.yellow)
-				{
-					light2.decRemainingtime();
 					if(light2.getRemainingTime()==0) // Change light to red.
 					{
 						light2.setlighttored();
@@ -276,114 +330,29 @@ public class TrafficLightScheduler {
 						int numcars=((remainingtime*carspeed)+carspacing)/(carlength+carspacing);
 						if(numcars<num1)
 						{
-							int index=0;
-							for(int temp=0;temp<numcars;temp++)
-							{
-								int t=((carlength+carspacing)*temp)/carspeed;
-								Car c=light2.getLeftLane().get(index);
-								index++;
-								if(c.getState()==0)
-								{
-								index=0;	
-								int check=c.getCurrentLight().removecar(c, currenttime+t);
-								c.moving();
-								if(check==1)
-								eventqueue.add(c.generateCarUpdateEvent(currenttime+t));
-								}
-							}
+							light2.setLLCarsToMove(numcars);
 						}
 						else
 						{
-							int index=0;
-							for(int temp=0;temp<num1;temp++)
-							{
-								int t=((carlength+carspacing)*temp)/carspeed;
-								Car c=light2.getLeftLane().get(index);
-								index++;
-								if(c.getState()==0)
-								{
-								index=0;	
-								int check=c.getCurrentLight().removecar(c, currenttime+t);
-								c.moving();
-								if(check==1)
-								eventqueue.add(c.generateCarUpdateEvent(currenttime+t));
-								}
-							}
+							light1.setLLCarsToMove(num1);
 						}
 						
 						if(numcars<num2)
 						{
-							int index=0;
-							for(int temp=0;temp<numcars;temp++)
-							{
-								int t=((carlength+carspacing)*temp)/carspeed;
-								Car c=light2.getMiddleLane().get(index);
-								index++;
-								if(c.getState()==0)
-								{
-								index=0;	
-								int check=c.getCurrentLight().removecar(c, currenttime+t);
-								c.moving();
-								if(check==1)
-								eventqueue.add(c.generateCarUpdateEvent(currenttime+t));
-								}
-							}
+							light1.setMLCarsToMove(numcars);
 						}
 						else
 						{
-							int index=0;
-							for(int temp=0;temp<num2;temp++)
-							{
-								int t=((carlength+carspacing)*temp)/carspeed;
-								Car c=light2.getMiddleLane().get(index);
-								index++;
-								if(c.getState()==0)
-								{
-								index=0;
-								int check=c.getCurrentLight().removecar(c, currenttime+t);
-								c.moving();
-								if(check==1)
-								eventqueue.add(c.generateCarUpdateEvent(currenttime+t));
-								}
-							}
+							light1.setMLCarsToMove(num2);
 						}
 						
 						if(numcars<num3)
 						{
-							int index=0;
-							for(int temp=0;temp<numcars;temp++)
-							{
-								int t=((carlength+carspacing)*temp)/carspeed;
-								Car c=light2.getRightLane().get(index);
-								index++;
-								if(c.getState()==0)
-								{
-								index=0;	
-								int check=c.getCurrentLight().removecar(c, currenttime+t);
-								c.moving();
-								if(check==1)
-								eventqueue.add(c.generateCarUpdateEvent(currenttime+t));
-								}
-							}
+							light1.setRLCarsToMove(numcars);
 						}
 						else
 						{
-							int index=0;
-							for(int temp=0;temp<num3;temp++)
-							{
-								int t=((carlength+carspacing)*temp)/carspeed;
-								Car c=light2.getRightLane().get(index);
-								index++;
-								if(c.getState()==0)
-								{
-								index=0;	
-								int check=c.getCurrentLight().removecar(c, currenttime+t);
-								c.moving();
-								if(check==1)
-								eventqueue.add(c.generateCarUpdateEvent(currenttime+t));
-								}
-								
-							}
+							light1.setRLCarsToMove(num3);
 						}
 					}
 				}

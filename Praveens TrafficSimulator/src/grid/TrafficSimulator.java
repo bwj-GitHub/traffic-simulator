@@ -7,6 +7,7 @@ import events.CarUpdateEvent;
 import events.Event;
 import events.Event.eventtypeenum;
 import events.EventQueue;
+import events.LightEvent;
 import statistics.Stats;
 
 
@@ -32,6 +33,7 @@ public class TrafficSimulator {
 	private int caracceleration=5;
 	private int carlength=5;
 	private int carspacing=1;
+	private int lighteventcounter=0;
 	
 	
 	
@@ -62,7 +64,7 @@ public class TrafficSimulator {
 				else if(e.getEventType()==eventtypeenum.carupdate)
 				{ // When we see car update event in queue.
 					CarUpdateEvent update= (CarUpdateEvent) e;
-					ArrayList<Event> list=trafficgrid.handleCarUpdateEvent(update,currenttime);
+					ArrayList<Event> list=trafficgrid.handleCarUpdateEvent(update,currenttime,eventqueue);
 					if(!list.isEmpty())
 					{
 						for(Event ev:list)
@@ -73,7 +75,17 @@ public class TrafficSimulator {
 				}
 				else // trafficlight update event.
 				{
-					// For other algorithms except dumb scheduling.
+					lighteventcounter++;
+					System.out.println("We are in traffic light update event");
+					LightEvent le= (LightEvent) e;
+					System.out.println("Setting light at the following position to green:");
+					le.getLight().printpos();
+					System.out.println(" ");
+					le.getLight().setlighttogreen();
+					System.out.println("Setting other light at following position to red:");
+					le.getLight().printpos();
+					System.out.println(" ");
+					le.getLight().getOtherLight().setlighttored();
 				}
 			}
 			}
@@ -150,7 +162,7 @@ public class TrafficSimulator {
 		}
 		
 		System.out.println("The number of cars which exited grid are :"+count+", The avg time spent in grid is:"+avg);
-		
+		System.out.println("Number of traffic light update events are :"+s.lighteventcounter);
 	}
 
 
