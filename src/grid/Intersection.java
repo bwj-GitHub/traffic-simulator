@@ -2,7 +2,9 @@ package grid;
 
 import cars.Car;
 import events.Event;
+import events.carEvents.CarEvent;
 import events.lightEvents.LightEvent;
+import lights.LightColor;
 import lights.TrafficLight;
 
 public class Intersection {
@@ -49,10 +51,27 @@ public class Intersection {
 		this.inStreet.outIntersection = this;
 	}
 
-	public Event[] handleLightEvent(LightEvent event) {
-		// When a light changes color, we need to alert their respective trafficQueues
-		TrafficLight light = event.light;
-		return light.updateLight(event);
+	public CarEvent[] handleLightEvent(LightEvent event) {
+		// Determine the color of each light:
+		TrafficLight greenYellowLight;  // green or yellow
+		TrafficLight redLight;
+		if (avenueLight.isRed()) {
+			redLight = avenueLight;
+			greenYellowLight = streetLight;
+		} else {
+			redLight = streetLight;
+			greenYellowLight = avenueLight;
+		}
+		// Change light colors and update TrafficQueues
+		if (greenYellowLight.isGreen()) {
+			// Change GREEN light to YELLOW
+			greenYellowLight.updateLight(event, LightColor.YELLOW);
+			return null;
+		} else {
+			// Change YELLOW light to RED, and RED to GREEN
+			greenYellowLight.updateLight(event, LightColor.RED);
+			return redLight.updateLight(event, LightColor.GREEN);
+		}
 	}
 
 	public float getLength(boolean avenue) {
@@ -65,6 +84,18 @@ public class Intersection {
 			return this.avenueLight;
 		} else {
 			return this.streetLight;
+		}
+	}
+	
+	/**
+	 * Return true if one of this Intersections TrafficLights is Yellow
+	 * @return
+	 */
+	public boolean hasYellowLight() {
+		if (avenueLight.isYellow() || streetLight.isYellow()) {
+			return true;
+		} else {
+			return false;
 		}
 	}
 

@@ -85,8 +85,8 @@ public class TestSimulation {
 		assert nextEvents[0] == null;  // The light is Red
 
 		// Cycle Light at intersection[2][1]:
-		TrafficLight light = grid.intersections[2][1].getTrafficLight(true);
-		nextEvents = tls.handleEvent(new LightEvent(30.0f, light, LightColor.GREEN));
+		tls.handleEvent(new LightEvent(25.0f, grid.intersections[2][1]));
+		nextEvents = tls.handleEvent(new LightEvent(30.0f, grid.intersections[2][1]));
 		updateEvent = checkUpdateEvent(nextEvents[1], 30.0f, 2, 1);
 
 		// Check event for next Intersection:
@@ -141,9 +141,8 @@ public class TestSimulation {
 		assert car2Events[0] == null;  // The light is still Red
 
 		// Cycle Light at intersection[2][1]:
-		TrafficLight light = grid.intersections[2][1].getTrafficLight(true);
-		Event[] nextEvents = tls.handleEvent(
-				new LightEvent(30.0f, light, LightColor.GREEN));
+		tls.handleEvent(new LightEvent(25.0f, grid.intersections[2][1]));
+		Event[] nextEvents = tls.handleEvent(new LightEvent(30.0f, grid.intersections[2][1]));
 		// Expecting 1 LightEvent and 2 new carUpdateEvents
 		updateEvent = checkUpdateEvent(nextEvents[1], 30.0f, 2, 1);
 		updateEvent2 = checkUpdateEvent(nextEvents[2], 30.2f, 2, 1);
@@ -195,10 +194,9 @@ public class TestSimulation {
 		}
 
 		// Cycle Light Green
-		TrafficLight light = grid.intersections[2][1].getTrafficLight(true);
 		Event[] lightUpdateEvents;
-		lightUpdateEvents = tls.handleEvent(
-				new LightEvent(30.0f, light, LightColor.GREEN));
+		tls.handleEvent(new LightEvent(25.0f, grid.intersections[2][1]));
+		lightUpdateEvents = tls.handleEvent(new LightEvent(30.0f, grid.intersections[2][1]));
 		for (int i = 1; i < 7; i++) {  // Note: first event is next LightUpdateEvent
 			nextEvents[i-1] = (CarUpdateEvent) lightUpdateEvents[i];
 		}

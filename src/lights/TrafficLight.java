@@ -29,7 +29,7 @@ public class TrafficLight {
 			trafficQueues[i] = new TrafficQueue(maxCars, intersection, i);
 		}
 	}
-	
+
 	public String toString() {
 		return String.format("TrafficLight(%s, %b)", intersection.toString(),
 				isAvenueLight);
@@ -44,7 +44,7 @@ public class TrafficLight {
 			return false;
 		}
 	}
-	
+
 	public boolean isRed() {
 		if (color == LightColor.RED) {
 			return true;
@@ -52,19 +52,27 @@ public class TrafficLight {
 			return false;
 		}
 	}
-	
+
+	public boolean isYellow() {
+		if (color == LightColor.YELLOW) {
+			return true;
+		} else {
+			return false;
+		}
+	}
+
 	public boolean isQueueFull(int laneIndex) {
 		return trafficQueues[laneIndex].isFull();
 	}
-	
+
 	public void addCarToTrafficQueue(Car car) {
 		trafficQueues[car.getLaneIndex()].addCar(car);
 	}
 
-	public CarEvent[] updateLight(LightEvent event) {
+	public CarEvent[] updateLight(LightEvent event, LightColor color) {
 		ArrayList<CarEvent> carEvents = new ArrayList<CarEvent>();
-		this.color = event.color;
-		if (event.color == LightColor.GREEN) {
+		this.color = color;
+		if (color == LightColor.GREEN) {
 			for (int i = 0; i < trafficQueues.length; i++) {
 				CarEvent[] queueEvents = trafficQueues[i].updateCars(event);
 				for (CarEvent ce: queueEvents) {

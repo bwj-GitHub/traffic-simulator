@@ -1,22 +1,19 @@
 package events.lightEvents;
 
 import events.Event;
-import lights.LightColor;
-import lights.TrafficLight;
+import grid.Intersection;
 
 public class LightEvent extends Event {
-	
-	public TrafficLight light;
-	public LightColor color;
 
-	public LightEvent(float time, TrafficLight light, LightColor color) {
+	public Intersection intersection;
+
+	public LightEvent(float time, Intersection intersection) {
 		super(time);
-		this.light = light;
-		this.color = color;
+		this.intersection = intersection;
 	}
 
 	public String toString() {
-		return "LightEvent(" + time() + "s, " + light.toString() + ", " + color +")";
+		return "LightEvent(" + time() + "s, " + intersection.toString() + ")";
 	}
 
 

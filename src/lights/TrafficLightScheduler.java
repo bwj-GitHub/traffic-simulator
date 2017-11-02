@@ -26,32 +26,23 @@ public class TrafficLightScheduler implements EventHandler{
 		this.yellowTime = config.yellowTime;
 	}
 
-	// TODO: Refactor for simultaneous light updates
 	@Override
 	public Event[] handleEvent(Event event) {
-		// NOTE: Light's colors change independently of one another;
-		//  however, they should still change colors at the same time.
-		// TODO: This will not work with different types of scheduling
 		LightEvent curEvent = (LightEvent) event;
 		LightEvent nextEvent;
-		TrafficLight light = curEvent.light;
+		Intersection intersection = curEvent.intersection;
 
-		// Update Light color (and TrafficQueue):
-		CarEvent[] carEvents = light.updateLight((LightEvent) event);
+		// Update Light colors (and TrafficQueue):
+		CarEvent[] carEvents = intersection.handleLightEvent(curEvent);
 
 		// Generate next LightEvent
-		if (curEvent.color == LightColor.GREEN) {
-			// Green turns to Yellow next
-			nextEvent = new LightEvent(event.time() + greenTime, light, LightColor.YELLOW);
-		} else if (curEvent.color == LightColor.YELLOW) {
-			// Yellow to Red
-			nextEvent = new LightEvent(event.time() + yellowTime, light, LightColor.RED);
+		// NOTE: The lights will change state after either green or yellow Time
+		if (intersection.hasYellowLight()) {
+			nextEvent = new LightEvent(event.time() + yellowTime, intersection);
 		} else {
-			// Red to Green
-			nextEvent = new LightEvent(event.time() + greenTime + yellowTime,
-					light, LightColor.GREEN);
+			nextEvent = new LightEvent(event.time() + greenTime, intersection);
 		}
-		
+
 		// Combine CarEvents with LightEvent:
 		if (carEvents != null) {
 			Event[] nextEvents = new Event[carEvents.length + 1];
@@ -81,7 +72,6 @@ public class TrafficLightScheduler implements EventHandler{
 		return initLights(initialLightStatus);
 	}
 
-	// TODO: Refactor for simultaneous light updates
 	public Event[] initLights(boolean[][] initialLightStatus) {
 		int n = intersections.length;
 		int m = intersections[0].length;
@@ -95,20 +85,13 @@ public class TrafficLightScheduler implements EventHandler{
 				if (initialLightStatus[i][j] == true) {
 					// Avenue is Green, Street RED
 					avenueLight.color = LightColor.GREEN;
-					lightEvents.add(new LightEvent(greenTime, avenueLight,
-							LightColor.YELLOW));
 					streetLight.color = LightColor.RED;
-					lightEvents.add(new LightEvent(greenTime + yellowTime, streetLight,
-							LightColor.GREEN));
 				} else {
 					// Avenue is Red, Street GREEN
 					avenueLight.color = LightColor.RED;
-					lightEvents.add(new LightEvent(greenTime + yellowTime, avenueLight,
-							LightColor.GREEN));
 					streetLight.color = LightColor.GREEN;
-					lightEvents.add(new LightEvent(greenTime, streetLight,
-							LightColor.YELLOW));
 				}
+				lightEvents.add(new LightEvent(greenTime, intersections[i][j]));
 			}
 		}
 		return lightEvents.toArray(new LightEvent[lightEvents.size()]);
