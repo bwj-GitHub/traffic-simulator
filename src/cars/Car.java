@@ -174,7 +174,7 @@ public class Car {
 		CarEvent nextEvent;
 		if (nextIntersection == null) {
 			// The car is exiting:
-			System.out.println("EXITING: " + this.toString() + ", LI=" + getLaneIndex());
+//			System.out.println("EXITING: " + this.toString() + ", LI=" + getLaneIndex());
 			nextEvent = new CarExitEvent(this, nextTime);
 		} else {
 			// Create the next CarUpdateEvent:

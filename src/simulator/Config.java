@@ -30,6 +30,9 @@ public class Config {
 
 	public float greenTime;   // For dumb-scheduling
 	public float yellowTime;  // "
+
+	// TODO: Add to Constructor:
+	public int queueThreshold = 15;  // For self-managed lights
 	
 	/* Create a Config with constant distance between roads and 3 lanes. */
 	public Config(int n, int m, float timeLimit, long randomSeed,
