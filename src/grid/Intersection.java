@@ -78,7 +78,40 @@ public class Intersection {
 		// TODO: should allow for variable number of lanes
 		return 3 * lengthPerLane;
 	}
+	
+	/**
+	 * Return the TrafficLight that is currently GREEN.
+	 * @return the TrafficLight that is currently GREEN; or, null if a light is
+	 * currently YELLOW.
+	 */
+	public TrafficLight getGreenLight() {
+		if (avenueLight.isGreen()) {
+			return avenueLight;
+		} else if (streetLight.isGreen()) {
+			return streetLight;
+		} else {
+			return null;
+		}
+	}
 
+	/**
+	 * Return the TrafficLight that is currently RED.
+	 * @return the TrafficLight that is currently RED.
+	 */
+	public TrafficLight getRedLight() {
+		if (avenueLight.isRed()) {
+			return avenueLight;
+		} else {
+			return streetLight;
+		}
+	}
+
+	/**
+	 * Return this intersection's avenueLight or streetLight.
+	 * @param onAvenue: indicates that the avenueLight should be returned, if true;
+	 *  otherwise, the streetLight.
+	 * @return a TrafficLight.
+	 */
 	public TrafficLight getTrafficLight(boolean onAvenue) {
 		if (onAvenue) {
 			return this.avenueLight;
@@ -86,7 +119,7 @@ public class Intersection {
 			return this.streetLight;
 		}
 	}
-	
+
 	/**
 	 * Return true if one of this Intersections TrafficLights is Yellow
 	 * @return

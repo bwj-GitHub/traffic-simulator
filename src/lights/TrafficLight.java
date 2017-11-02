@@ -34,6 +34,14 @@ public class TrafficLight {
 		return String.format("TrafficLight(%s, %b)", intersection.toString(),
 				isAvenueLight);
 	}
+	
+	public int getTotalQueueSize() {
+		int totalQueueSize = 0;
+		for (TrafficQueue queue: this.trafficQueues) {
+			totalQueueSize += queue.queue.size();
+		}
+		return totalQueueSize;
+	}
 
 	public boolean isGreen() {
 		// TODO: Once acceleration is implemented, YELLOW should no longer count
