@@ -93,9 +93,7 @@ public class TrafficSimulator {
 			// Config(int n, int m, float timeLimit, long randomSeed,
 			//		int carSpawnLimit, float lambda, float greenTime, float yellowTime,
 			//		float acceleration, float maxVelocity, int d){
-			config = new Config(3, 3, 200, 0, 5, 5.0f, 20.0f, 5.0f, 1, 5, 20);
-			// 20x20: 258.18
-			// 12x12: 157.97
+			config = new Config(20, 20, 10000, 0, 10000, 400.0f, 20.0f, 5.0f, 1, 5, 100);
 		}
 
 		// Start Simulation:
