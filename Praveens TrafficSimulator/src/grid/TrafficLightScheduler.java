@@ -334,25 +334,25 @@ public class TrafficLightScheduler {
 						}
 						else
 						{
-							light1.setLLCarsToMove(num1);
+							light2.setLLCarsToMove(num1);
 						}
 						
 						if(numcars<num2)
 						{
-							light1.setMLCarsToMove(numcars);
+							light2.setMLCarsToMove(numcars);
 						}
 						else
 						{
-							light1.setMLCarsToMove(num2);
+							light2.setMLCarsToMove(num2);
 						}
 						
 						if(numcars<num3)
 						{
-							light1.setRLCarsToMove(numcars);
+							light2.setRLCarsToMove(numcars);
 						}
 						else
 						{
-							light1.setRLCarsToMove(num3);
+							light2.setRLCarsToMove(num3);
 						}
 					}
 				}
