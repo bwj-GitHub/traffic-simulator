@@ -1,5 +1,5 @@
 package grid;
 
-public enum LightColor {
+public enum lightcolor {
 red,green,yellow
 }

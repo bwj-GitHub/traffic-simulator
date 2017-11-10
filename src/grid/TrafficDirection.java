@@ -1,5 +1,5 @@
 package grid;
 
-public enum TrafficDirection {
+public enum trafficdirection {
 we,ew,ns,sn
 }

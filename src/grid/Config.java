@@ -1,4 +1,4 @@
-package simulator;
+package grid;
 import java.io.File;
 import java.io.FileNotFoundException;
 import java.util.Scanner;

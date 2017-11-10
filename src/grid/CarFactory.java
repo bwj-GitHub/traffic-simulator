@@ -6,7 +6,6 @@ import java.util.Random;
 import events.CarSpawnEvent;
 import events.Event;
 import events.Event.eventtypeenum;
-import simulator.Config;
 import events.EventQueue;
 
 
@@ -21,9 +20,9 @@ public class CarFactory {
 		this.config=config;
 		ArrayList<Intersection> entrys=new ArrayList<Intersection>();
 		ArrayList<TrafficLight> path=new ArrayList<TrafficLight>();
-		Lane l1 = null;
-		Lane l2=null;
-		Lane l3=null;
+		lane l1 = null;
+		lane l2=null;
+		lane l3=null;
 		TrafficLight turn1;
 		int turncounter1=0;
 		int turncounter2=0;
@@ -59,7 +58,7 @@ public class CarFactory {
 		Intersection e=entrys.get(r.nextInt(numavenues+numstreets));
 		if (numofturns==0)
 		{
-			l1=Lane.middle;
+			l1=lane.middle;
 			if(e.getypos()==0 && e.getxpos()!=0)
 			{
 				int i=e.getxpos();
@@ -137,7 +136,7 @@ public class CarFactory {
 		
 		else if(numofturns==1)
 		{
-			l2=Lane.middle;
+			l2=lane.middle;
 			int offset=r.nextInt(numavenues); //Randomly determine an intersection to turn.
 		//	System.out.println("Offset value is :"+offset);
 			if(e.getypos()==0 && e.getxpos()!=0)
@@ -155,9 +154,9 @@ public class CarFactory {
 				}
 				turncounter1=path.size();
 				j--;
-				if(path.get(path.size()-1).getOtherLight().getTrafficDirection()==TrafficDirection.ns)
+				if(path.get(path.size()-1).getOtherLight().getTrafficDirection()==trafficdirection.ns)
 				{
-					l1=Lane.right;
+					l1=lane.right;
 					i++;
 					while(i<numavenues)
 					{
@@ -168,7 +167,7 @@ public class CarFactory {
 				
 				else
 				{
-					l1=Lane.left;
+					l1=lane.left;
 					i--;
 					while(i>=0)
 					{
@@ -193,9 +192,9 @@ public class CarFactory {
 				}
 				turncounter1=path.size();
 				i--;
-				if(path.get(path.size()-1).getOtherLight().getTrafficDirection()==TrafficDirection.we)
+				if(path.get(path.size()-1).getOtherLight().getTrafficDirection()==trafficdirection.we)
 				{
-					l1=Lane.left;
+					l1=lane.left;
 					j++;
 					while(j<numstreets)
 					{
@@ -206,7 +205,7 @@ public class CarFactory {
 				
 				else
 				{
-					l1=Lane.right;
+					l1=lane.right;
 					j--;
 					while(j>=0)
 					{
@@ -231,9 +230,9 @@ public class CarFactory {
 				}
 				turncounter1=path.size();
 				j++;
-				if(path.get(path.size()-1).getOtherLight().getTrafficDirection()==TrafficDirection.ns)
+				if(path.get(path.size()-1).getOtherLight().getTrafficDirection()==trafficdirection.ns)
 				{
-					l1=Lane.left;
+					l1=lane.left;
 					i++;
 					while(i<numavenues)
 					{
@@ -244,7 +243,7 @@ public class CarFactory {
 				
 				else
 				{
-					l1=Lane.right;
+					l1=lane.right;
 					i--;
 					while(i>=0)
 					{
@@ -268,9 +267,9 @@ public class CarFactory {
 				}
 				turncounter1=path.size();
 				i--;
-				if(path.get(path.size()-1).getOtherLight().getTrafficDirection()==TrafficDirection.we)
+				if(path.get(path.size()-1).getOtherLight().getTrafficDirection()==trafficdirection.we)
 				{
-					l1=Lane.left;
+					l1=lane.left;
 					j++;
 					while(j<numstreets)
 					{
@@ -281,7 +280,7 @@ public class CarFactory {
 				
 				else
 				{
-					l1=Lane.right;
+					l1=lane.right;
 					j--;
 					while(j>=0)
 					{
@@ -305,9 +304,9 @@ public class CarFactory {
 				}
 				turncounter1=path.size();
 				i++;
-				if(path.get(path.size()-1).getOtherLight().getTrafficDirection()==TrafficDirection.we)
+				if(path.get(path.size()-1).getOtherLight().getTrafficDirection()==trafficdirection.we)
 				{
-					l1=Lane.right;
+					l1=lane.right;
 					j++;
 					while(j<numstreets)
 					{
@@ -318,7 +317,7 @@ public class CarFactory {
 				
 				else
 				{
-					l1=Lane.left;
+					l1=lane.left;
 					j--;
 					while(j>=0)
 					{
@@ -342,9 +341,9 @@ public class CarFactory {
 				}
 				turncounter1=path.size();
 				i++;
-				if(path.get(path.size()-1).getOtherLight().getTrafficDirection()==TrafficDirection.we)
+				if(path.get(path.size()-1).getOtherLight().getTrafficDirection()==trafficdirection.we)
 				{
-					l1=Lane.right;
+					l1=lane.right;
 					j++;
 					while(j<numstreets)
 					{
@@ -355,7 +354,7 @@ public class CarFactory {
 				
 				else
 				{
-					l1=Lane.left;
+					l1=lane.left;
 					j--;
 					while(j>=0)
 					{
@@ -369,7 +368,7 @@ public class CarFactory {
 		
 		else
 		{
-			l3=Lane.middle;
+			l3=lane.middle;
 			int offset=r.nextInt(numavenues); //Randomly determine an intersection to turn.
 			int offset1;
 		//	System.out.println("Offset value is :"+offset);
@@ -388,13 +387,13 @@ public class CarFactory {
 				}
 				turncounter1=path.size();
 				j--;
-				if(path.get(path.size()-1).getOtherLight().getTrafficDirection()==TrafficDirection.ns)
+				if(path.get(path.size()-1).getOtherLight().getTrafficDirection()==trafficdirection.ns)
 				{
 					if(numavenues-i-1==0)
 						offset1=0;
 					else
 					offset1=r.nextInt(numavenues-i-1);
-					l1=Lane.right;
+					l1=lane.right;
 					i++;
 					while(i<numavenues&&offset1>=0)
 					{
@@ -404,9 +403,9 @@ public class CarFactory {
 					}
 					turncounter2=path.size();
 					i--;
-					if(path.get(path.size()-1).getOtherLight().getTrafficDirection()==TrafficDirection.we)
+					if(path.get(path.size()-1).getOtherLight().getTrafficDirection()==trafficdirection.we)
 					{
-						l2=Lane.left;
+						l2=lane.left;
 						j++;
 						while(j<numstreets)
 						{
@@ -416,7 +415,7 @@ public class CarFactory {
 					}
 					else
 					{
-						l2=Lane.right;
+						l2=lane.right;
 						j--;
 						while(j>=0)
 						{
@@ -429,7 +428,7 @@ public class CarFactory {
 				else
 				{
 					offset1=r.nextInt(i);
-					l1=Lane.left;
+					l1=lane.left;
 					i--;
 					while(i>=0&&offset1>=0)
 					{
@@ -439,9 +438,9 @@ public class CarFactory {
 					}
 					turncounter2=path.size();
 					i++;
-					if(path.get(path.size()-1).getOtherLight().getTrafficDirection()==TrafficDirection.we)
+					if(path.get(path.size()-1).getOtherLight().getTrafficDirection()==trafficdirection.we)
 					{
-						l2=Lane.right;
+						l2=lane.right;
 						j++;
 						while(j<numstreets)
 						{
@@ -451,7 +450,7 @@ public class CarFactory {
 					}
 					else
 					{
-						l2=Lane.left;
+						l2=lane.left;
 						j--;
 						while(j>=0)
 						{
@@ -477,10 +476,10 @@ public class CarFactory {
 				}
 				turncounter1=path.size();
 				i--;
-				if(path.get(path.size()-1).getOtherLight().getTrafficDirection()==TrafficDirection.we)
+				if(path.get(path.size()-1).getOtherLight().getTrafficDirection()==trafficdirection.we)
 				{
 					offset1=r.nextInt(numstreets-1);
-					l1=Lane.left;
+					l1=lane.left;
 					j++;
 					while(j<numstreets&&offset1>=0)
 					{
@@ -490,9 +489,9 @@ public class CarFactory {
 					}
 					turncounter2=path.size();
 					j--;
-					if(path.get(path.size()-1).getOtherLight().getTrafficDirection()==TrafficDirection.ns)
+					if(path.get(path.size()-1).getOtherLight().getTrafficDirection()==trafficdirection.ns)
 					{
-						l2=Lane.right;
+						l2=lane.right;
 						i++;
 						while(i<numavenues)
 						{
@@ -502,7 +501,7 @@ public class CarFactory {
 					}
 					else
 					{
-						l2=Lane.left;
+						l2=lane.left;
 						i--;
 						while(i>=0)
 						{
@@ -515,7 +514,7 @@ public class CarFactory {
 				else
 				{
 					offset1=r.nextInt(numstreets-1);
-					l1=Lane.right;
+					l1=lane.right;
 					j--;
 					while(j>=0&&offset1>=0)
 					{
@@ -541,10 +540,10 @@ public class CarFactory {
 				}
 				turncounter1=path.size();
 				j++;
-				if(path.get(path.size()-1).getOtherLight().getTrafficDirection()==TrafficDirection.ns)
+				if(path.get(path.size()-1).getOtherLight().getTrafficDirection()==trafficdirection.ns)
 				{
 					offset1=r.nextInt(numavenues-i-1);
-					l1=Lane.left;
+					l1=lane.left;
 					i++;
 					while(i<numavenues&&offset1>=0)
 					{
@@ -553,9 +552,9 @@ public class CarFactory {
 					}
 					turncounter2=path.size();
 					i--;
-					if(path.get(path.size()-1).getOtherLight().getTrafficDirection()==TrafficDirection.we)
+					if(path.get(path.size()-1).getOtherLight().getTrafficDirection()==trafficdirection.we)
 					{
-						l2=Lane.left;
+						l2=lane.left;
 						j++;
 						while(j<numstreets)
 						{
@@ -565,7 +564,7 @@ public class CarFactory {
 					}
 					else
 					{
-						l2=Lane.right;
+						l2=lane.right;
 						j--;
 						while(j>=0)
 						{
@@ -581,7 +580,7 @@ public class CarFactory {
 						offset1=0;
 						else
 					offset1=r.nextInt(i);
-					l1=Lane.right;
+					l1=lane.right;
 					i--;
 					while(i>=0&&offset1>=0)
 					{
@@ -591,9 +590,9 @@ public class CarFactory {
 					}
 					turncounter2=path.size();
 					i++;
-					if(path.get(path.size()-1).getOtherLight().getTrafficDirection()==TrafficDirection.we)
+					if(path.get(path.size()-1).getOtherLight().getTrafficDirection()==trafficdirection.we)
 					{
-						l2=Lane.right;
+						l2=lane.right;
 						j++;
 						while(j<numstreets)
 						{
@@ -603,7 +602,7 @@ public class CarFactory {
 					}
 					else
 					{
-						l2=Lane.left;
+						l2=lane.left;
 						j--;
 						while(j>=0)
 						{
@@ -628,10 +627,10 @@ public class CarFactory {
 				}
 				turncounter1=path.size();
 				i--;
-				if(path.get(path.size()-1).getOtherLight().getTrafficDirection()==TrafficDirection.we)
+				if(path.get(path.size()-1).getOtherLight().getTrafficDirection()==trafficdirection.we)
 				{
 					offset1=r.nextInt(numstreets-j-1);
-					l1=Lane.left;
+					l1=lane.left;
 					j++;
 					while(j<numstreets&&offset1>=0)
 					{
@@ -641,9 +640,9 @@ public class CarFactory {
 					}
 					turncounter2=path.size();
 					j--;
-					if(path.get(path.size()-1).getOtherLight().getTrafficDirection()==TrafficDirection.ns)
+					if(path.get(path.size()-1).getOtherLight().getTrafficDirection()==trafficdirection.ns)
 					{
-						l2=Lane.right;
+						l2=lane.right;
 						i++;
 						while(i<numavenues)
 						{
@@ -653,7 +652,7 @@ public class CarFactory {
 					}
 					else
 					{
-						l2=Lane.left;
+						l2=lane.left;
 						i--;
 						while(i>=0)
 						{
@@ -665,7 +664,7 @@ public class CarFactory {
 				
 				else
 				{
-					l1=Lane.right;
+					l1=lane.right;
 					j--;
 					while(j>=0)
 					{
@@ -674,9 +673,9 @@ public class CarFactory {
 					}
 					turncounter2=path.size();
 					j++;
-					if(path.get(path.size()-1).getOtherLight().getTrafficDirection()==TrafficDirection.ns)
+					if(path.get(path.size()-1).getOtherLight().getTrafficDirection()==trafficdirection.ns)
 					{
-						l2=Lane.left;
+						l2=lane.left;
 						i++;
 						while(i<numavenues)
 						{
@@ -686,7 +685,7 @@ public class CarFactory {
 					}
 					else
 					{
-						l2=Lane.right;
+						l2=lane.right;
 						i--;
 						while(i>=0)
 						{
@@ -711,13 +710,13 @@ public class CarFactory {
 				}
 				turncounter1=path.size();
 				i++;
-				if(path.get(path.size()-1).getOtherLight().getTrafficDirection()==TrafficDirection.we)
+				if(path.get(path.size()-1).getOtherLight().getTrafficDirection()==trafficdirection.we)
 				{
 					if(numstreets-j-1==0)
 						offset1=0;
 					else
 					offset1=r.nextInt(numstreets-j-1);
-					l1=Lane.right;
+					l1=lane.right;
 					j++;
 					while(j<numstreets&&offset1>=0)
 					{
@@ -727,9 +726,9 @@ public class CarFactory {
 					}
 					turncounter2=path.size();
 					j--;
-					if(path.get(path.size()-1).getOtherLight().getTrafficDirection()==TrafficDirection.ns)
+					if(path.get(path.size()-1).getOtherLight().getTrafficDirection()==trafficdirection.ns)
 					{
-						l2=Lane.right;
+						l2=lane.right;
 						i++;
 						while(i<numavenues)
 						{
@@ -739,7 +738,7 @@ public class CarFactory {
 					}
 					else
 					{
-						l2=Lane.left;
+						l2=lane.left;
 						i--;
 						while(i>=0)
 						{
@@ -753,7 +752,7 @@ public class CarFactory {
 				else
 				{
 					offset1=r.nextInt(j);
-					l1=Lane.left;
+					l1=lane.left;
 					j--;
 					while(j>=0&&offset1>=0)
 					{
@@ -763,9 +762,9 @@ public class CarFactory {
 					}
 					turncounter2=path.size();
 					j++;
-					if(path.get(path.size()-1).getOtherLight().getTrafficDirection()==TrafficDirection.ns)
+					if(path.get(path.size()-1).getOtherLight().getTrafficDirection()==trafficdirection.ns)
 					{
-						l2=Lane.left;
+						l2=lane.left;
 						i++;
 						while(i<numavenues)
 						{
@@ -775,7 +774,7 @@ public class CarFactory {
 					}
 					else
 					{
-						l2=Lane.right;
+						l2=lane.right;
 						i--;
 						while(i>=0)
 						{
@@ -801,10 +800,10 @@ public class CarFactory {
 				}
 				turncounter1=path.size();
 				i++;
-				if(path.get(path.size()-1).getOtherLight().getTrafficDirection()==TrafficDirection.we)
+				if(path.get(path.size()-1).getOtherLight().getTrafficDirection()==trafficdirection.we)
 				{
 					offset1=r.nextInt(numstreets-j-1);
-					l1=Lane.right;
+					l1=lane.right;
 					j++;
 					while(j<numstreets&&offset1>=0)
 					{
@@ -814,9 +813,9 @@ public class CarFactory {
 					}
 					turncounter2=path.size();
 					j--;
-					if(path.get(path.size()-1).getOtherLight().getTrafficDirection()==TrafficDirection.ns)
+					if(path.get(path.size()-1).getOtherLight().getTrafficDirection()==trafficdirection.ns)
 					{
-						l2=Lane.right;
+						l2=lane.right;
 						i++;
 						while(i<numavenues)
 						{
@@ -826,7 +825,7 @@ public class CarFactory {
 					}
 					else
 					{
-						l2=Lane.left;
+						l2=lane.left;
 						i--;
 						while(i>=0)
 						{
@@ -839,7 +838,7 @@ public class CarFactory {
 				else
 				{
 					offset1=r.nextInt(j);
-					l1=Lane.left;
+					l1=lane.left;
 					j--;
 					while(j>=0&&offset1>=0)
 					{
@@ -849,9 +848,9 @@ public class CarFactory {
 					}
 					turncounter2=path.size();
 					j++;
-					if(path.get(path.size()-1).getOtherLight().getTrafficDirection()==TrafficDirection.ns)
+					if(path.get(path.size()-1).getOtherLight().getTrafficDirection()==trafficdirection.ns)
 					{
-						l2=Lane.left;
+						l2=lane.left;
 						i++;
 						while(i<numavenues)
 						{
@@ -861,7 +860,7 @@ public class CarFactory {
 					}
 					else
 					{
-						l2=Lane.right;
+						l2=lane.right;
 						i--;
 						while(i>=0)
 						{
