@@ -16,10 +16,8 @@ import events.LightEvent;
 
 
 public class TrafficSimulator {
-	
 	private Config config;
 	// We are assigning the simulation time as 500 time units.
-	private int totalsimtime=5000;
 	private TrafficGrid trafficgrid;
 	private TrafficLightScheduler trafficlightscheduler=new TrafficLightScheduler();
 	private int algorithm;
@@ -28,19 +26,26 @@ public class TrafficSimulator {
 	//private ArrayList<Integer> exitedcarslist=new ArrayList<Integer>();
 	private int numavenues;
 	private int numstreets;
-	private int distrows=100;
-	private int distcolumns=100;
 	private CarFactory factory=new CarFactory();
 	private int id=0;
 	private int carspeed=5;
-	private int caracceleration=5;
 	private int carlength=5;
 	private int carspacing=1;
 	private int lighteventcounter=0;
 	private int total_wait_time=0;
-	
-	
-	
+
+	public TrafficSimulator(Config config)
+	{
+		this.config=config;
+		this.numavenues=config.numrows;
+		this.numstreets=config.numcol;
+		this.carspeed=config.carspeed;
+		this.carlength=config.carsize;
+		this.carspacing=config.carspacing;
+		trafficgrid = new TrafficGrid(config);
+		
+	}
+
 	public void run()
 	{
 		// We have initialized the grid and generated car spawn events, Now we will begin simulation.
@@ -48,9 +53,8 @@ public class TrafficSimulator {
 		int ccheck=1;
 	//	System.out.println("Before sim num of car events:"+eventqueue.getSize());
 	//	eventqueue.print();
-		while( currenttime<=totalsimtime)
+		while( currenttime<=config.timelimit)
 		{
-	//	System.out.println("in loop : "+currenttime);
 			if(eventqueue.peek()!=null)
 			{
 			if(currenttime==eventqueue.peek().getTime())
@@ -104,35 +108,46 @@ public class TrafficSimulator {
 			//if((eventqueue.peek()!=null))	
 			if( (eventqueue.peek()==null || eventqueue.peek().getTime()>currenttime))
 			{
-			currenttime++;
-			for(Car car:carslist)
-			{
-				if(car.getState()==0)
-					total_wait_time++;
-			}
-			// We need to update the traffic lights states.
-			trafficlightscheduler.UpdateTrafficLights(trafficgrid,numavenues,numstreets,carlength,carspacing,carspeed,currenttime,eventqueue,ccheck);
-			ccheck++;
+				currenttime++;
+				for(Car car:carslist)
+				{
+					if(car.getState()==0)
+						total_wait_time++;
+				}
+				// We need to update the traffic lights states.
+				trafficlightscheduler.UpdateTrafficLights(trafficgrid,numavenues,numstreets,carlength,carspacing,carspeed,currenttime,eventqueue,ccheck);
+				ccheck++;
 			}
 		}
-	
 	}
-	
-	public TrafficSimulator(Config config)
-	{
-		this.config=config;
-		this.totalsimtime=config.timelimit;
-		this.numavenues=config.numrows;
-		this.numstreets=config.numcol;
-		this.distcolumns=config.distcols;
-		this.distrows=config.distrows;
-		this.carspeed=config.carspeed;
-		this.caracceleration=config.caracceleration;
-		this.carlength=config.carsize;
-		this.carspacing=config.carspacing;
-		
+
+
+	public void printStatistics() {
+		//	System.out.println("Simulation complete with #cars:"+s.carslist.size());
+		// Calculate the average time spent in grid for cars that exited:
+		int count=0;
+		int sum=0;
+		float avg=0;
+		for(Car c: carslist)
+		{
+			if (c.hasCarExited())
+			{
+				count++;
+				sum += c.getTimeInGrid();
+			}
+		}
+		if (count != 0)
+		{
+			avg=(float)sum/count;
+		}
+		System.out.println("The number of cars which exited grid are :"
+				+ count + "; The avg time spent in grid is:" + avg);
+		System.out.println("Number of traffic light update events are :" + lighteventcounter);
+		avg=(float) total_wait_time / carslist.size();
+		System.out.println("The avg time spent by cars at traffic light is:"+avg);
 	}
-	
+
+
 	public static void main(String args[])
 	{
 		String configFileName = "src/config";
@@ -146,83 +161,17 @@ public class TrafficSimulator {
 			// TODO Auto-generated catch block
 			e.printStackTrace();
 		}
-		
-		TrafficSimulator s=new TrafficSimulator(configuration);
+
+		TrafficSimulator s = new TrafficSimulator(configuration);
 		//System.out.println("We are executing self managed scheduling");
 		System.out.println("We are executing Coordinated scheduling");
 		s.algorithm=1;
-		// We will now initialize the grid
-		s.trafficgrid=new TrafficGrid(s.numavenues,s.numstreets,s.config);
+
 		// All the initialization is done. We will now create cars
-		
 		s.factory.generateCarSpawnEvent(s.eventqueue,s.config);
 		//System.out.println("The time of first event is:"+s.eventqueue.peek().getTime());
 		// We have generated car creation events , Now we can start with the simulation.
 		s.run();
-		
-	//	System.out.println("Simulation complete with #cars:"+s.carslist.size());
-		int count=0;
-		int sum=0;
-		float avg=0;
-		for(Car c:s.carslist)
-		{
-			//count=0;
-			//sum=0;
-			if(c.hasCarExited())
-			{
-				count++;
-				sum+=c.getTimeInGrid();
-			}
-			
-		}
-		if(count!=0)
-		{
-		avg=(float)sum/count;
-		}
-		
-		System.out.println("The number of cars which exited grid are :"+count+", The avg time spent in grid is:"+avg);
-		
-		count=0;sum=0;avg=0;
-		
-		for(Car c:s.carslist)
-		{
-			//count=0;
-			//sum=0;
-			if(c.hasCarExited()&&c.getNumOfTurns()==0)
-			{
-				count++;
-				sum+=c.getTimeInGrid();
-			}
-			
-		}
-		if(count!=0)
-		{
-		avg=(float)sum/count;
-		}
-		
-	//	System.out.println("The average time spent by cars in the grid which took 0 turns is "+avg );
-		
-		count=0;sum=0;avg=0;
-		
-		for(Car c:s.carslist)
-		{
-			//count=0;
-			//sum=0;
-			if(c.hasCarExited())
-			{
-				count++;
-				sum+=c.getTimeInGrid();
-			}
-			
-		}
-		if(count!=0)
-		{
-		avg=(float)sum/count;
-		}
-		System.out.println("Number of traffic light update events are :"+s.lighteventcounter);
-		avg=(float)s.total_wait_time/s.carslist.size();
-		System.out.println("The avg time spent by cars at traffic light is:"+avg);
+		s.printStatistics();
 	}
-
-
 }
