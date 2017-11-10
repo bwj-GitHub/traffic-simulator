@@ -18,8 +18,8 @@ import events.LightEvent;
 public class TrafficSimulator {
 	private Config config;
 	// We are assigning the simulation time as 500 time units.
-	private TrafficGrid trafficgrid;
-	private TrafficLightScheduler trafficlightscheduler;
+	private TrafficGrid trafficGrid;
+	private TrafficLightScheduler trafficLightScheduler;
 	private int algorithm;
 	private EventQueue eventqueue=new EventQueue();
 	private ArrayList<Car> carslist = new ArrayList<Car>();
@@ -42,8 +42,8 @@ public class TrafficSimulator {
 		this.carspeed=config.carspeed;
 		this.carlength=config.carsize;
 		this.carspacing=config.carspacing;
-		trafficgrid = new TrafficGrid(config);
-		trafficlightscheduler = new TrafficLightScheduler();
+		trafficGrid = new TrafficGrid(config);
+		trafficLightScheduler = new TrafficLightScheduler();
 	}
 
 	public void run()
@@ -64,7 +64,7 @@ public class TrafficSimulator {
 				if(e.getEventType()==eventtypeenum.carspawn)
 				{
 					id++;
-					carslist.add(factory.newcar(id,currenttime,numavenues,numstreets,trafficgrid,config));
+					carslist.add(factory.newcar(id,currenttime,numavenues,numstreets,trafficGrid,config));
 					// After car spawn we need to create a carupdate event for spawned car.
 					carslist.get(id-1).path.get(0).addcar(carslist.get(id-1));//Adding car to first traffic light.
 					Event n=carslist.get(id-1).generateCarUpdateEvent(currenttime);
@@ -73,7 +73,7 @@ public class TrafficSimulator {
 				else if(e.getEventType()==eventtypeenum.carupdate)
 				{ // When we see car update event in queue.
 					CarUpdateEvent update= (CarUpdateEvent) e;
-					ArrayList<Event> list=trafficgrid.handleCarUpdateEvent(update,currenttime,eventqueue);
+					ArrayList<Event> list=trafficGrid.handleCarUpdateEvent(update,currenttime,eventqueue);
 					if(!list.isEmpty())
 					{
 						for(Event ev:list)
@@ -114,7 +114,7 @@ public class TrafficSimulator {
 						total_wait_time++;
 				}
 				// We need to update the traffic lights states.
-				trafficlightscheduler.UpdateTrafficLights(trafficgrid,numavenues,numstreets,carlength,carspacing,carspeed,currenttime,eventqueue,ccheck);
+				trafficLightScheduler.UpdateTrafficLights(trafficGrid,numavenues,numstreets,carlength,carspacing,carspeed,currenttime,eventqueue,ccheck);
 				ccheck++;
 			}
 		}
