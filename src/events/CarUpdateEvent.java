@@ -1,7 +1,7 @@
 package events;
 import grid.Car;
 
-public class CarUpdateEvent extends Event {
+public class CarUpdateEvent extends CarEvent {
 	private Car car;
 	
 	public CarUpdateEvent(Car c,eventtypeenum e,int time)

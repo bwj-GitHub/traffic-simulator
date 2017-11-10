@@ -1,8 +1,12 @@
 package simulator;
 
+import events.CarEvent;
 import events.Event;
-import events.carEvents.CarEvent;
-import events.lightEvents.LightEvent;
+import events.EventQueue;
+import events.ExternalEventQueue;
+import events.LightEvent;
+import grid.TrafficGrid;
+import grid.TrafficLightScheduler;
 
 public class TrafficSimulatorNode {
 	
@@ -32,7 +36,7 @@ public class TrafficSimulatorNode {
 			}
 			enqueueFutureEvents(futureEvents);
 			
-		} while (nextEvent.time() < config.timeLimit);
+		} while (nextEvent.getTime() < config.timelimit);
 		
 	}
 
