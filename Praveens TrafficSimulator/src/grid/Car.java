@@ -87,6 +87,26 @@ public class Car {
 		this.intersectionlength=config.distrows;
 	}
 	
+	public int getTurnCount1()
+	{
+		return turncount1;
+	}
+	
+	public int getTurnCount2()
+	{
+		return turncount2;
+	}
+	
+	public int getAcceleration()
+	{
+		return acceleration;
+	}
+	
+	public int getIntersectionLength()
+	{
+		return intersectionlength;
+	}
+	
 	public int getId()
 	{
 		return id;
@@ -161,7 +181,7 @@ public class Car {
 	{
 		return pos;
 	}
-	public Event generateCarUpdateEvent(int currenttime)
+	public Event generateCarUpdateEvent(int currenttime) // Added acceleration.
 	{
 		int time;
 		int numofcars;
@@ -170,38 +190,69 @@ public class Car {
 		else numofcars=currentlight.getRightLaneSize();
 		if(numofcars==1)
 		{
-			if(acceleration==5 && carspeed==10)
-			time=12; //acc is 5 , speed is 10.
-			else
+			if(acceleration==0)
 				time=intersectionlength/carspeed;
+			else
+			time=(carspeed/acceleration)+(intersectionlength/carspeed);
 		}
 		else
 		{
 			int distance=intersectionlength-(((numofcars-pos)*carlength)+((numofcars-pos)*carspacing));
-			if(distance<=acceleration) //acceleration.
+			if(acceleration==0)
 			{
-				time=1;
+				time=distance/carspeed;
 			}
-			else if (distance<=2*acceleration)
+			else
 			{
-				time=2;
+			int s=(carspeed^2)/(2*acceleration);
+			if(distance>=2*s)
+			{
+				time=(carspeed/acceleration)+(distance/carspeed);
 			}
-			else if (distance<=3*acceleration) // deceleration.
+			else
 			{
-				time=3;
+				time=(int) (2*Math.sqrt(distance/acceleration));
 			}
-			else if (distance<=4*acceleration)
-			{
-				time=4;
-			}
-			else				// steady state.
-			{
-				distance-=20;
-				time=(distance/carspeed)+4;
 			}
 		}
 		Event e=new CarUpdateEvent(this,eventtypeenum.carupdate,currenttime+time);
 		return e;
+	}
+	
+	public int getTime() // Added acceleration.
+	{
+		int time;
+		int numofcars;
+		if(currentlane==grid.lane.left) numofcars=currentlight.getLeftLaneSize();
+		else if(currentlane==grid.lane.middle) numofcars=currentlight.getMiddleLaneSize();
+		else numofcars=currentlight.getRightLaneSize();
+		if(numofcars==1)
+		{
+			if(acceleration==0)
+				time=intersectionlength/carspeed;
+			else
+				time=(carspeed/acceleration)+(intersectionlength/carspeed);
+		}
+		else
+		{
+			int distance=intersectionlength-(((numofcars-pos)*carlength)+((numofcars-pos)*carspacing));
+			if(acceleration==0)
+				time=distance/carspeed;
+			else
+			{
+			int s=(carspeed^2)/(2*acceleration);
+			if(distance>=2*s)
+			{
+				time=(carspeed/acceleration)+(distance/carspeed);
+			}
+			else
+			{
+				time=(int) (2*Math.sqrt(distance/acceleration));
+			}
+			}
+		}
+	//	Event e=new CarUpdateEvent(this,eventtypeenum.carupdate,currenttime+time);
+		return time;
 	}
 	
 	public void setCurrentLight(TrafficLight t)
