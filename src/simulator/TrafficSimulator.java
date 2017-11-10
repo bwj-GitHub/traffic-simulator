@@ -19,7 +19,7 @@ public class TrafficSimulator {
 	private Config config;
 	// We are assigning the simulation time as 500 time units.
 	private TrafficGrid trafficgrid;
-	private TrafficLightScheduler trafficlightscheduler=new TrafficLightScheduler();
+	private TrafficLightScheduler trafficlightscheduler;
 	private int algorithm;
 	private EventQueue eventqueue=new EventQueue();
 	private ArrayList<Car> carslist = new ArrayList<Car>();
@@ -43,7 +43,7 @@ public class TrafficSimulator {
 		this.carlength=config.carsize;
 		this.carspacing=config.carspacing;
 		trafficgrid = new TrafficGrid(config);
-		
+		trafficlightscheduler = new TrafficLightScheduler();
 	}
 
 	public void run()
@@ -84,7 +84,6 @@ public class TrafficSimulator {
 				}
 				else // trafficlight update event.
 				{
-					
 					lighteventcounter++;
 					// For other algorithms except dumb scheduling.
 					// Code for self managed scheduling. change light to green , other light to red.
