@@ -10,6 +10,12 @@ public class EventQueue {
 		queue.add(e);
 	}
 	
+	public void add(Event[] events) {
+		for (Event e: events) {
+			add(e);
+		}
+	}
+	
 	public void remove(Event e)
 	{
 		queue.remove(e);
