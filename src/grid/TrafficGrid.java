@@ -24,26 +24,18 @@ public class TrafficGrid  {
 		numavenues=config.numrows;
 		numstreets=config.numcol;
 		int i,j;
-		intersections=new Intersection[numavenues][numstreets];
+		intersections = new Intersection[numavenues][numstreets];
 		for (i=0;i<numavenues;i++)
 			for(j=0;j<numstreets;j++)
 				intersections[i][j]=new Intersection(i,j,numavenues,numstreets,config);
 	}
-	
+
 	
 	public Intersection  getIntersection(int i,int j)
 	{
 		return intersections[i][j];
 	}
-	
-	ArrayList<Event> handleCarSpawnEvent(CarSpawnEvent event)
-	{
-		ArrayList<Event> l=new ArrayList<Event>();
-		
-		//Handle carspawn
-		
-		return l;
-	}
+
 	
 	public ArrayList<Event> handleCarUpdateEvent(CarUpdateEvent event,int currenttime,EventQueue eq)
 	{

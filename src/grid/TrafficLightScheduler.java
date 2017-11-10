@@ -7,9 +7,10 @@ import events.EventQueue;
 import events.LightEvent;
 
 public class TrafficLightScheduler {
-	
 	// We handle traffic light events here such as traffic light change when something happens.
 
+	// TODO, BJ: This should be broken into several smaller methods
+	// TODO, BJ: This should NOT be this tightly coupled with the grid
 	public void UpdateTrafficLights(TrafficGrid grid,int numavenues,int numstreets,int carlength,int carspacing,int carspeed,int currenttime,EventQueue eventqueue,int ccheck)
 	{ // Regular traffic light updates.
 		//System.out.println("We are in updatetrafficlights function");

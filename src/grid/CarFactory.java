@@ -895,21 +895,22 @@ public class CarFactory {
 		}
 	}
 	
-	public void generateCarSpawnEvent(EventQueue q,Config config)
+	public CarSpawnEvent[] generateCarSpawnEvent(Config config)
 	{
 		// using negative exponential random number generator we generate car creation events and add them to the eventqueue.
 		
 		// Here I'm using random numbers to generate car spawn events.
 		int n=config.numcars;
 		float time=1;
-		Random r=new Random();
+		Random r=new Random();  // TODO, BJ: we need to be able to initialize with seed
 		InterarrivalTimeGenerator rate=new InterarrivalTimeGenerator(config.lambda,r);
-		for(int i=0;i<n;i++)
+		CarSpawnEvent[] carSpawnEvents = new CarSpawnEvent[n];
+		for(int i=0; i<n; i++)
 		{
 			time+=rate.getNextArrivalTime();
-			q.add(new CarSpawnEvent(eventtypeenum.carspawn,(int)time));
-		//	q.add(new CarSpawnEvent(eventtypeenum.carspawn,1));
+			carSpawnEvents[i] = new CarSpawnEvent(eventtypeenum.carspawn, (int)time);
 		}
-		System.out.println("Genetared number of car spawn events are :"+q.getSize());
+		System.out.println("Genetared number of car spawn events are :" + n);
+		return carSpawnEvents;
 	}
 }

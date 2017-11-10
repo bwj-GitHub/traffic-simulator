@@ -17,16 +17,16 @@ import events.LightEvent;
 
 public class TrafficSimulator {
 	private Config config;
-	// We are assigning the simulation time as 500 time units.
+	private EventQueue eventQueue;
 	private TrafficGrid trafficGrid;
 	private TrafficLightScheduler trafficLightScheduler;
 	private int algorithm;
-	private EventQueue eventqueue=new EventQueue();
 	private ArrayList<Car> carslist = new ArrayList<Car>();
-	//private ArrayList<Integer> exitedcarslist=new ArrayList<Integer>();
 	private int numavenues;
 	private int numstreets;
-	private CarFactory factory=new CarFactory();
+	private CarFactory carFactory;
+	
+	// BJ: Don't initialize when declaring attributes
 	private int id=0;
 	private int carspeed=5;
 	private int carlength=5;
@@ -42,43 +42,44 @@ public class TrafficSimulator {
 		this.carspeed=config.carspeed;
 		this.carlength=config.carsize;
 		this.carspacing=config.carspacing;
+		eventQueue = new EventQueue();
 		trafficGrid = new TrafficGrid(config);
 		trafficLightScheduler = new TrafficLightScheduler();
+		carFactory = new CarFactory();
+
+		// Generate all CarSpawnEvents
+		CarSpawnEvent[] carSpawnEvents = carFactory.generateCarSpawnEvent(config);
+		eventQueue.add(carSpawnEvents);
 	}
 
 	public void run()
 	{
-		// We have initialized the grid and generated car spawn events, Now we will begin simulation.
-		int currenttime=1;
-		int ccheck=1;
-	//	System.out.println("Before sim num of car events:"+eventqueue.getSize());
-	//	eventqueue.print();
-		while( currenttime<=config.timelimit)
+		int currenttime=1;  // BJ: Do we really need to explicitly count time?
+		int ccheck=1;  // BJ: What is this?
+		while (currenttime<=config.timelimit)
 		{
-			if(eventqueue.peek()!=null)
+			if(eventQueue.peek() != null && currenttime==eventQueue.peek().getTime())
 			{
-			if(currenttime==eventqueue.peek().getTime())
-			{
-				Event e;
-				e=eventqueue.poll();
-				if(e.getEventType()==eventtypeenum.carspawn)
+				Event currentEvent;
+				currentEvent = eventQueue.poll();
+				if(currentEvent.getEventType()==eventtypeenum.carspawn)
 				{
 					id++;
-					carslist.add(factory.newcar(id,currenttime,numavenues,numstreets,trafficGrid,config));
+					carslist.add(carFactory.newcar(id,currenttime,numavenues,numstreets,trafficGrid,config));
 					// After car spawn we need to create a carupdate event for spawned car.
 					carslist.get(id-1).path.get(0).addcar(carslist.get(id-1));//Adding car to first traffic light.
 					Event n=carslist.get(id-1).generateCarUpdateEvent(currenttime);
-					eventqueue.add(n); // We added carupdate event into queue for that carspawn.
+					eventQueue.add(n); // We added carupdate event into queue for that carspawn.
 				}
-				else if(e.getEventType()==eventtypeenum.carupdate)
+				else if(currentEvent.getEventType()==eventtypeenum.carupdate)
 				{ // When we see car update event in queue.
-					CarUpdateEvent update= (CarUpdateEvent) e;
-					ArrayList<Event> list=trafficGrid.handleCarUpdateEvent(update,currenttime,eventqueue);
+					CarUpdateEvent update= (CarUpdateEvent) currentEvent;
+					ArrayList<Event> list=trafficGrid.handleCarUpdateEvent(update,currenttime,eventQueue);
 					if(!list.isEmpty())
 					{
 						for(Event ev:list)
 						{
-							eventqueue.add(ev);
+							eventQueue.add(ev);
 						}
 					}
 				}
@@ -88,7 +89,7 @@ public class TrafficSimulator {
 					// For other algorithms except dumb scheduling.
 					// Code for self managed scheduling. change light to green , other light to red.
 					//System.out.println("We are in traffic light update event");
-					LightEvent le= (LightEvent) e;
+					LightEvent le= (LightEvent) currentEvent;
 					//System.out.println("Setting light at the following position to green:");
 					//le.getLight().printpos();
 					//System.out.println(" ");
@@ -100,12 +101,9 @@ public class TrafficSimulator {
 					//System.out.println(" ");
 					le.getLight().getOtherLight().setlighttored();
 					}
-					
 				}
 			}
-			}
-			//if((eventqueue.peek()!=null))	
-			if( (eventqueue.peek()==null || eventqueue.peek().getTime()>currenttime))
+			if( (eventQueue.peek()==null || eventQueue.peek().getTime()>currenttime))
 			{
 				currenttime++;
 				for(Car car:carslist)
@@ -114,7 +112,7 @@ public class TrafficSimulator {
 						total_wait_time++;
 				}
 				// We need to update the traffic lights states.
-				trafficLightScheduler.UpdateTrafficLights(trafficGrid,numavenues,numstreets,carlength,carspacing,carspeed,currenttime,eventqueue,ccheck);
+				trafficLightScheduler.UpdateTrafficLights(trafficGrid,numavenues,numstreets,carlength,carspacing,carspeed,currenttime,eventQueue,ccheck);
 				ccheck++;
 			}
 		}
@@ -166,8 +164,6 @@ public class TrafficSimulator {
 		System.out.println("We are executing Coordinated scheduling");
 		s.algorithm=1;
 
-		// All the initialization is done. We will now create cars
-		s.factory.generateCarSpawnEvent(s.eventqueue,s.config);
 		//System.out.println("The time of first event is:"+s.eventqueue.peek().getTime());
 		// We have generated car creation events , Now we can start with the simulation.
 		s.run();
