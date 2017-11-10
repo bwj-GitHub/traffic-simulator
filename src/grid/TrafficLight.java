@@ -3,6 +3,7 @@ package grid;
 import java.util.ArrayList;
 
 import events.Event;
+import simulator.Config;
 
 public class TrafficLight {
 	
@@ -25,9 +26,9 @@ public class TrafficLight {
 	private boolean flag=false;
 	private boolean flag_coordinated=false; // For middle lane.
 	private boolean flag_coordinated1=false; // For right/left lane.
-	private lightcolor currentlight;
+	private LightColor currentlight;
 	private int remainingtime;
-	private trafficdirection direction;
+	private TrafficDirection direction;
 	private TrafficLight otherlight;
 	private Event otherlightevent;
 	private ArrayList<Car> list1=new ArrayList<Car>();
@@ -171,13 +172,13 @@ public class TrafficLight {
 	//initialize  light to green
 	public void setlighttogreen()
 	{
-		currentlight=lightcolor.green;
+		currentlight=LightColor.green;
 		remainingtime=greentime;
 	}
 	
 	public void setlighttogreenevent(int carspeed,int carlength,int carspacing)
 	{
-		currentlight=lightcolor.green;
+		currentlight=LightColor.green;
 		remainingtime=greentime;
 		TrafficLight light1=this;
 		int num1=light1.getLeftLaneSize();
@@ -275,17 +276,17 @@ public class TrafficLight {
 	
 	public void setlighttored()
 	{
-		currentlight=lightcolor.red;
+		currentlight=LightColor.red;
 		remainingtime=redtime;
 	}
 	
 	public void setlighttoyellow()
 	{
-		currentlight=lightcolor.yellow;
+		currentlight=LightColor.yellow;
 		remainingtime=yellowtime;
 	}
 	
-	public void setdirection(trafficdirection d)
+	public void setdirection(TrafficDirection d)
 	{
 		direction=d;
 	}
@@ -300,7 +301,7 @@ public class TrafficLight {
 		return otherlight;
 	}
 	
-	public trafficdirection getTrafficDirection()
+	public TrafficDirection getTrafficDirection()
 	{
 		return direction;
 	}
@@ -311,37 +312,37 @@ public class TrafficLight {
 		{
 			list2.add(c);
 			c.setposition(list2.size());
-			c.setCurrentLane(lane.middle);
+			c.setCurrentLane(Lane.middle);
 		}	
 		else if(c.getNumOfTurns()==1)
 		{
-			if(c.getLane()==lane.left)
+			if(c.getLane()==Lane.left)
 			{ 
 				list1.add(c);
 				c.setposition(list1.size());
-				c.setCurrentLane(lane.left);
+				c.setCurrentLane(Lane.left);
 			}
 			else 
 			{	
 				list3.add(c);
 				c.setposition(list3.size());
-				c.setCurrentLane(lane.right);
+				c.setCurrentLane(Lane.right);
 			}
 				c.decTurnCount1();
 		}
 		else
 		{
-			if(c.getLane()==lane.left)
+			if(c.getLane()==Lane.left)
 			{ 
 				list1.add(c);
 				c.setposition(list1.size());
-				c.setCurrentLane(lane.left);
+				c.setCurrentLane(Lane.left);
 			}
 			else 
 			{
 				list3.add(c);
 				c.setposition(list3.size());
-				c.setCurrentLane(lane.right);
+				c.setCurrentLane(Lane.right);
 			}
 			c.decTurnCount1();
 			c.decTurnCount2();
@@ -420,7 +421,7 @@ public class TrafficLight {
 		return list3;
 	}
 	
-	public lightcolor getCurrentLightColor()
+	public LightColor getCurrentLightColor()
 	{
 		return currentlight;
 	}

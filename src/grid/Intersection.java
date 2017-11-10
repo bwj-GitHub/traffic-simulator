@@ -2,14 +2,16 @@ package grid;
 
 import java.util.Random;
 
+import simulator.Config;
+
 public class Intersection {
 
 	private Config config;
 	private int numavenues;
 	private int numstreets;
 	private TrafficLight light1,light2;
-	private trafficdirection xdirection;
-	private trafficdirection ydirection;
+	private TrafficDirection xdirection;
+	private TrafficDirection ydirection;
 	private int xpos,ypos;
 	//methods
 	public Intersection(int x,int y,int avenues,int streets,Config config)
@@ -19,10 +21,10 @@ public class Intersection {
 		ypos=y;
 		numavenues=avenues;
 		numstreets=streets;
-		if(xpos%2==0) xdirection=trafficdirection.ew;
-		else xdirection=trafficdirection.we;
-		if(ypos%2==0) ydirection=trafficdirection.ns;
-		else ydirection=trafficdirection.sn;
+		if(xpos%2==0) xdirection=TrafficDirection.ew;
+		else xdirection=TrafficDirection.we;
+		if(ypos%2==0) ydirection=TrafficDirection.ns;
+		else ydirection=TrafficDirection.sn;
 		light1=new TrafficLight(config);
 		light2=new TrafficLight(config);
 		light1.setOtherLight(light2);

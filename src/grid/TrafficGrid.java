@@ -6,6 +6,7 @@ import events.CarSpawnEvent;
 import events.CarUpdateEvent;
 import events.Event;
 import events.Event.eventtypeenum;
+import simulator.Config;
 import events.EventQueue;
 import events.LightEvent;
 
@@ -66,7 +67,7 @@ public class TrafficGrid  {
 		currentlight.incrementCounter();
 		
 		
-		if(c.getCurrentLight().getCurrentLightColor()==lightcolor.green && c.getPosition()==1)
+		if(c.getCurrentLight().getCurrentLightColor()==LightColor.green && c.getPosition()==1)
 		{
 			// Since trafficlight is green/yellow , We check if it can move to next traffic light and move it accordingly.
 			/*switch(c.getCurrentLane()) // Get the current position of car in respective lane.
@@ -85,7 +86,7 @@ public class TrafficGrid  {
 			//if(time<=c.getCurrentLight().getRemainingTime())
 			//{
 				// We can proceed to move this car to next intersection.
-				if( c.getNextLightIndex()==c.path.size() ||(c.getCurrentLane()==lane.middle && c.path.get(c.getNextLightIndex()).getMiddleLaneSize()<=c.getCurrentLight().getLaneLimit()) || ( c.getCurrentLane()!=lane.middle &&(c.path.get(c.getNextLightIndex()).getNumberOfTurningCars()<=c.getCurrentLight().getLaneLimit())))
+				if( c.getNextLightIndex()==c.path.size() ||(c.getCurrentLane()==Lane.middle && c.path.get(c.getNextLightIndex()).getMiddleLaneSize()<=c.getCurrentLight().getLaneLimit()) || ( c.getCurrentLane()!=Lane.middle &&(c.path.get(c.getNextLightIndex()).getNumberOfTurningCars()<=c.getCurrentLight().getLaneLimit())))
 				{	 
 				int check=c.getCurrentLight().removecar(c,currenttime); // We removed car and added it to appropriate traffic light.
 				// Now we need to create new carupdate event.
@@ -98,7 +99,7 @@ public class TrafficGrid  {
 		
 		if((currentlight.getCounter()>currentlight.getThreshold()))
 		{
-			if(currentlight.getFlag()==false && currentlight.getCurrentLightColor()!=lightcolor.green)
+			if(currentlight.getFlag()==false && currentlight.getCurrentLightColor()!=LightColor.green)
 			{
 			// Create traffic light update event with current time.
 			//	System.out.println("Creating traffic light update event and number of cars at that light are :"+currentlight.getCounter());
@@ -107,7 +108,7 @@ public class TrafficGrid  {
 				currentlight.getOtherLight().setFlag();
 				currentlight.getOtherLight().setOtherLightEvent(lightevent);
 			}
-			else if((currentlight.getFlag()==true && (currentlight.getCounter()>currentlight.getOtherLight().getCounter())) && currentlight.getCurrentLightColor()!=lightcolor.green)
+			else if((currentlight.getFlag()==true && (currentlight.getCounter()>currentlight.getOtherLight().getCounter())) && currentlight.getCurrentLightColor()!=LightColor.green)
 			{
 			//	System.out.println("Creating traffic light update event and number of cars at that light are :"+currentlight.getCounter());
 				l.add(new LightEvent(currentlight,eventtypeenum.trafficlightupdate,currenttime));

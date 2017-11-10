@@ -5,6 +5,7 @@ import java.util.ArrayList;
 import events.CarUpdateEvent;
 import events.Event;
 import events.Event.eventtypeenum;
+import simulator.Config;
 
 public class Car {
 	private int id;
@@ -20,9 +21,9 @@ public class Car {
 	private int pos; //position in lane
 	private int size=5;
 	private int carsgap=1;
-	private lane firstturn;
-	private lane secondturn;
-	private lane thirdturn;
+	private Lane firstturn;
+	private Lane secondturn;
+	private Lane thirdturn;
 	private int numofturns=0;
 	private int turncount1; // When turncount is 0 it means that car should take turn now.
 	private int turncount2;
@@ -31,7 +32,7 @@ public class Car {
 	private int carlength=5;
 	private int intersectionlength=100;
 	private int carspacing=1;
-	private lane currentlane;
+	private Lane currentlane;
 	private boolean exited=false;
 	
 	
@@ -49,7 +50,7 @@ public class Car {
 		this.intersectionlength=config.distrows;
 	}
 	
-	public  Car(int time,ArrayList<TrafficLight> p,int i,int turns,lane l1,lane l2,int count,Config config)
+	public  Car(int time,ArrayList<TrafficLight> p,int i,int turns,Lane l1,Lane l2,int count,Config config)
 	{
 		entrytime=time;
 		path=p;
@@ -67,7 +68,7 @@ public class Car {
 		this.intersectionlength=config.distrows;
 	}
 	
-	public  Car(int time,ArrayList<TrafficLight> p,int i,int turns,lane l1,lane l2,lane l3,int count1,int count2,Config config)
+	public  Car(int time,ArrayList<TrafficLight> p,int i,int turns,Lane l1,Lane l2,Lane l3,int count1,int count2,Config config)
 	{
 		entrytime=time;
 		path=p;
@@ -147,7 +148,7 @@ public class Car {
 		return numofturns;
 	}
 	
-	public lane getLane()
+	public Lane getLane()
 	{
 		if(numofturns==1)
 		{
@@ -185,8 +186,8 @@ public class Car {
 	{
 		int time;
 		int numofcars;
-		if(currentlane==grid.lane.left) numofcars=currentlight.getLeftLaneSize();
-		else if(currentlane==grid.lane.middle) numofcars=currentlight.getMiddleLaneSize();
+		if(currentlane==grid.Lane.left) numofcars=currentlight.getLeftLaneSize();
+		else if(currentlane==grid.Lane.middle) numofcars=currentlight.getMiddleLaneSize();
 		else numofcars=currentlight.getRightLaneSize();
 		if(numofcars==1)
 		{
@@ -223,8 +224,8 @@ public class Car {
 	{
 		int time;
 		int numofcars;
-		if(currentlane==grid.lane.left) numofcars=currentlight.getLeftLaneSize();
-		else if(currentlane==grid.lane.middle) numofcars=currentlight.getMiddleLaneSize();
+		if(currentlane==grid.Lane.left) numofcars=currentlight.getLeftLaneSize();
+		else if(currentlane==grid.Lane.middle) numofcars=currentlight.getMiddleLaneSize();
 		else numofcars=currentlight.getRightLaneSize();
 		if(numofcars==1)
 		{
@@ -265,12 +266,12 @@ public class Car {
 		return currentlight;
 	}
 	
-	public void setCurrentLane(lane l)
+	public void setCurrentLane(Lane l)
 	{
 		currentlane=l;
 	}
 	
-	public lane getCurrentLane()
+	public Lane getCurrentLane()
 	{
 		return currentlane;
 	}

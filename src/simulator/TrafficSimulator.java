@@ -1,4 +1,4 @@
-package grid;
+package simulator;
 import java.io.*;
 import java.util.*;
 
@@ -6,9 +6,13 @@ import events.CarSpawnEvent;
 import events.CarUpdateEvent;
 import events.Event;
 import events.Event.eventtypeenum;
+import grid.Car;
+import grid.CarFactory;
+import grid.LightColor;
+import grid.TrafficGrid;
+import grid.TrafficLightScheduler;
 import events.EventQueue;
 import events.LightEvent;
-import statistics.Stats;
 
 
 public class TrafficSimulator {
@@ -22,7 +26,6 @@ public class TrafficSimulator {
 	private EventQueue eventqueue=new EventQueue();
 	private ArrayList<Car> carslist = new ArrayList<Car>();
 	//private ArrayList<Integer> exitedcarslist=new ArrayList<Integer>();
-	private Stats stats;
 	private int numavenues;
 	private int numstreets;
 	private int distrows=100;
@@ -86,7 +89,7 @@ public class TrafficSimulator {
 					//System.out.println("Setting light at the following position to green:");
 					//le.getLight().printpos();
 					//System.out.println(" ");
-					if(le.getLight().getCurrentLightColor()!=lightcolor.green) // For coordinated scheduling.
+					if(le.getLight().getCurrentLightColor()!=LightColor.green) // For coordinated scheduling.
 					{
 					le.getLight().setlighttogreenevent(carspeed,carlength,carspacing);
 					//System.out.println("Setting other light at following position to red:");
