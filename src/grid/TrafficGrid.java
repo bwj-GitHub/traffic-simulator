@@ -18,11 +18,11 @@ public class TrafficGrid  {
 	CarFactory carfactory;
 	Intersection[][] intersections;
 	
-	public TrafficGrid(int a,int b,Config config)
+	public TrafficGrid(Config config)
 	{
 		this.config=config;
-		numavenues=a;
-		numstreets=b;
+		numavenues=config.numrows;
+		numstreets=config.numcol;
 		int i,j;
 		intersections=new Intersection[numavenues][numstreets];
 		for (i=0;i<numavenues;i++)
