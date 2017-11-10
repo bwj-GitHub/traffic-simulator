@@ -1,4 +1,4 @@
-package grid;
+package simulator;
 import java.io.*;
 import java.util.*;
 
@@ -6,9 +6,12 @@ import events.CarSpawnEvent;
 import events.CarUpdateEvent;
 import events.Event;
 import events.Event.eventtypeenum;
+import grid.Car;
+import grid.CarFactory;
+import grid.TrafficGrid;
+import grid.TrafficLightScheduler;
 import events.EventQueue;
 import events.LightEvent;
-import statistics.Stats;
 
 
 public class TrafficSimulator {
@@ -22,7 +25,6 @@ public class TrafficSimulator {
 	private EventQueue eventqueue=new EventQueue();
 	private ArrayList<Car> carslist = new ArrayList<Car>();
 	//private ArrayList<Integer> exitedcarslist=new ArrayList<Integer>();
-	private Stats stats;
 	private int numavenues;
 	private int numstreets;
 	private int distrows=100;

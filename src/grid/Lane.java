@@ -1,5 +1,5 @@
 package grid;
 
-public enum lane {
+public enum Lane {
 left,middle,right
 }
