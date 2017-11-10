@@ -1,8 +1,8 @@
 package grid;
 
 import java.util.ArrayList;
-import events.Event;
 
+import events.Event;
 
 public class TrafficLight {
 	
@@ -10,7 +10,7 @@ public class TrafficLight {
 	private int redtime=5;
 	private int greentime=5;
 	private int yellowtime=3;
-	private int threshold=3;//Number of cars which turn light to green for traffic light.
+	private int threshold=6;//Number of cars which turn light to green for traffic light.
 	private int counter=0; // Number of cars at intersection at that current traffic light. 
 	private int lanelimit=10;
 	private int xpos;
@@ -147,6 +147,7 @@ public class TrafficLight {
 	}
 	
 	//initialize light to red
+	
 	public int getThreshold()
 	{
 		return threshold;
@@ -166,7 +167,6 @@ public class TrafficLight {
 	{
 		return counter;
 	}
-	
 	
 	public void setlighttored()
 	{
@@ -262,23 +262,23 @@ public class TrafficLight {
 		{
 			// Exit grid event.
 			//time+10 because it needs to travel 100 units distance after crossing last intersection before leaving grid.
-			System.out.println("Car with id :"+c.getId()+" exited.");
+			//c.getCurrentLight().decrementCounter();
+		//	System.out.println("Car with id :"+c.getId()+" exited.");
 			c.setExitTime(time+10);
 			c.carExited(); // Set exited flag of car to true.
 			return 0; // Return 0 if car exited.
 		}
 		else
 		{
-		
+			//c.getCurrentLight().decrementCounter();
 			c.path.get(c.getNextLightIndex()).addcar(c); //We added car to next traffic light.
-			System.out.print("Car with id:"+c.getId() +" is moving to lane of New Intersection:");
-			c.getCurrentLight().printpos();
-			System.out.println(" ");
+		//	System.out.print("Car with id:"+c.getId() +" is moving to lane of New Intersection:");
+		//	c.getCurrentLight().printpos();
+		//	System.out.println(" ");
 			return 1;// Return 1 if car did not complete its path.
 		}
 		
 	}
-	
 	
 	public int getNumberOfTurningCars()
 	{

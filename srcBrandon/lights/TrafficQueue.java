@@ -13,6 +13,7 @@ public class TrafficQueue {
 	int maxCars;  // this limit can be exceeded by entry points
 	int laneIndex;
 	private Intersection intersection;
+	public float lastExitTime;  // the time the last Car in the queue crossed Intersection.
 	public ArrayList<Car> queue;
 
 
@@ -20,6 +21,7 @@ public class TrafficQueue {
 		this.maxCars = maxCars;
 		this.laneIndex = laneIndex;
 		this.intersection = intersection;
+		this.lastExitTime = 0.0f;
 		this.queue = new ArrayList<Car>();
 	}
 
@@ -64,6 +66,11 @@ public class TrafficQueue {
 			car.updateNextEvent(nextEvent);
 			updateEvents[i] = nextEvent;
 			removeCar(0);
+
+			// Update lastExitTime
+			if (eventTime > lastExitTime) {
+				lastExitTime = eventTime;
+			}
 		}
 		return updateEvents;
 	}

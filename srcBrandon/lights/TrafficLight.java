@@ -34,6 +34,10 @@ public class TrafficLight {
 		return String.format("TrafficLight(%s, %b)", intersection.toString(),
 				isAvenueLight);
 	}
+
+	public TrafficQueue getQueue(int laneIndex) {
+		return this.trafficQueues[laneIndex];
+	}
 	
 	public int getTotalQueueSize() {
 		int totalQueueSize = 0;

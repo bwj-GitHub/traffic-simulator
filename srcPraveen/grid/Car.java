@@ -14,9 +14,9 @@ public class Car {
 	//car has 2 states, state=1 means car is moving, state=0 means car is at rest
 	private int state=1;
 	private int lane;
-	public ArrayList<TrafficLight> path;
+	public ArrayList<TrafficLight> path;  // BJ: problematic for distribution.
 	private TrafficLight currentlight;
-	private ArrayList<TrafficLight> turns;
+	private ArrayList<TrafficLight> turns;  // BJ: problematic for distribution.
 	private int pos; //position in lane
 	private int size=5;
 	private int carsgap=1;
