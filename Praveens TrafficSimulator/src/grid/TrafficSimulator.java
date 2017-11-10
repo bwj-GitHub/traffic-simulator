@@ -29,11 +29,12 @@ public class TrafficSimulator {
 	private int distcolumns=100;
 	private CarFactory factory=new CarFactory();
 	private int id=0;
-	private int carspeed=10;
+	private int carspeed=5;
 	private int caracceleration=5;
 	private int carlength=5;
 	private int carspacing=1;
 	private int lighteventcounter=0;
+	private int total_wait_time=0;
 	
 	
 	
@@ -41,6 +42,7 @@ public class TrafficSimulator {
 	{
 		// We have initialized the grid and generated car spawn events, Now we will begin simulation.
 		int currenttime=1;
+		int ccheck=1;
 	//	System.out.println("Before sim num of car events:"+eventqueue.getSize());
 	//	eventqueue.print();
 		while( currenttime<=totalsimtime)
@@ -75,17 +77,24 @@ public class TrafficSimulator {
 				}
 				else // trafficlight update event.
 				{
+					
 					lighteventcounter++;
-					System.out.println("We are in traffic light update event");
+					// For other algorithms except dumb scheduling.
+					// Code for self managed scheduling. change light to green , other light to red.
+					//System.out.println("We are in traffic light update event");
 					LightEvent le= (LightEvent) e;
-					System.out.println("Setting light at the following position to green:");
-					le.getLight().printpos();
-					System.out.println(" ");
-					le.getLight().setlighttogreen();
-					System.out.println("Setting other light at following position to red:");
-					le.getLight().printpos();
-					System.out.println(" ");
+					//System.out.println("Setting light at the following position to green:");
+					//le.getLight().printpos();
+					//System.out.println(" ");
+					if(le.getLight().getCurrentLightColor()!=lightcolor.green) // For coordinated scheduling.
+					{
+					le.getLight().setlighttogreenevent(carspeed,carlength,carspacing);
+					//System.out.println("Setting other light at following position to red:");
+					//le.getLight().printpos();
+					//System.out.println(" ");
 					le.getLight().getOtherLight().setlighttored();
+					}
+					
 				}
 			}
 			}
@@ -93,8 +102,14 @@ public class TrafficSimulator {
 			if( (eventqueue.peek()==null || eventqueue.peek().getTime()>currenttime))
 			{
 			currenttime++;
+			for(Car car:carslist)
+			{
+				if(car.getState()==0)
+					total_wait_time++;
+			}
 			// We need to update the traffic lights states.
-			trafficlightscheduler.UpdateTrafficLights(trafficgrid,numavenues,numstreets,carlength,carspacing,carspeed,currenttime,eventqueue);
+			trafficlightscheduler.UpdateTrafficLights(trafficgrid,numavenues,numstreets,carlength,carspacing,carspeed,currenttime,eventqueue,ccheck);
+			ccheck++;
 			}
 		}
 	
@@ -130,7 +145,8 @@ public class TrafficSimulator {
 		}
 		
 		TrafficSimulator s=new TrafficSimulator(configuration);
-		System.out.println("We are executing dumb scheduling");
+		//System.out.println("We are executing self managed scheduling");
+		System.out.println("We are executing Coordinated scheduling");
 		s.algorithm=1;
 		// We will now initialize the grid
 		s.trafficgrid=new TrafficGrid(s.numavenues,s.numstreets,s.config);
@@ -141,7 +157,7 @@ public class TrafficSimulator {
 		// We have generated car creation events , Now we can start with the simulation.
 		s.run();
 		
-		System.out.println("Simulation complete with #cars:"+s.carslist.size());
+	//	System.out.println("Simulation complete with #cars:"+s.carslist.size());
 		int count=0;
 		int sum=0;
 		float avg=0;
@@ -162,7 +178,47 @@ public class TrafficSimulator {
 		}
 		
 		System.out.println("The number of cars which exited grid are :"+count+", The avg time spent in grid is:"+avg);
+		
+		count=0;sum=0;avg=0;
+		
+		for(Car c:s.carslist)
+		{
+			//count=0;
+			//sum=0;
+			if(c.hasCarExited()&&c.getNumOfTurns()==0)
+			{
+				count++;
+				sum+=c.getTimeInGrid();
+			}
+			
+		}
+		if(count!=0)
+		{
+		avg=(float)sum/count;
+		}
+		
+	//	System.out.println("The average time spent by cars in the grid which took 0 turns is "+avg );
+		
+		count=0;sum=0;avg=0;
+		
+		for(Car c:s.carslist)
+		{
+			//count=0;
+			//sum=0;
+			if(c.hasCarExited())
+			{
+				count++;
+				sum+=c.getTimeInGrid();
+			}
+			
+		}
+		if(count!=0)
+		{
+		avg=(float)sum/count;
+		}
 		System.out.println("Number of traffic light update events are :"+s.lighteventcounter);
+		avg=(float)s.total_wait_time/s.carslist.size();
+		System.out.println("The avg time spent by cars at traffic light is:"+avg);
 	}
 
 
