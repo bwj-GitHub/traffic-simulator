@@ -13,12 +13,20 @@ import events.EventQueue;
 
 public class CarFactory {
 	Config config;
-	
-	public Car newcar(int id,int arrivaltime,int numavenues,int numstreets,TrafficGrid trafficgrid,Config config)
+	int numAvenues;
+	int numStreets;
+
+	public CarFactory(Config config) {
+		this.config = config;
+		this.numAvenues = config.numrows;  // BJ: Shouldn't this be cols?
+		this.numStreets = config.numcol;
+	}
+
+
+	public Car newcar(int id, int arrivaltime, TrafficGrid trafficgrid)
 	{
 		// We first need to generate the path of the car.
 	//	System.out.println("Number of rows and cols are :"+numavenues+","+numstreets);
-		this.config=config;
 		ArrayList<Intersection> entrys=new ArrayList<Intersection>();
 		ArrayList<TrafficLight> path=new ArrayList<TrafficLight>();
 		Lane l1 = null;
@@ -29,11 +37,11 @@ public class CarFactory {
 		int turncounter2=0;
 		//int entrypoints=numavenues+numstreets;
 		// We are going to find entry intersections list.
-		for(int i=0;i<numavenues;i++)
+		for(int i=0;i<numAvenues;i++)
 		{
 			if(i%2==0)
 			
-				entrys.add(trafficgrid.getIntersection(i,numstreets-1));
+				entrys.add(trafficgrid.getIntersection(i,numStreets-1));
 			
 			else
 			
@@ -41,7 +49,7 @@ public class CarFactory {
 			
 		}
 		
-		for(int i=0;i<numstreets;i++)
+		for(int i=0;i<numStreets;i++)
 		{
 			if(i%2==0)
 			
@@ -49,14 +57,14 @@ public class CarFactory {
 			
 			else
 				
-				entrys.add(trafficgrid.getIntersection(numavenues-1, i));
+				entrys.add(trafficgrid.getIntersection(numAvenues-1, i));
 		
 		}
 		//We found entry points , Now we will generate paths randomly with 0/1/2 turns.
 		Random r=new Random();
 		int numofturns=r.nextInt(3);
 		//int numofturns=2;
-		Intersection e=entrys.get(r.nextInt(numavenues+numstreets));
+		Intersection e=entrys.get(r.nextInt(numAvenues+numStreets));
 		if (numofturns==0)
 		{
 			l1=Lane.middle;
@@ -66,7 +74,7 @@ public class CarFactory {
 				int j=e.getypos();
 				path.add(e.getlight1());
 				j++;
-				while(j<numstreets)
+				while(j<numStreets)
 				{
 					path.add(trafficgrid.getIntersection(i, j).getlight1());
 					j++;
@@ -79,13 +87,13 @@ public class CarFactory {
 				int j=e.getypos();
 				path.add(e.getlight2());
 				i++;
-				while(i<numavenues)
+				while(i<numAvenues)
 				{
 					path.add(trafficgrid.getIntersection(i, j).getlight2());
 					i++;
 				}
 			}
-			else if (e.getypos()==numstreets-1 && e.getxpos()!=numavenues-1)
+			else if (e.getypos()==numStreets-1 && e.getxpos()!=numAvenues-1)
 			{
 				int i=e.getxpos();
 				int j=e.getypos();
@@ -103,13 +111,13 @@ public class CarFactory {
 				int j=e.getypos();
 				path.add(e.getlight2());
 				i++;
-				while(i<numavenues)
+				while(i<numAvenues)
 				{
 					path.add(trafficgrid.getIntersection(i, j).getlight2());
 					i++;
 				}
 			}
-			else if (e.getypos()==numstreets-1 && e.getxpos()==numavenues-1)
+			else if (e.getypos()==numStreets-1 && e.getxpos()==numAvenues-1)
 			{
 				int i=e.getxpos();
 				int j=e.getypos();
@@ -121,7 +129,7 @@ public class CarFactory {
 					i--;
 				}
 			}
-			else if(e.getypos()!=0 && e.getxpos()==numavenues-1)
+			else if(e.getypos()!=0 && e.getxpos()==numAvenues-1)
 			{
 				int i=e.getxpos();
 				int j=e.getypos();
@@ -138,7 +146,7 @@ public class CarFactory {
 		else if(numofturns==1)
 		{
 			l2=Lane.middle;
-			int offset=r.nextInt(numavenues); //Randomly determine an intersection to turn.
+			int offset=r.nextInt(numAvenues); //Randomly determine an intersection to turn.
 		//	System.out.println("Offset value is :"+offset);
 			if(e.getypos()==0 && e.getxpos()!=0)
 			{
@@ -147,7 +155,7 @@ public class CarFactory {
 				path.add(e.getlight1());
 				j++;
 				offset--;
-				while(j<numstreets && offset>=0)
+				while(j<numStreets && offset>=0)
 				{
 					path.add(trafficgrid.getIntersection(i, j).getlight1());
 					j++;
@@ -159,7 +167,7 @@ public class CarFactory {
 				{
 					l1=Lane.right;
 					i++;
-					while(i<numavenues)
+					while(i<numAvenues)
 					{
 						path.add(trafficgrid.getIntersection(i, j).getlight2());
 						i++;
@@ -185,7 +193,7 @@ public class CarFactory {
 				path.add(e.getlight2());
 				i++;
 				offset--;
-				while(i<numavenues && offset>=0)
+				while(i<numAvenues && offset>=0)
 				{
 					path.add(trafficgrid.getIntersection(i, j).getlight2());
 					i++;
@@ -197,7 +205,7 @@ public class CarFactory {
 				{
 					l1=Lane.left;
 					j++;
-					while(j<numstreets)
+					while(j<numStreets)
 					{
 						path.add(trafficgrid.getIntersection(i, j).getlight1());
 						j++;
@@ -216,7 +224,7 @@ public class CarFactory {
 				}
 				
 			}
-			else if (e.getypos()==numstreets-1 && e.getxpos()!=numavenues-1)
+			else if (e.getypos()==numStreets-1 && e.getxpos()!=numAvenues-1)
 			{
 				int i=e.getxpos();
 				int j=e.getypos();
@@ -235,7 +243,7 @@ public class CarFactory {
 				{
 					l1=Lane.left;
 					i++;
-					while(i<numavenues)
+					while(i<numAvenues)
 					{
 						path.add(trafficgrid.getIntersection(i, j).getlight2());
 						i++;
@@ -260,7 +268,7 @@ public class CarFactory {
 				path.add(e.getlight2());
 				i++;
 				offset--;
-				while(i<numavenues && offset>=0)
+				while(i<numAvenues && offset>=0)
 				{
 					path.add(trafficgrid.getIntersection(i, j).getlight2());
 					i++;
@@ -272,7 +280,7 @@ public class CarFactory {
 				{
 					l1=Lane.left;
 					j++;
-					while(j<numstreets)
+					while(j<numStreets)
 					{
 						path.add(trafficgrid.getIntersection(i, j).getlight1());
 						j++;
@@ -290,7 +298,7 @@ public class CarFactory {
 					}
 				}
 			}
-			else if (e.getypos()==numstreets-1 && e.getxpos()==numavenues-1)
+			else if (e.getypos()==numStreets-1 && e.getxpos()==numAvenues-1)
 			{
 				int i=e.getxpos();
 				int j=e.getypos();
@@ -309,7 +317,7 @@ public class CarFactory {
 				{
 					l1=Lane.right;
 					j++;
-					while(j<numstreets)
+					while(j<numStreets)
 					{
 						path.add(trafficgrid.getIntersection(i, j).getlight1());
 						j++;
@@ -327,7 +335,7 @@ public class CarFactory {
 					}
 				}
 			}
-			else if(e.getypos()!=0 && e.getxpos()==numavenues-1)
+			else if(e.getypos()!=0 && e.getxpos()==numAvenues-1)
 			{
 				int i=e.getxpos();
 				int j=e.getypos();
@@ -346,7 +354,7 @@ public class CarFactory {
 				{
 					l1=Lane.right;
 					j++;
-					while(j<numstreets)
+					while(j<numStreets)
 					{
 						path.add(trafficgrid.getIntersection(i, j).getlight1());
 						j++;
@@ -370,7 +378,7 @@ public class CarFactory {
 		else
 		{
 			l3=Lane.middle;
-			int offset=r.nextInt(numavenues); //Randomly determine an intersection to turn.
+			int offset=r.nextInt(numAvenues); //Randomly determine an intersection to turn.
 			int offset1;
 		//	System.out.println("Offset value is :"+offset);
 			if(e.getypos()==0 && e.getxpos()!=0)
@@ -380,7 +388,7 @@ public class CarFactory {
 				path.add(e.getlight1());
 				j++;
 				offset--;
-				while(j<numstreets && offset>=0)
+				while(j<numStreets && offset>=0)
 				{
 					path.add(trafficgrid.getIntersection(i, j).getlight1());
 					j++;
@@ -390,13 +398,13 @@ public class CarFactory {
 				j--;
 				if(path.get(path.size()-1).getOtherLight().getTrafficDirection()==TrafficDirection.ns)
 				{
-					if(numavenues-i-1==0)
+					if(numAvenues-i-1==0)
 						offset1=0;
 					else
-					offset1=r.nextInt(numavenues-i-1);
+					offset1=r.nextInt(numAvenues-i-1);
 					l1=Lane.right;
 					i++;
-					while(i<numavenues&&offset1>=0)
+					while(i<numAvenues&&offset1>=0)
 					{
 						path.add(trafficgrid.getIntersection(i, j).getlight2());
 						i++;
@@ -408,7 +416,7 @@ public class CarFactory {
 					{
 						l2=Lane.left;
 						j++;
-						while(j<numstreets)
+						while(j<numStreets)
 						{
 							path.add(trafficgrid.getIntersection(i, j).getlight1());
 							j++;
@@ -443,7 +451,7 @@ public class CarFactory {
 					{
 						l2=Lane.right;
 						j++;
-						while(j<numstreets)
+						while(j<numStreets)
 						{
 							path.add(trafficgrid.getIntersection(i, j).getlight1());
 							j++;
@@ -469,7 +477,7 @@ public class CarFactory {
 				path.add(e.getlight2());
 				i++;
 				offset--;
-				while(i<numavenues && offset>=0)
+				while(i<numAvenues && offset>=0)
 				{
 					path.add(trafficgrid.getIntersection(i, j).getlight2());
 					i++;
@@ -479,10 +487,10 @@ public class CarFactory {
 				i--;
 				if(path.get(path.size()-1).getOtherLight().getTrafficDirection()==TrafficDirection.we)
 				{
-					offset1=r.nextInt(numstreets-1);
+					offset1=r.nextInt(numStreets-1);
 					l1=Lane.left;
 					j++;
-					while(j<numstreets&&offset1>=0)
+					while(j<numStreets&&offset1>=0)
 					{
 						path.add(trafficgrid.getIntersection(i, j).getlight1());
 						j++;
@@ -494,7 +502,7 @@ public class CarFactory {
 					{
 						l2=Lane.right;
 						i++;
-						while(i<numavenues)
+						while(i<numAvenues)
 						{
 							path.add(trafficgrid.getIntersection(i, j).getlight2());
 							i++;
@@ -514,7 +522,7 @@ public class CarFactory {
 				
 				else
 				{
-					offset1=r.nextInt(numstreets-1);
+					offset1=r.nextInt(numStreets-1);
 					l1=Lane.right;
 					j--;
 					while(j>=0&&offset1>=0)
@@ -526,7 +534,7 @@ public class CarFactory {
 				}
 				
 			}
-			else if (e.getypos()==numstreets-1 && e.getxpos()!=numavenues-1)
+			else if (e.getypos()==numStreets-1 && e.getxpos()!=numAvenues-1)
 			{
 				int i=e.getxpos();
 				int j=e.getypos();
@@ -543,10 +551,10 @@ public class CarFactory {
 				j++;
 				if(path.get(path.size()-1).getOtherLight().getTrafficDirection()==TrafficDirection.ns)
 				{
-					offset1=r.nextInt(numavenues-i-1);
+					offset1=r.nextInt(numAvenues-i-1);
 					l1=Lane.left;
 					i++;
-					while(i<numavenues&&offset1>=0)
+					while(i<numAvenues&&offset1>=0)
 					{
 						path.add(trafficgrid.getIntersection(i, j).getlight2());
 						i++;
@@ -557,7 +565,7 @@ public class CarFactory {
 					{
 						l2=Lane.left;
 						j++;
-						while(j<numstreets)
+						while(j<numStreets)
 						{
 							path.add(trafficgrid.getIntersection(i, j).getlight1());
 							j++;
@@ -595,7 +603,7 @@ public class CarFactory {
 					{
 						l2=Lane.right;
 						j++;
-						while(j<numstreets)
+						while(j<numStreets)
 						{
 							path.add(trafficgrid.getIntersection(i, j).getlight1());
 							j++;
@@ -620,7 +628,7 @@ public class CarFactory {
 				path.add(e.getlight2());
 				i++;
 				offset--;
-				while(i<numavenues && offset>=0)
+				while(i<numAvenues && offset>=0)
 				{
 					path.add(trafficgrid.getIntersection(i, j).getlight2());
 					i++;
@@ -630,10 +638,10 @@ public class CarFactory {
 				i--;
 				if(path.get(path.size()-1).getOtherLight().getTrafficDirection()==TrafficDirection.we)
 				{
-					offset1=r.nextInt(numstreets-j-1);
+					offset1=r.nextInt(numStreets-j-1);
 					l1=Lane.left;
 					j++;
-					while(j<numstreets&&offset1>=0)
+					while(j<numStreets&&offset1>=0)
 					{
 						path.add(trafficgrid.getIntersection(i, j).getlight1());
 						j++;
@@ -645,7 +653,7 @@ public class CarFactory {
 					{
 						l2=Lane.right;
 						i++;
-						while(i<numavenues)
+						while(i<numAvenues)
 						{
 							path.add(trafficgrid.getIntersection(i, j).getlight2());
 							i++;
@@ -678,7 +686,7 @@ public class CarFactory {
 					{
 						l2=Lane.left;
 						i++;
-						while(i<numavenues)
+						while(i<numAvenues)
 						{
 							path.add(trafficgrid.getIntersection(i, j).getlight2());
 							i++;
@@ -696,7 +704,7 @@ public class CarFactory {
 					}
 				}
 			}
-			else if (e.getypos()==numstreets-1 && e.getxpos()==numavenues-1)
+			else if (e.getypos()==numStreets-1 && e.getxpos()==numAvenues-1)
 			{
 				int i=e.getxpos();
 				int j=e.getypos();
@@ -713,13 +721,13 @@ public class CarFactory {
 				i++;
 				if(path.get(path.size()-1).getOtherLight().getTrafficDirection()==TrafficDirection.we)
 				{
-					if(numstreets-j-1==0)
+					if(numStreets-j-1==0)
 						offset1=0;
 					else
-					offset1=r.nextInt(numstreets-j-1);
+					offset1=r.nextInt(numStreets-j-1);
 					l1=Lane.right;
 					j++;
-					while(j<numstreets&&offset1>=0)
+					while(j<numStreets&&offset1>=0)
 					{
 						path.add(trafficgrid.getIntersection(i, j).getlight1());
 						j++;
@@ -731,7 +739,7 @@ public class CarFactory {
 					{
 						l2=Lane.right;
 						i++;
-						while(i<numavenues)
+						while(i<numAvenues)
 						{
 							path.add(trafficgrid.getIntersection(i, j).getlight2());
 							i++;
@@ -767,7 +775,7 @@ public class CarFactory {
 					{
 						l2=Lane.left;
 						i++;
-						while(i<numavenues)
+						while(i<numAvenues)
 						{
 							path.add(trafficgrid.getIntersection(i, j).getlight2());
 							i++;
@@ -786,7 +794,7 @@ public class CarFactory {
 					
 				}
 			}
-			else if(e.getypos()!=0 && e.getxpos()==numavenues-1)
+			else if(e.getypos()!=0 && e.getxpos()==numAvenues-1)
 			{
 				int i=e.getxpos();
 				int j=e.getypos();
@@ -803,10 +811,10 @@ public class CarFactory {
 				i++;
 				if(path.get(path.size()-1).getOtherLight().getTrafficDirection()==TrafficDirection.we)
 				{
-					offset1=r.nextInt(numstreets-j-1);
+					offset1=r.nextInt(numStreets-j-1);
 					l1=Lane.right;
 					j++;
-					while(j<numstreets&&offset1>=0)
+					while(j<numStreets&&offset1>=0)
 					{
 						path.add(trafficgrid.getIntersection(i, j).getlight1());
 						j++;
@@ -818,7 +826,7 @@ public class CarFactory {
 					{
 						l2=Lane.right;
 						i++;
-						while(i<numavenues)
+						while(i<numAvenues)
 						{
 							path.add(trafficgrid.getIntersection(i, j).getlight2());
 							i++;
@@ -853,7 +861,7 @@ public class CarFactory {
 					{
 						l2=Lane.left;
 						i++;
-						while(i<numavenues)
+						while(i<numAvenues)
 						{
 							path.add(trafficgrid.getIntersection(i, j).getlight2());
 							i++;

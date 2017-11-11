@@ -25,7 +25,7 @@ public class TrafficSimulator {
 	private int numavenues;
 	private int numstreets;
 	private CarFactory carFactory;
-	
+
 	// BJ: Don't initialize when declaring attributes
 	private int id=0;
 	private int carspeed=5;
@@ -45,12 +45,13 @@ public class TrafficSimulator {
 		eventQueue = new EventQueue();
 		trafficGrid = new TrafficGrid(config);
 		trafficLightScheduler = new TrafficLightScheduler();
-		carFactory = new CarFactory();
+		carFactory = new CarFactory(config);
 
 		// Generate all CarSpawnEvents
 		CarSpawnEvent[] carSpawnEvents = carFactory.generateCarSpawnEvent(config);
 		eventQueue.add(carSpawnEvents);
 	}
+
 
 	public void run()
 	{
@@ -64,12 +65,8 @@ public class TrafficSimulator {
 				currentEvent = eventQueue.poll();
 				if(currentEvent.getEventType()==eventtypeenum.carspawn)
 				{
-					id++;
-					carslist.add(carFactory.newcar(id,currenttime,numavenues,numstreets,trafficGrid,config));
-					// After car spawn we need to create a carupdate event for spawned car.
-					carslist.get(id-1).path.get(0).addcar(carslist.get(id-1));//Adding car to first traffic light.
-					Event n=carslist.get(id-1).generateCarUpdateEvent(currenttime);
-					eventQueue.add(n); // We added carupdate event into queue for that carspawn.
+					Event updateEvent = handleCarSpawnEvent(currentEvent);
+					eventQueue.add(updateEvent);
 				}
 				else if(currentEvent.getEventType()==eventtypeenum.carupdate)
 				{ // When we see car update event in queue.
@@ -103,7 +100,7 @@ public class TrafficSimulator {
 					}
 				}
 			}
-			if( (eventQueue.peek()==null || eventQueue.peek().getTime()>currenttime))
+			if ((eventQueue.peek()==null || eventQueue.peek().getTime()>currenttime))
 			{
 				currenttime++;
 				for(Car car:carslist)
@@ -116,6 +113,19 @@ public class TrafficSimulator {
 				ccheck++;
 			}
 		}
+	}
+
+
+	public Event handleCarSpawnEvent(Event carSpawnEvent) {
+		int eventTime = carSpawnEvent.getTime();
+		id++;
+		carslist.add(carFactory.newcar(id, eventTime, trafficGrid));
+		//Adding car to first traffic light:
+		carslist.get(id-1).path.get(0).addcar(carslist.get(id-1));
+
+		// Generating the Car's next CarUpdateEvent:
+		Event updateEvent = carslist.get(id-1).generateCarUpdateEvent(eventTime);
+		return updateEvent;
 	}
 
 

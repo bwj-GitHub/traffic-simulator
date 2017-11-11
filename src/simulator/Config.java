@@ -4,7 +4,7 @@ import java.io.FileNotFoundException;
 import java.util.Scanner;
 
 public class Config {
-
+	public long randomSeed;
 	public int numrows=50;
 	public int numcol=50;
 	public float lambda;
@@ -23,7 +23,6 @@ public class Config {
 	public int nRows;  // n in project description
 	public int nCols;  // m in project description
 	float timeLimit;  // TODO: Read timelimit?
-	long randomSeed; // TODO: Read this?
 
 	float lambda;  // parameter for car arrival
 	public float acceleration;
