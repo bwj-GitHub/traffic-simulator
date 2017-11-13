@@ -1,4 +1,4 @@
-package events;
+package events.distributed;
 
 public class ExternalEventQueue {
 

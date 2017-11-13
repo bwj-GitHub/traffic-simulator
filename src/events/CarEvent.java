@@ -8,9 +8,8 @@ package events;
  */
 public class CarEvent extends Event{
 
-	public CarEvent(eventtypeenum e, int t) {
-		super(e, t);
-		// TODO Auto-generated constructor stub
+	public CarEvent(int t) {
+		super(t);
 	}
 
 }

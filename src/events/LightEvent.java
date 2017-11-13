@@ -6,9 +6,9 @@ public class LightEvent extends Event {
 	
 	TrafficLight t;
 	
-	public LightEvent(TrafficLight light,eventtypeenum e,int time) 
+	public LightEvent(TrafficLight light, int time) 
 	{
-		super(e,time);
+		super(time);
 		t=light;
 	}
 	

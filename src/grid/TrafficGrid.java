@@ -5,7 +5,6 @@ import java.util.*;
 import events.CarSpawnEvent;
 import events.CarUpdateEvent;
 import events.Event;
-import events.Event.eventtypeenum;
 import simulator.Config;
 import events.EventQueue;
 import events.LightEvent;
@@ -106,7 +105,7 @@ public class TrafficGrid  {
 			{
 			// Create traffic light update event with current time.
 			//	System.out.println("Creating traffic light update event and number of cars at that light are :"+currentlight.getCounter());
-				Event lightevent=new LightEvent(currentlight,eventtypeenum.trafficlightupdate,currenttime);
+				Event lightevent=new LightEvent(currentlight, currenttime);
 				futureEvents.add(lightevent);
 				currentlight.getOtherLight().setFlag();
 				currentlight.getOtherLight().setOtherLightEvent(lightevent);
@@ -114,7 +113,7 @@ public class TrafficGrid  {
 			else if((currentlight.getFlag()==true && (currentlight.getCounter()>currentlight.getOtherLight().getCounter())) && currentlight.getCurrentLightColor()!=LightColor.green)
 			{
 			//	System.out.println("Creating traffic light update event and number of cars at that light are :"+currentlight.getCounter());
-				futureEvents.add(new LightEvent(currentlight,eventtypeenum.trafficlightupdate,currenttime));
+				futureEvents.add(new LightEvent(currentlight, currenttime));
 			// By the current event creation if previous traffic light update event of other light is executed then we need to remove that event from eventqueue.
 				// BJ: NO! You should not be deciding that an Event won't be executed after it was placed in the EventQueue
 				eq.remove(currentlight.getOtherLightEvent()); //Remove event if it is present.

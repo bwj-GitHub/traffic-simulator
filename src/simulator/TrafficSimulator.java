@@ -5,7 +5,6 @@ import java.util.*;
 import events.CarSpawnEvent;
 import events.CarUpdateEvent;
 import events.Event;
-import events.Event.eventtypeenum;
 import grid.Car;
 import grid.CarFactory;
 import grid.LightColor;
@@ -64,12 +63,12 @@ public class TrafficSimulator {
 			{
 				Event currentEvent;
 				currentEvent = eventQueue.poll();
-				if(currentEvent.getEventType()==eventtypeenum.carspawn)
+				if(currentEvent instanceof CarSpawnEvent)
 				{
 					Event updateEvent = handleCarSpawnEvent(currentEvent);
 					eventQueue.add(updateEvent);
 				}
-				else if(currentEvent.getEventType()==eventtypeenum.carupdate)
+				else if(currentEvent instanceof CarUpdateEvent)
 				{ // When we see car update event in queue.
 					CarUpdateEvent update = (CarUpdateEvent) currentEvent;
 					ArrayList<Event> list=trafficGrid.handleCarUpdateEvent(update,currenttime,eventQueue);

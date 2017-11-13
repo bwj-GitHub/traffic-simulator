@@ -2,7 +2,6 @@ package grid;
 
 import java.util.ArrayList;
 
-import events.Event.eventtypeenum;
 import events.EventQueue;
 import events.LightEvent;
 
@@ -52,7 +51,7 @@ public class TrafficLightScheduler {
 										if(c.getCurrentLight().getTrafficDirection()==light1.getTrafficDirection())
 											light1.s1=true;
 									//	{	
-										eventqueue.add(new LightEvent(c.getCurrentLight(),eventtypeenum.trafficlightupdate,currenttime+c.getTime()));
+										eventqueue.add(new LightEvent(c.getCurrentLight(), currenttime+c.getTime()));
 										//if(light1.getRemainingTime()!=4 && (c.getCurrentLight().getTrafficDirection()==light1.getTrafficDirection()))
 										light1.unsetFlag_Coordinated1();
 										
@@ -85,7 +84,7 @@ public class TrafficLightScheduler {
 								if(light1.getFlag_Coordinated()==true)
 								{
 									//Creating a traffic light update event for next light of cars path.
-									eventqueue.add(new LightEvent(c.getCurrentLight(),eventtypeenum.trafficlightupdate,currenttime+c.getTime()));
+									eventqueue.add(new LightEvent(c.getCurrentLight(), currenttime+c.getTime()));
 									light1.unsetFlag_Coordinated();
 								}
 							}
@@ -114,7 +113,7 @@ public class TrafficLightScheduler {
 								//	if(c.getCurrentLight().getTrafficDirection()!=light1.getTrafficDirection())
 									if(c.getCurrentLight().getTrafficDirection()==light1.getTrafficDirection())
 										light1.s1=true;
-									eventqueue.add(new LightEvent(c.getCurrentLight(),eventtypeenum.trafficlightupdate,currenttime+c.getTime()));
+									eventqueue.add(new LightEvent(c.getCurrentLight(), currenttime+c.getTime()));
 									light1.unsetFlag_Coordinated1();
 									if(light1.s1==true&&c.getCurrentLight().getTrafficDirection()!=light1.getTrafficDirection())
 										light1.s1=false;
@@ -294,7 +293,7 @@ public class TrafficLightScheduler {
 									//if(c.getCurrentLight().getTrafficDirection()!=light2.getTrafficDirection())
 									if(c.getCurrentLight().getTrafficDirection()==light2.getTrafficDirection())
 										light2.s1=true;
-									eventqueue.add(new LightEvent(c.getCurrentLight(),eventtypeenum.trafficlightupdate,currenttime+c.getTime()));
+									eventqueue.add(new LightEvent(c.getCurrentLight(), currenttime+c.getTime()));
 									light2.unsetFlag_Coordinated1();
 									if(light2.s1==true&&c.getCurrentLight().getTrafficDirection()!=light2.getTrafficDirection())
 										light2.s1=false;
@@ -322,7 +321,7 @@ public class TrafficLightScheduler {
 								if(light2.getFlag_Coordinated()==true)
 								{
 									//Creating a traffic light update event for next light of cars path.
-									eventqueue.add(new LightEvent(c.getCurrentLight(),eventtypeenum.trafficlightupdate,currenttime+c.getTime()));
+									eventqueue.add(new LightEvent(c.getCurrentLight(), currenttime+c.getTime()));
 									light2.unsetFlag_Coordinated();
 								}
 							}
@@ -351,7 +350,7 @@ public class TrafficLightScheduler {
 									//if(c.getCurrentLight().getTrafficDirection()!=light2.getTrafficDirection())
 									if(c.getCurrentLight().getTrafficDirection()==light2.getTrafficDirection())
 										light2.s1=true;
-									eventqueue.add(new LightEvent(c.getCurrentLight(),eventtypeenum.trafficlightupdate,currenttime+c.getTime()));
+									eventqueue.add(new LightEvent(c.getCurrentLight(), currenttime+c.getTime()));
 									light2.unsetFlag_Coordinated1();
 									if(light2.s1==true&&c.getCurrentLight().getTrafficDirection()!=light2.getTrafficDirection())
 										light2.s1=false;

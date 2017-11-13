@@ -3,9 +3,9 @@ package events;
 
 public class CarSpawnEvent extends CarEvent {
 
-	public CarSpawnEvent(eventtypeenum e, int t)
+	public CarSpawnEvent(int t)
 	{
-		super(e, t);
+		super(t);
 	}
 
 }

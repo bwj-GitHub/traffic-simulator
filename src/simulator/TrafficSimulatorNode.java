@@ -3,8 +3,8 @@ package simulator;
 import events.CarEvent;
 import events.Event;
 import events.EventQueue;
-import events.ExternalEventQueue;
 import events.LightEvent;
+import events.distributed.ExternalEventQueue;
 import grid.TrafficGrid;
 import grid.TrafficLightScheduler;
 
@@ -17,27 +17,7 @@ public class TrafficSimulatorNode {
 	public ExternalEventQueue[] externalEventQueues;
 	
 	public TrafficSimulatorNode(Config config) {
-		
-	}
-
-	public void run() {
-		Event nextEvent;
-		Event[] futureEvents;
-		do {
-			nextEvent = getNextEvent();
-			if (nextEvent instanceof CarEvent) {
-				futureEvents = trafficGrid.handleEvent(nextEvent);
-			} else if (nextEvent instanceof LightEvent) {
-				futureEvents = trafficLightScheduler.handleEvent(nextEvent);
-			} else {
-				System.out.println("Unexpected event received!");
-				break;
-//				throw new Exception();
-			}
-			enqueueFutureEvents(futureEvents);
-			
-		} while (nextEvent.getTime() < config.timelimit);
-		
+		// TODO: Write me!
 	}
 
 	/**

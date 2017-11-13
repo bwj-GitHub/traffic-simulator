@@ -4,7 +4,6 @@ import java.util.ArrayList;
 
 import events.CarUpdateEvent;
 import events.Event;
-import events.Event.eventtypeenum;
 import simulator.Config;
 
 public class Car {
@@ -216,7 +215,7 @@ public class Car {
 			}
 			}
 		}
-		Event e=new CarUpdateEvent(this,eventtypeenum.carupdate,currenttime+time);
+		Event e=new CarUpdateEvent(this, currenttime+time);
 		return e;
 	}
 	

@@ -5,7 +5,6 @@ import java.util.Random;
 
 import events.CarSpawnEvent;
 import events.Event;
-import events.Event.eventtypeenum;
 import simulator.Config;
 import events.EventQueue;
 
@@ -916,7 +915,7 @@ public class CarFactory {
 		for(int i=0; i<n; i++)
 		{
 			time+=rate.getNextArrivalTime();
-			carSpawnEvents[i] = new CarSpawnEvent(eventtypeenum.carspawn, (int)time);
+			carSpawnEvents[i] = new CarSpawnEvent((int)time);
 		}
 		System.out.println("Genetared number of car spawn events are :" + n);
 		return carSpawnEvents;

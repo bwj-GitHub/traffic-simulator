@@ -4,10 +4,10 @@ import grid.Car;
 public class CarUpdateEvent extends CarEvent {
 	private Car car;
 	
-	public CarUpdateEvent(Car c,eventtypeenum e,int time)
+	public CarUpdateEvent(Car c, int time)
 	{
-		super(e,time);
-		car=c;
+		super(time);
+		car = c;
 	}
 	
 	
