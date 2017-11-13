@@ -2,9 +2,13 @@ package events;
 import java.util.*;
 
 public class EventQueue {
-	
-	private PriorityQueue<Event> queue=new PriorityQueue<Event>();
-	
+
+	private PriorityQueue<Event> queue;
+
+	public EventQueue() {
+		queue=new PriorityQueue<Event>();
+	}
+
 	public void add(Event e)
 	{
 		queue.add(e);

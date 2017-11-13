@@ -4,7 +4,7 @@ package events;
   public abstract class Event implements Comparable<Event> {
 
 	int time;
-	eventtypeenum type;
+	eventtypeenum type;  // BJ: What is wrong with just using instanceof operator?
 	
 	public Event(eventtypeenum e,int t)
 	{

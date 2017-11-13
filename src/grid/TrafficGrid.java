@@ -21,45 +21,48 @@ public class TrafficGrid  {
 	public TrafficGrid(Config config)
 	{
 		this.config=config;
-		numavenues=config.numrows;
-		numstreets=config.numcol;
-		int i,j;
+		numavenues = config.numrows;
+		numstreets = config.numcol;
 		intersections = new Intersection[numavenues][numstreets];
-		for (i=0;i<numavenues;i++)
-			for(j=0;j<numstreets;j++)
-				intersections[i][j]=new Intersection(i,j,numavenues,numstreets,config);
+		for (int i = 0; i < numavenues; i++)
+		{
+			for(int j = 0; j < numstreets; j++)
+			{
+				// BJ: why do I need numavenues and numstreets if I have config?
+				intersections[i][j] = new Intersection(i, j, numavenues, numstreets, config);
+			}
+		}
 	}
 
 	
-	public Intersection  getIntersection(int i,int j)
+	public Intersection  getIntersection(int i, int j)
 	{
 		return intersections[i][j];
 	}
 
-	
-	public ArrayList<Event> handleCarUpdateEvent(CarUpdateEvent event,int currenttime,EventQueue eq)
+	// BJ: Why is this being passed the EventQueue?
+	public ArrayList<Event> handleCarUpdateEvent(CarUpdateEvent event, int currenttime, EventQueue eq)
 	{
 	//	System.out.println("We are inside car update event with time:"+ currenttime);
-		
+
 		int n; //Number of cars ahead it at lane.
-		ArrayList<Event> l=new ArrayList<Event>();
-		Car c=event.getCar();
+		ArrayList<Event> futureEvents = new ArrayList<Event>();
+		Car car = event.getCar();
 	//	System.out.println("Car with id:"+c.getId()+" has reached intersection and we are handling its car update event at time :"+ currenttime);
 	//	System.out.println("Intersection is:");
 	//	c.getCurrentLight().printpos();
 	//	System.out.println("");
 	//	System.out.println("The current light color is: "+c.getCurrentLight().getCurrentLightColor()+" Remaining light time is :"+c.getCurrentLight().getRemainingTime());
-		c.rest(); // Setting car to rest state.
-		int n1=c.getPosition();
+		car.rest(); // Setting car to rest state.  // BJ: What is this?
+		int n1=car.getPosition();
 		int distance;
 		int time;
-		TrafficLight currentlight=c.getCurrentLight();
-		
+		TrafficLight currentlight=car.getCurrentLight();
+
 		//For handling self managed scheduling we add the following code which increments the counter in current traffic light & checks if counter exceeds threshold.
 		currentlight.incrementCounter();
-		
-		
-		if(c.getCurrentLight().getCurrentLightColor()==LightColor.green && c.getPosition()==1)
+
+		if(car.getCurrentLight().getCurrentLightColor()==LightColor.green && car.getPosition()==1)
 		{
 			// Since trafficlight is green/yellow , We check if it can move to next traffic light and move it accordingly.
 			/*switch(c.getCurrentLane()) // Get the current position of car in respective lane.
@@ -78,41 +81,47 @@ public class TrafficGrid  {
 			//if(time<=c.getCurrentLight().getRemainingTime())
 			//{
 				// We can proceed to move this car to next intersection.
-				if( c.getNextLightIndex()==c.path.size() ||(c.getCurrentLane()==Lane.middle && c.path.get(c.getNextLightIndex()).getMiddleLaneSize()<=c.getCurrentLight().getLaneLimit()) || ( c.getCurrentLane()!=Lane.middle &&(c.path.get(c.getNextLightIndex()).getNumberOfTurningCars()<=c.getCurrentLight().getLaneLimit())))
+			// BJ: This if statement is too long
+				if (car.getNextLightIndex() == car.path.size() ||
+						(car.getCurrentLane() == Lane.middle &&
+						car.path.get(car.getNextLightIndex()).getMiddleLaneSize() <= car.getCurrentLight().getLaneLimit()) ||
+						(car.getCurrentLane()!=Lane.middle &&
+						(car.path.get(car.getNextLightIndex()).getNumberOfTurningCars() <= car.getCurrentLight().getLaneLimit())))
 				{	 
-				int check=c.getCurrentLight().removecar(c,currenttime); // We removed car and added it to appropriate traffic light.
+				int check = car.getCurrentLight().removecar(car,currenttime); // We removed car and added it to appropriate traffic light.
 				// Now we need to create new carupdate event.
-				c.moving(); // Car is in motion.
+				car.moving(); // Car is in motion.
 				if(check==1)
-				l.add(c.generateCarUpdateEvent(currenttime));
+				futureEvents.add(car.generateCarUpdateEvent(currenttime));
 				}
 			//}
 		}
 		
-		if((currentlight.getCounter()>currentlight.getThreshold()))
+		// BJ: What is this doing?
+		// BJ: The TrafficLights should be controlled by the TrafficLightScheduler!
+		if((currentlight.getCounter() > currentlight.getThreshold()))
 		{
-			if(currentlight.getFlag()==false && currentlight.getCurrentLightColor()!=LightColor.green)
+			if(currentlight.getFlag() == false &&  /* BJ: What is this flag? */
+					currentlight.getCurrentLightColor() != LightColor.green)
 			{
 			// Create traffic light update event with current time.
 			//	System.out.println("Creating traffic light update event and number of cars at that light are :"+currentlight.getCounter());
 				Event lightevent=new LightEvent(currentlight,eventtypeenum.trafficlightupdate,currenttime);
-				l.add(lightevent);
+				futureEvents.add(lightevent);
 				currentlight.getOtherLight().setFlag();
 				currentlight.getOtherLight().setOtherLightEvent(lightevent);
 			}
 			else if((currentlight.getFlag()==true && (currentlight.getCounter()>currentlight.getOtherLight().getCounter())) && currentlight.getCurrentLightColor()!=LightColor.green)
 			{
 			//	System.out.println("Creating traffic light update event and number of cars at that light are :"+currentlight.getCounter());
-				l.add(new LightEvent(currentlight,eventtypeenum.trafficlightupdate,currenttime));
+				futureEvents.add(new LightEvent(currentlight,eventtypeenum.trafficlightupdate,currenttime));
 			// By the current event creation if previous traffic light update event of other light is executed then we need to remove that event from eventqueue.
+				// BJ: NO! You should not be deciding that an Event won't be executed after it was placed in the EventQueue
 				eq.remove(currentlight.getOtherLightEvent()); //Remove event if it is present.
 			}
-			
-			
 		}
 		//Handle carupdate
-		
-		return l;
+		return futureEvents;
 	}
 	
 }
