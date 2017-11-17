@@ -19,8 +19,8 @@ public class TrafficSimulator {
 	private EventQueue eventQueue;
 	private TrafficGrid trafficGrid;
 	private TrafficLightScheduler trafficLightScheduler;
-	private int algorithm;  // BJ: Is this used anywhere?
-	private ArrayList<Car> cars;
+	private int algorithm;
+	private ArrayList<Car> carslist = new ArrayList<Car>();
 	private int numavenues;
 	private int numstreets;
 	private CarFactory carFactory;
@@ -45,7 +45,6 @@ public class TrafficSimulator {
 		trafficGrid = new TrafficGrid(config);
 		trafficLightScheduler = new TrafficLightScheduler();
 		carFactory = new CarFactory(config);
-		cars = new ArrayList<Car>();
 
 		// Generate all CarSpawnEvents
 		CarSpawnEvent[] carSpawnEvents = carFactory.generateCarSpawnEvent(config);
@@ -70,8 +69,8 @@ public class TrafficSimulator {
 				}
 				else if(currentEvent instanceof CarUpdateEvent)
 				{ // When we see car update event in queue.
-					CarUpdateEvent update = (CarUpdateEvent) currentEvent;
-					ArrayList<Event> list=trafficGrid.handleCarUpdateEvent(update,currenttime,eventQueue);
+					CarUpdateEvent update= (CarUpdateEvent) currentEvent;
+					ArrayList<Event> list=trafficGrid.handleCarUpdateEvent(update,currenttime,eventQueue,4);
 					if(!list.isEmpty())
 					{
 						for(Event ev:list)
@@ -92,7 +91,7 @@ public class TrafficSimulator {
 					//System.out.println(" ");
 					if(le.getLight().getCurrentLightColor()!=LightColor.green) // For coordinated scheduling.
 					{
-					le.getLight().setlighttogreenevent(carspeed,carlength,carspacing);
+					le.getLight().setlighttogreenevent(carspeed,carlength,carspacing,4);
 					//System.out.println("Setting other light at following position to red:");
 					//le.getLight().printpos();
 					//System.out.println(" ");
@@ -103,13 +102,13 @@ public class TrafficSimulator {
 			if ((eventQueue.peek()==null || eventQueue.peek().getTime()>currenttime))
 			{
 				currenttime++;
-				for(Car car:cars)
+				for(Car car:carslist)
 				{
 					if(car.getState()==0)
 						total_wait_time++;
 				}
 				// We need to update the traffic lights states.
-				trafficLightScheduler.UpdateTrafficLights(trafficGrid,numavenues,numstreets,carlength,carspacing,carspeed,currenttime,eventQueue,ccheck);
+				trafficLightScheduler.UpdateTrafficLights(trafficGrid,numavenues,numstreets,carlength,carspacing,carspeed,currenttime,eventQueue,ccheck,4);
 				ccheck++;
 			}
 		}
@@ -119,12 +118,12 @@ public class TrafficSimulator {
 	public Event handleCarSpawnEvent(Event carSpawnEvent) {
 		int eventTime = carSpawnEvent.getTime();
 		id++;
-		cars.add(carFactory.newcar(id, eventTime, trafficGrid));
+		carslist.add(carFactory.newcar(id, eventTime, trafficGrid));
 		//Adding car to first traffic light:
-		cars.get(id-1).path.get(0).addcar(cars.get(id-1));
+		carslist.get(id-1).path.get(0).addcar(carslist.get(id-1));
 
 		// Generating the Car's next CarUpdateEvent:
-		Event updateEvent = cars.get(id-1).generateCarUpdateEvent(eventTime);
+		Event updateEvent = carslist.get(id-1).generateCarUpdateEvent(eventTime);
 		return updateEvent;
 	}
 
@@ -135,7 +134,7 @@ public class TrafficSimulator {
 		int count=0;
 		int sum=0;
 		float avg=0;
-		for(Car c: cars)
+		for(Car c: carslist)
 		{
 			if (c.hasCarExited())
 			{
@@ -150,7 +149,7 @@ public class TrafficSimulator {
 		System.out.println("The number of cars which exited grid are :"
 				+ count + "; The avg time spent in grid is:" + avg);
 		System.out.println("Number of traffic light update events are :" + lighteventcounter);
-		avg=(float) total_wait_time / cars.size();
+		avg=(float) total_wait_time / carslist.size();
 		System.out.println("The avg time spent by cars at traffic light is:"+avg);
 	}
 
