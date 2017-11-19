@@ -3,7 +3,7 @@ import java.util.*;
 
 public class EventQueue {
 
-	private PriorityQueue<Event> queue;
+	protected PriorityQueue<Event> queue;
 
 	public EventQueue() {
 		queue=new PriorityQueue<Event>();
@@ -13,18 +13,18 @@ public class EventQueue {
 	{
 		queue.add(e);
 	}
-	
+
 	public void add(Event[] events) {
 		for (Event e: events) {
 			add(e);
 		}
 	}
-	
+
 	public void remove(Event e)
 	{
 		queue.remove(e);
 	}
-	
+
 	public Event peek()
 	{
 		return queue.peek();
@@ -34,11 +34,12 @@ public class EventQueue {
 	{
 		return queue.poll();
 	}
-	
+
 	public int getSize()
 	{
 		return queue.size();
 	}
+
 	public void print()
 	{
 		System.out.println("Printing the car spawn events");

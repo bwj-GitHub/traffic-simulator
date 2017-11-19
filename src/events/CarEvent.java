@@ -7,6 +7,10 @@ package events;
  *
  */
 public class CarEvent extends Event{
+	
+	public CarEvent() {
+		super();
+	}
 
 	public CarEvent(int t) {
 		super(t);

@@ -35,13 +35,17 @@ public class TrafficSimulator {
 
 	public TrafficSimulator(Config config)
 	{
+		this(config, new EventQueue());
+	}
+
+	public TrafficSimulator(Config config, EventQueue eventQueue) {
 		this.config=config;
 		this.numavenues=config.numrows;
 		this.numstreets=config.numcol;
 		this.carspeed=config.carspeed;
 		this.carlength=config.carsize;
 		this.carspacing=config.carspacing;
-		eventQueue = new EventQueue();
+		this.eventQueue = eventQueue;
 		trafficGrid = new TrafficGrid(config);
 		trafficLightScheduler = new TrafficLightScheduler();
 		carFactory = new CarFactory(config);
