@@ -23,23 +23,22 @@ public class ExternalEventQueue extends EventQueue{
 
 	Config config;
 	EventMessageListener messageListener;
-	QueueSession inputSession;   // for reading incoming messages
-	QueueSession outputSession;  // for sending messages
+	QueueSession queueSession;   // for reading incoming messages
 	QueueReceiver queueReceiver;
 	QueueSender queueSender;
 	EventQueue queue;
 	Event lastSentEvent;
 
-	public ExternalEventQueue(Config config, Queue inputQueue, Queue outputQueue,
-			QueueSession inputSession, QueueSession outputSession) {
+	public ExternalEventQueue(Config config, QueueSession queueSession, Queue inputQueue,
+			Queue outputQueue) {
 		queue = new EventQueue();
 		messageListener = null;
 		lastSentEvent = null;
 
 		// Connect to queue of incoming messages and set listener:
-		this.inputSession = inputSession;
+		this.queueSession = queueSession;
 		try {
-			queueReceiver = inputSession.createReceiver(inputQueue);
+			queueReceiver = queueSession.createReceiver(inputQueue);
 			messageListener = new EventMessageListener();
 			queueReceiver.setMessageListener(messageListener);
 		} catch (JMSException e) {
@@ -47,9 +46,8 @@ public class ExternalEventQueue extends EventQueue{
 		}
 
 		// Connect to queue for outgoing messages:
-		this.outputSession = outputSession;
 		try {
-			queueSender = outputSession.createSender(outputQueue);
+			queueSender = queueSession.createSender(outputQueue);
 		} catch (JMSException e) {
 			e.printStackTrace();
 		}
@@ -78,7 +76,7 @@ public class ExternalEventQueue extends EventQueue{
 	public void sendEventMessage(Event event) {
 		String messageText = event.getStringRepresentation();
 		try {
-			TextMessage message = outputSession.createTextMessage();
+			TextMessage message = queueSession.createTextMessage();
 			message.setText(messageText);
 			queueSender.send(message);
 			lastSentEvent = event;

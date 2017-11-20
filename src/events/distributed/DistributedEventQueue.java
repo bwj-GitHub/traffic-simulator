@@ -25,7 +25,7 @@ public class DistributedEventQueue extends EventQueue {
 		this.config = config;
 		this.externalEventQueues = externalEventQueues;
 		this.lastPolledEvent = null;
-		
+
 		// Send first NullEvents to connected nodes:
 		for (int i = 0; i < this.externalEventQueues.length; i++) {
 			NullEvent firstNullEvent = createNextNullEvent(i, 0);
