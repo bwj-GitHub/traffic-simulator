@@ -35,18 +35,15 @@ public class Config {
 	int[] nStreetLanes;  // number of lanes in each street
 	*/
 	
-	public Config(String args) {
-		// NOTE: constructor should ignore additional args (for distributed config)
-		// args: n, m, time, lambda, nCars, roadGapSize
-		String[] parts = args.split(" ");
-		this.numrows = Integer.parseInt(parts[0]);
-		this.numcol = Integer.parseInt(parts[1]);
-		this.timelimit = Integer.parseInt(parts[2]);
-		this.lambda = Float.parseFloat(parts[3]);
-		this.numcars = Integer.parseInt(parts[4]);
+	public Config(String[] args) {
+		this.numrows = Integer.parseInt(args[0]);
+		this.numcol = Integer.parseInt(args[1]);
+		this.timelimit = Integer.parseInt(args[2]);
+		this.lambda = Float.parseFloat(args[3]);
+		this.numcars = Integer.parseInt(args[4]);
 		
 		// All row and col gaps are the same size:
-		int gap = Integer.parseInt(parts[5]);
+		int gap = Integer.parseInt(args[5]);
 		this.distrows = gap;
 		this.distcols = gap;
 
@@ -58,6 +55,12 @@ public class Config {
 		this.redtime = 8;
 		this.greentime = 5;
 		this.yellowtime = 3;
+	}
+
+	public Config(String args) {
+		// NOTE: constructor should ignore additional args (for distributed config)
+		// args: n, m, time, lambda, nCars, roadGapSize
+		this(args.split(" "));
 	}
 
 	public Config(int rows,int columns,int time,float lambda,int rowgap,int colgap,

@@ -4,23 +4,29 @@ public class NodeConfig extends Config {
 	
 	public int nNodeRows;
 	public int nNodeCols;
+	public int nodeRow;    // row of this node
+	public int nodeCol;    // col of this node
 	public String providerURL;
 	public String connectionFactoryName;
-	
-	public NodeConfig(String args) {
-		super(args);  // args: n, m, time, lambda, nCars, roadGapSize
 
-		String[] parts = args.split(" ");
-		this.nNodeRows = Integer.parseInt(parts[6]);
-		this.nNodeCols = Integer.parseInt(parts[7]);
-		this.providerURL = parts[8];
-		this.connectionFactoryName = parts[9];
-		// TODO: Parse additional args
+	public NodeConfig(String[] args) {
+		super(args);
+		this.nNodeRows = Integer.parseInt(args[6]);
+		this.nNodeCols = Integer.parseInt(args[7]);
+		this.nodeRow = Integer.parseInt(args[8]);
+		this.nodeCol = Integer.parseInt(args[9]);
+		this.providerURL = args[10];
+		this.connectionFactoryName = args[11];
 	}
-	
-	public NodeConfig(int nNodeRows, int nNodeCols, String providerURL,
-			String connectionFactoryName, int rowsPerNode, int columnsPerNode,
-			int time, float lambda, int rowGap,
+
+	public NodeConfig(String args) {
+		this(args.split(" "));  // args: n, m, time, lambda, nCars, roadGapSize
+	}
+
+	public NodeConfig(int nNodeRows, int nNodeCols, int nodeRow, int nodeCol,
+			String providerURL, String connectionFactoryName,
+			// args for super class:
+			int rowsPerNode, int columnsPerNode, int time, float lambda, int rowGap,
 			int colGap, int speed, int acceleration, int size, int spacing, int numcars,
 			int redTime, int greenTime, int yellowTime) {
 		super(rowsPerNode, columnsPerNode, time, lambda, rowGap, colGap, speed,
@@ -29,5 +35,4 @@ public class NodeConfig extends Config {
 		this.nNodeCols = nNodeCols;
 		this.providerURL = providerURL;
 	}
-
 }
