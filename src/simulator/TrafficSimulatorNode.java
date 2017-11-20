@@ -112,6 +112,7 @@ public class TrafficSimulatorNode extends TrafficSimulator{
 	public static void main(String[] args) {
 		Config config = null;
 		if (args.length > 0) {
+			// args: n, m, time, lambda, nCars, roadGapSize
 			config = Config(args);
 		} else {
 			// TODO: Create default Config
