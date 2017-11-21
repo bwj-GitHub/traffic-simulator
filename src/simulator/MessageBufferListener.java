@@ -7,11 +7,11 @@ import javax.jms.Message;
 import javax.jms.MessageListener;
 import javax.jms.TextMessage;
 
-public class ControlListener implements MessageListener {
+public class MessageBufferListener implements MessageListener {
 
 	public ArrayList<String> messageBuffer;
 	
-	public ControlListener() {
+	public MessageBufferListener() {
 		this.messageBuffer = new ArrayList<String>();
 	}
 	@Override

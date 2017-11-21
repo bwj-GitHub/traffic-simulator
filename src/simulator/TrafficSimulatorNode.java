@@ -125,8 +125,7 @@ public class TrafficSimulatorNode extends TrafficSimulator{
 		return eeq;
 	}
 
-	public static void startSimulation(QueueSession session, QueueSender masterQueue,
-			String[] args) {
+	public static void startSimulation(TwoWayMessenger masterMessenger, String[] args) {
 		System.out.println("Starting simulation...");
 		System.out.println(String.format("args: %s", args.toString()));
 		NodeConfig config = null;
@@ -135,6 +134,7 @@ public class TrafficSimulatorNode extends TrafficSimulator{
 			config = new NodeConfig(args);
 		} else {
 			// TODO: Create default Config
+			System.exit(-2);
 		}
 
 		TrafficSimulatorNode sim = buildTrafficSimulatorNode(config);
@@ -143,74 +143,28 @@ public class TrafficSimulatorNode extends TrafficSimulator{
 		float averageTimeInGrid = sim.getAverageTimeInGrid();
 
 		// Send results message:
-		try {
-			TextMessage resultsMessage = session.createTextMessage();
-			resultsMessage.setText(String.format("%d %f",
-					numCarsExited, averageTimeInGrid));
-			masterQueue.send(resultsMessage);
-		} catch (JMSException e) {
-			e.printStackTrace();
-		}
-		// TODO: send master message with results
+		String resultsMessageText = String.format("%d %f",
+				numCarsExited, averageTimeInGrid);
+		masterMessenger.send(resultsMessageText);
 	}
 
 	public static void main(String[] args) {
 		// Check that args are valid:
+		// NOTE: these args only specify the node's name and the provider's URL,
+		//  config. args for a simulation will be sent as a message.
 		if (args.length < 2) {
 			System.out.println("Missing required args: {nodeName, providerURL}");
 			return;
 		}
-
-		// Prepare queues to communicate with the Master Node:
-		QueueConnection connection = null;
-		QueueSession queueSession = null;
-        QueueReceiver queueReceiver = null;
-		ControlListener messageListener = null;
-        QueueSender queueSender = null;
         String nodeName = args[0];
-        String factoryName = "brandonsFactory";
         String providerURL = args[1];
+        String factoryName = "brandonsFactory";
 
-		// Create Properties for connection:
-        Properties connectionProps = createProperties(providerURL);
-
-		// Create Connections and Queues:
-		try {
-			messageListener = new ControlListener();
-			// Lookup ConnectionFactory by name and create and start a connection:
-			InitialContext context = new InitialContext(connectionProps);
-
-			// NOTE: This will block until the factory is found; also, this could
-			//	take some time (a few seconds)
-			System.out.println("Waiting on ConnectionFactory...");
-			QueueConnectionFactory connectionFactory =
-					(QueueConnectionFactory) context.lookup(factoryName);
-
-			connection = connectionFactory.createQueueConnection();
-			connection.start();
-			queueSession = connection.createQueueSession(false,
-					Session.AUTO_ACKNOWLEDGE);
-
-			// Create receiver (from master):
-			System.out.println("Waiting on QueueReceiver...");
-			Queue fromMaster = (Queue) context.lookup(String.format(
-					"queue-%s-master", nodeName));
-			queueReceiver = queueSession.createReceiver(fromMaster);
-			queueReceiver.setMessageListener(messageListener);
-
-			// Create sender (to master):
-			System.out.println("Waiting on QueueSender...");
-			Queue toMaster = (Queue) context.lookup(String.format(
-					"queue-master-%s", nodeName));
-			queueSender = queueSession.createSender(toMaster);
-
-		} catch (NamingException e) {
-			e.printStackTrace();
-			System.exit(-1);
-		} catch (JMSException e) {
-			e.printStackTrace();
-			System.exit(-1);
-		}
+        // Create two-way connection (using queues) between this node and the master:
+        String inputQueueName = String.format("queue-%s-master", nodeName);
+        String outputQueueName = String.format("queue-master-%s", nodeName);
+        TwoWayMessenger masterMessenger = new TwoWayMessenger(inputQueueName,
+        		outputQueueName, factoryName, providerURL);
 
 		// Check for start/stop message:
 		System.out.println("Waiting for Master...");
@@ -220,7 +174,7 @@ public class TrafficSimulatorNode extends TrafficSimulator{
 		do {
 			String message;
 			// Check for next message:
-			if (messageListener.messageBuffer.size() == 0) {
+			if (masterMessenger.getMessageBufferSize() == 0) {
 				// No messages available, sleep:
 				try {
 					Thread.sleep(1000);
@@ -235,12 +189,12 @@ public class TrafficSimulatorNode extends TrafficSimulator{
 				continue;
 			} else {
 				// Parse message (stop message, or config (start) message):
-				message = messageListener.messageBuffer.remove(0);
+				message = masterMessenger.getNextMessage();
 				if (message.toLowerCase() == "stop") {
 					hasStopMessage = true;
 				} else {
 					// message is config. args of new simulation:
-					startSimulation( queueSession, queueSender, message.split(" "));
+					startSimulation(masterMessenger, message.split(" "));
 				}
 				secondsIdle = 0;
 			}
@@ -254,14 +208,5 @@ public class TrafficSimulatorNode extends TrafficSimulator{
 			System.out.println(String.format(
 					"Simulation Node %s has timed out!", nodeName));
 		}
-	}
-
-	private static Properties createProperties(String providerURL) {
-		Properties connectionProps = new Properties();
-		connectionProps.put(Context.INITIAL_CONTEXT_FACTORY,
-				"com.sun.enterprise.naming.SerialInitContextFactory");
-		connectionProps.put(Context.URL_PKG_PREFIXES, "com.sun.enterprise.naming");
-		connectionProps.put(Context.PROVIDER_URL, providerURL);
-		return connectionProps;
 	}
 }
