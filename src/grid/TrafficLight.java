@@ -8,13 +8,13 @@ import simulator.Config;
 public class TrafficLight {
 	
 	private Config config;
-	private int redtime=5;
+	private int redtime=8;
 	private int greentime=5;
 	private int yellowtime=3;
-	private int threshold=50000;//Number of cars which turn light to green for traffic light.
+	private int threshold=5000;//Number of cars which turn light to green for traffic light.
 	private int counter=0; // Number of cars at intersection at that current traffic light. 
 	private int lanelimit=10;
-	private int threshold_coordinated=4;//Number of cars leaving lane which turn next traffic light to green.
+	private int threshold_coordinated=2;//Number of cars leaving lane which turn next traffic light to green.
 	private int xpos;
 	private int ypos;
 	public boolean s1=false;
@@ -39,6 +39,20 @@ public class TrafficLight {
 	public int getYellowTime()
 	{
 		return yellowtime;
+	}
+	
+	public int getcurrentposition(Car c)
+	{
+		int n;
+		if(c.getCurrentLane()==Lane.left)n=list1.indexOf(c)+1;
+		else if(c.getCurrentLane()==Lane.middle)n=list2.indexOf(c)+1;
+		else n=list3.indexOf(c)+1;
+		return n;
+	}
+	
+	public void setremaininglighttime(int n)
+	{
+		remainingtime=n;
 	}
 	
 	public int getLaneLimit()
@@ -176,7 +190,7 @@ public class TrafficLight {
 		remainingtime=greentime;
 	}
 	
-	public void setlighttogreenevent(int carspeed,int carlength,int carspacing)
+	public void setlighttogreenevent(int carspeed,int carlength,int carspacing,int algorithm)
 	{
 		currentlight=LightColor.green;
 		remainingtime=greentime;
@@ -189,6 +203,44 @@ public class TrafficLight {
 		ArrayList<Car> middlelane=light1.getMiddleLane();
 		ArrayList<Car> rightlane=light1.getRightLane();
 		int numcars=((remainingtime*carspeed)+carspacing)/(carlength+carspacing);
+		
+		if(algorithm==4)
+		{
+			num2=0;
+			
+			for(Car car:middlelane)
+			{
+				if(car.getState()==0)
+					num2++;
+			}
+			
+			if(num2>=light1.getThreshold_Coordinated())
+			{
+				light1.setFlag_Coordinated();
+			}
+			
+			if(num2<numcars)
+			{
+				light1.setMLCarsToMove(num2);
+			}
+			else
+			{
+			//	System.out.println("Extending green light");
+				light1.setMLCarsToMove(num2);
+				int time;
+				int x=((num2*(carlength+carspacing))-carspacing);
+				if(x%carspeed==0)
+					time=x/carspeed;
+				else
+					time=(x/carspeed)+1;
+				//Extending current light time.
+				light1.setremaininglighttime(time);
+				light1.getOtherLight().setremaininglighttime(light1.getOtherLight().getYellowTime()+time);
+			}
+		}
+		
+		else
+		{
 		if(numcars<num1)
 		{
 			light1.setLLCarsToMove(numcars);
@@ -238,6 +290,7 @@ public class TrafficLight {
 			{
 				light1.setFlag_Coordinated1();
 			}
+		}
 		}
 	}
 	

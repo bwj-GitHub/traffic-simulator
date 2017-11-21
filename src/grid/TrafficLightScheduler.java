@@ -1,7 +1,6 @@
 package grid;
 
 import java.util.ArrayList;
-
 import events.EventQueue;
 import events.LightEvent;
 
@@ -10,7 +9,7 @@ public class TrafficLightScheduler {
 
 	// TODO, BJ: This should be broken into several smaller methods
 	// TODO, BJ: This should NOT be this tightly coupled with the grid
-	public void UpdateTrafficLights(TrafficGrid grid,int numavenues,int numstreets,int carlength,int carspacing,int carspeed,int currenttime,EventQueue eventqueue,int ccheck)
+	public void UpdateTrafficLights(TrafficGrid grid,int numavenues,int numstreets,int carlength,int carspacing,int carspeed,int currenttime,EventQueue eventqueue,int ccheck,int algorithm)
 	{ // Regular traffic light updates.
 		//System.out.println("We are in updatetrafficlights function");
 		for(int i=0;i<numavenues;i++)
@@ -30,6 +29,10 @@ public class TrafficLightScheduler {
 					light1.decRemainingtime();
 					//if(light1.getLLCarsToMove()!=0 || light1.getMLCarsToMove()!=0 || light1.getRLCarsToMove()!=0)
 					//System.out.println("light 1 ll,ml,rl cars to move:"+light1.getLLCarsToMove()+light1.getMLCarsToMove()+light1.getRLCarsToMove()+" time is:"+currenttime);
+					
+					int carstomove=(carspeed+carspacing)/(carlength+carspacing);
+					while(carstomove>0)
+					{
 					if(light1.getLLCarsToMove()>0)
 					{
 						if(light1.getLeftLaneSize()!=0)
@@ -106,6 +109,7 @@ public class TrafficLightScheduler {
 								int check=c.getCurrentLight().removecar(c, currenttime);
 								c.moving();
 								if(check==1)
+								{	
 									eventqueue.add(c.generateCarUpdateEvent(currenttime));
 								if(light1.getFlag_Coordinated1()==true || (light1.s1==true && c.getCurrentLight().getTrafficDirection()!=light1.getTrafficDirection()))
 								{
@@ -118,10 +122,13 @@ public class TrafficLightScheduler {
 									if(light1.s1==true&&c.getCurrentLight().getTrafficDirection()!=light1.getTrafficDirection())
 										light1.s1=false;
 								}
+								}
 							}
 						}
 						light1.decRLCarsToMove();
 						}
+					}
+					carstomove--;
 					}
 					// We need to move cars from front of each lane.
 					
@@ -215,6 +222,44 @@ public class TrafficLightScheduler {
 						ArrayList<Car> middlelane=light1.getMiddleLane();
 						ArrayList<Car> rightlane=light1.getRightLane();
 						int numcars=((remainingtime*carspeed)+carspacing)/(carlength+carspacing);
+						
+						if(algorithm==4)
+						{
+							num2=0;
+							
+							for(Car car:middlelane)
+							{
+								if(car.getState()==0)
+									num2++;
+							}
+							
+							if(num2>=light1.getThreshold_Coordinated())
+							{
+								light1.setFlag_Coordinated();
+							}
+							
+							if(num2<numcars)
+							{
+								light1.setMLCarsToMove(num2);
+							}
+							else
+							{
+							//	System.out.println("Extending green light");
+								light1.setMLCarsToMove(num2);
+								int time;
+								int x=((num2*(carlength+carspacing))-carspacing);
+								if(x%carspeed==0)
+									time=x/carspeed;
+								else
+									time=(x/carspeed)+1;
+								//Extending current light time.
+								light1.setremaininglighttime(time);
+								light1.getOtherLight().setremaininglighttime(light1.getOtherLight().getYellowTime()+time);
+							}
+						}
+						
+						else
+						{
 						if(numcars<num1)
 						{
 							light1.setLLCarsToMove(numcars);
@@ -265,14 +310,18 @@ public class TrafficLightScheduler {
 								light1.setFlag_Coordinated1();
 							}
 						}
+						}
 					}
 				}
 				
 				if(light2.getCurrentLightColor()==LightColor.green)
 				{
 					light2.decRemainingtime();
-					if(light2.getLLCarsToMove()!=0 || light2.getMLCarsToMove()!=0 || light2.getRLCarsToMove()!=0)
+				//	if(light2.getLLCarsToMove()!=0 || light2.getMLCarsToMove()!=0 || light2.getRLCarsToMove()!=0)
 				//	System.out.println("light 2 ll,ml,rl cars to move:"+light2.getLLCarsToMove()+light2.getMLCarsToMove()+light2.getRLCarsToMove()+" time is:"+currenttime);
+					int carstomove=(carspeed+carspacing)/(carlength+carspacing);
+					while(carstomove>0)	
+					{	
 					if(light2.getLLCarsToMove()>0)
 					{
 						if(light2.getLeftLaneSize()!=0)
@@ -286,6 +335,7 @@ public class TrafficLightScheduler {
 								int check=c.getCurrentLight().removecar(c, currenttime);
 								c.moving();
 								if(check==1)
+								{	
 									eventqueue.add(c.generateCarUpdateEvent(currenttime));
 								if(light2.getFlag_Coordinated1()==true || (light2.s1==true && c.getCurrentLight().getTrafficDirection()!=light2.getTrafficDirection()))
 								{
@@ -297,6 +347,7 @@ public class TrafficLightScheduler {
 									light2.unsetFlag_Coordinated1();
 									if(light2.s1==true&&c.getCurrentLight().getTrafficDirection()!=light2.getTrafficDirection())
 										light2.s1=false;
+								}
 								}
 							}
 						}
@@ -343,6 +394,7 @@ public class TrafficLightScheduler {
 								int check=c.getCurrentLight().removecar(c, currenttime);
 								c.moving();
 								if(check==1)
+								{	
 									eventqueue.add(c.generateCarUpdateEvent(currenttime));
 								if(light2.getFlag_Coordinated1()==true || (light2.s1==true && c.getCurrentLight().getTrafficDirection()!=light2.getTrafficDirection()))
 								{
@@ -355,12 +407,14 @@ public class TrafficLightScheduler {
 									if(light2.s1==true&&c.getCurrentLight().getTrafficDirection()!=light2.getTrafficDirection())
 										light2.s1=false;
 								}
+								}
 							}
 						}
 						light2.decRLCarsToMove();
 						}
 					}
-					
+					carstomove--;
+					}
 					//We need to move cars from front of each lane.
 					
 					if(light2.getRemainingTime()==0) // Change light to yellow.
@@ -446,6 +500,44 @@ public class TrafficLightScheduler {
 						ArrayList<Car> middlelane=light2.getMiddleLane();
 						ArrayList<Car> rightlane=light2.getRightLane();
 						int numcars=((remainingtime*carspeed)+carspacing)/(carlength+carspacing);
+						
+						if(algorithm==4)
+						{
+							num2=0;
+							
+							for(Car car:middlelane)
+							{
+								if(car.getState()==0)
+									num2++;
+							}
+							
+							if(num2>=light2.getThreshold_Coordinated())
+							{
+								light2.setFlag_Coordinated();
+							}
+							
+							if(num2<numcars)
+							{
+								light2.setMLCarsToMove(num2);
+							}
+							else
+							{
+						//		System.out.println("Extending green light");
+								light2.setMLCarsToMove(num2);
+								int time;
+								int x=((num2*(carlength+carspacing))-carspacing);
+								if(x%carspeed==0)
+									time=x/carspeed;
+								else
+									time=(x/carspeed)+1;
+								//Extending current light time.
+								light2.setremaininglighttime(time);
+								light2.getOtherLight().setremaininglighttime(light2.getOtherLight().getYellowTime()+time);
+							}
+						}
+						
+						else
+						{
 						if(numcars<num1)
 						{
 							light2.setLLCarsToMove(numcars);
@@ -598,6 +690,7 @@ public class TrafficLightScheduler {
 								
 							}
 							*/
+						}
 						}
 					}
 				}

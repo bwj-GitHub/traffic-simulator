@@ -62,7 +62,7 @@ public class CarFactory {
 		//We found entry points , Now we will generate paths randomly with 0/1/2 turns.
 		Random r=new Random();
 		int numofturns=r.nextInt(3);
-		//int numofturns=2;
+		 numofturns=0; //For convoy scheduling algorithm.
 		Intersection e=entrys.get(r.nextInt(numAvenues+numStreets));
 		if (numofturns==0)
 		{
