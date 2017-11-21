@@ -15,6 +15,7 @@ import events.LightEvent;
 
 
 public class TrafficSimulator {
+	public int numCarsExited;
 	private Config config;
 	private EventQueue eventQueue;
 	private TrafficGrid trafficGrid;
@@ -50,6 +51,7 @@ public class TrafficSimulator {
 		trafficLightScheduler = new TrafficLightScheduler();
 		carFactory = new CarFactory(config);
 		cars = new ArrayList<Car>();
+		numCarsExited = 0;
 
 		// Generate all CarSpawnEvents
 		CarSpawnEvent[] carSpawnEvents = carFactory.generateCarSpawnEvent(config);
@@ -117,6 +119,18 @@ public class TrafficSimulator {
 				ccheck++;
 			}
 		}
+	}
+
+	
+	public int getNumExitedCars() {
+		// TODO: set value for this variable
+		return this.numCarsExited;
+	}
+
+
+	public float getAverageTimeInGrid() {
+		// TODO: calculate this
+		return 0.0f;
 	}
 
 

@@ -2,8 +2,6 @@ package simulator;
 
 public class NodeConfig extends Config {
 	
-	public int nNodeRows;
-	public int nNodeCols;
 	public int nodeRow;    // row of this node
 	public int nodeCol;    // col of this node
 	public String providerURL;
@@ -11,8 +9,6 @@ public class NodeConfig extends Config {
 
 	public NodeConfig(String[] args) {
 		super(args);
-		this.nNodeRows = Integer.parseInt(args[6]);
-		this.nNodeCols = Integer.parseInt(args[7]);
 		this.nodeRow = Integer.parseInt(args[8]);
 		this.nodeCol = Integer.parseInt(args[9]);
 		this.providerURL = args[10];

@@ -5,12 +5,14 @@ public class DistributedTrafficSimulation {
 	public static void main(String[] args) {
 		// args: numNodes n m numCars lambda algorithm
 		// Create Config for distributed simulation:
-		Config config = getConfig(args);
+		Config config = new Config(args);
 
 		// Create Config for each node:
-		Config[] nodeConfig = new Config[config.numNodes];
+		NodeConfig[][] nodeConfig = new NodeConfig[config.nNodeRows][config.nNodeCols];
 		for (int i = 0; i < nodeConfig.length; i++) {
-			nodeConfig = createNodeConfig(i, config);
+			for (int j = 0; j < nodeConfig[i].length; j++) {
+				nodeConfig[i][j] = createNodeConfig(args, i, j);
+			}
 		}
 
 		// Start thread to launch each node:
@@ -25,12 +27,18 @@ public class DistributedTrafficSimulation {
 		// TODO: Print average-time-in-grid
 	}
 
-	private static Config getConfig(String[] args) {
-		// TODO: Write me!
-	}
-
-	private static Config createNodeConfig(int index, Config config) {
-		// TODO: Write me!
+	private static NodeConfig createNodeConfig(String[] configArgs, int i, int j) {
+		String[] nodeArgs = new String[configArgs.length + 4];
+		int nArgs = configArgs.length;
+		for (int k = 0; k < nArgs; k++) {
+			nodeArgs[k] = configArgs[k];
+		}
+		nodeArgs[nArgs] = Integer.toString(i);
+		nodeArgs[nArgs + 1] = Integer.toString(j);
+		// TODO: make providerURL and factoryName variables?
+		nodeArgs[nArgs + 2] = "http://localhost:4848/";
+		nodeArgs[nArgs + 1] = "brandonsFactory";
+		return new NodeConfig(nodeArgs);
 	}
 
 	private static void startNode(Config nodeConfig) {

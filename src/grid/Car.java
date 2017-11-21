@@ -35,6 +35,9 @@ public class Car {
 	private boolean exited=false;
 	
 	
+	public Car(String args) {
+		// TODO: Write me!
+	}
 	public  Car(int time,ArrayList<TrafficLight> p,int i,Config config)
 	{
 		entrytime=time;
@@ -85,6 +88,10 @@ public class Car {
 		this.acceleration=config.caracceleration;
 		this.carlength=config.carsize;
 		this.intersectionlength=config.distrows;
+	}
+	
+	public String getStringRepresentation() {
+		// TODO: Write me!
 	}
 	
 	public int getTurnCount1()

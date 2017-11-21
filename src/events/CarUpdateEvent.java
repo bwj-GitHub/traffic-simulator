@@ -19,7 +19,7 @@ public class CarUpdateEvent extends CarEvent {
 		super();
 		String[] parts = eventString.split(" ", 3);
 		this.time = Integer.parseInt(parts[1]);
-		this.car = Car(parts[2]);
+		this.car = new Car(parts[2]);
 	}
 
 	public Car getCar() 

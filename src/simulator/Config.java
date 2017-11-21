@@ -5,7 +5,7 @@ import java.util.Scanner;
 
 public class Config {
 	public long randomSeed;
-	public int numrows=50;
+	public int numrows=50;  // if distributed, numrows per node
 	public int numcol=50;
 	public float lambda;
 	public int timelimit=5000;
@@ -19,33 +19,32 @@ public class Config {
 	public int redtime;
 	public int greentime;
 	public int yellowtime;
-	/*
-	public int nRows;  // n in project description
-	public int nCols;  // m in project description
-	float timeLimit;  // TODO: Read timelimit?
-
-	float lambda;  // parameter for car arrival
-	public float acceleration;
-	float maxVelocity;
-
-	public int[] dRows;  // Distance between rows i and i+1 (in units c)
-	public int[] dCols;  // Distance between cols i and i+1
-
-	int[] nAvenueLanes;  // number of lanes in each avenue
-	int[] nStreetLanes;  // number of lanes in each street
-	*/
 	
+	// Parameters for a distributed system (node specific parameters in NodeConfig):
+	public int nNodeRows;
+	public int nNodeCols;
+
 	public Config(String[] args) {
+		// args: n, m, time, lambda, nCars, roadGapSize [,nNnodeRows, nNodeCols]
 		this.numrows = Integer.parseInt(args[0]);
 		this.numcol = Integer.parseInt(args[1]);
 		this.timelimit = Integer.parseInt(args[2]);
 		this.lambda = Float.parseFloat(args[3]);
 		this.numcars = Integer.parseInt(args[4]);
-		
+
 		// All row and col gaps are the same size:
 		int gap = Integer.parseInt(args[5]);
 		this.distrows = gap;
 		this.distcols = gap;
+
+		// Check if the simulation should be distributed:
+		if (args.length > 6) {
+			this.nNodeRows = Integer.parseInt(args[6]);
+			this.nNodeCols = Integer.parseInt(args[7]);
+		} else {
+			this.nNodeRows = 1;
+			this.nNodeCols = 1;
+		}
 
 		// Other config. attributes get default values:
 		this.carspeed = 5;
