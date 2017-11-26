@@ -84,6 +84,13 @@ public class TwoWayMessenger {
 			e.printStackTrace();
 		}
 	}
+	
+	public String blockTillMessage(int sleepMillis) throws InterruptedException {
+		while (!hasMessage()) {
+			Thread.sleep(sleepMillis);
+		}
+		return this.getNextMessage();
+	}
 
 	public void close() {
 		try {
@@ -95,6 +102,10 @@ public class TwoWayMessenger {
 	
 	public int getMessageBufferSize() {
 		return this.messageListener.messageBuffer.size();
+	}
+	
+	public boolean hasMessage() {
+		return this.messageListener.messageBuffer.size() > 0;
 	}
 	
 	public String getNextMessage() {

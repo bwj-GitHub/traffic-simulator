@@ -26,6 +26,7 @@ public class Config {
 
 	public Config(String[] args) {
 		// args: n, m, time, lambda, nCars, roadGapSize [,nNnodeRows, nNodeCols]
+		// TODO: What about algorithm
 		this.numrows = Integer.parseInt(args[0]);
 		this.numcol = Integer.parseInt(args[1]);
 		this.timelimit = Integer.parseInt(args[2]);
