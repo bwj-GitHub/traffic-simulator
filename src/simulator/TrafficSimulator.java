@@ -2,7 +2,6 @@ package simulator;
 import java.io.*;
 import java.util.*;
 
-import events.AddCarEvent;
 import events.CarSpawnEvent;
 import events.CarUpdateEvent;
 import events.Event;
@@ -16,12 +15,13 @@ import events.LightEvent;
 
 
 public class TrafficSimulator {
+	public int numCarsExited;
 	private Config config;
 	private EventQueue eventQueue;
 	private TrafficGrid trafficGrid;
 	private TrafficLightScheduler trafficLightScheduler;
 	private int algorithm;
-	private ArrayList<Car> carslist = new ArrayList<Car>();
+	private ArrayList<Car> carslist;
 	private int numavenues;
 	private int numstreets;
 	private CarFactory carFactory;
@@ -36,16 +36,22 @@ public class TrafficSimulator {
 
 	public TrafficSimulator(Config config)
 	{
+		this(config, new EventQueue());
+	}
+
+	public TrafficSimulator(Config config, EventQueue eventQueue) {
 		this.config=config;
 		this.numavenues=config.numrows;
 		this.numstreets=config.numcol;
 		this.carspeed=config.carspeed;
 		this.carlength=config.carsize;
 		this.carspacing=config.carspacing;
-		eventQueue = new EventQueue();
+		this.eventQueue = eventQueue;
 		trafficGrid = new TrafficGrid(config);
 		trafficLightScheduler = new TrafficLightScheduler();
 		carFactory = new CarFactory(config);
+		carslist = new ArrayList<Car>();
+		numCarsExited = 0;
 
 		// Generate all CarSpawnEvents
 		CarSpawnEvent[] carSpawnEvents = carFactory.generateCarSpawnEvent(config);
@@ -59,14 +65,6 @@ public class TrafficSimulator {
 		int ccheck=1;  // BJ: What is this?
 		while (currenttime<=config.timelimit)
 		{
-//			System.out.println("In iteration :"+currenttime);
-//			System.out.println("Next Event Time: " + eventQueue.peek().getTime());
-
-			// BJ: Quick fix to Issue #36:
-			if (eventQueue.peek() != null && eventQueue.peek().getTime() < currenttime) {
-				currenttime = eventQueue.peek().getTime();
-			}
-			
 			if(eventQueue.peek() != null && currenttime==eventQueue.peek().getTime())
 			{
 				Event currentEvent;
@@ -88,13 +86,6 @@ public class TrafficSimulator {
 						}
 					}
 				}
-
-				else if(currentEvent instanceof AddCarEvent)
-				{
-					AddCarEvent addevent=(AddCarEvent) currentEvent;
-					Car c=addevent.getCar();
-					c.path.get(c.getNextLightIndex()).gettrafficlight(trafficGrid).addcar(c);
-				}
 				else // trafficlight update event.
 				{
 					lighteventcounter++;
@@ -105,13 +96,13 @@ public class TrafficSimulator {
 					//System.out.println("Setting light at the following position to green:");
 					//le.getLight().printpos();
 					//System.out.println(" ");
-					if(le.getLight().gettrafficlight(trafficGrid).getCurrentLightColor()!=LightColor.green) // For coordinated scheduling.
+					if(le.getLight().getCurrentLightColor()!=LightColor.green) // For coordinated scheduling.
 					{
-					le.getLight().gettrafficlight(trafficGrid).setlighttogreenevent(carspeed,carlength,carspacing,4);
+					le.getLight().setlighttogreenevent(carspeed,carlength,carspacing,4);
 					//System.out.println("Setting other light at following position to red:");
 					//le.getLight().printpos();
 					//System.out.println(" ");
-					le.getLight().gettrafficlight(trafficGrid).getOtherLight().setlighttored();
+					le.getLight().getOtherLight().setlighttored();
 					}
 				}
 			}
@@ -130,13 +121,25 @@ public class TrafficSimulator {
 		}
 	}
 
+	
+	public int getNumExitedCars() {
+		// TODO: set value for this variable
+		return this.numCarsExited;
+	}
+
+
+	public float getAverageTimeInGrid() {
+		// TODO: calculate this
+		return 0.0f;
+	}
+
 
 	public Event handleCarSpawnEvent(Event carSpawnEvent) {
 		int eventTime = carSpawnEvent.getTime();
 		id++;
 		carslist.add(carFactory.newcar(id, eventTime, trafficGrid));
 		//Adding car to first traffic light:
-		carslist.get(id-1).path.get(0).gettrafficlight(trafficGrid).addcar(carslist.get(id-1));
+		carslist.get(id-1).path.get(0).addcar(carslist.get(id-1));
 
 		// Generating the Car's next CarUpdateEvent:
 		Event updateEvent = carslist.get(id-1).generateCarUpdateEvent(eventTime);

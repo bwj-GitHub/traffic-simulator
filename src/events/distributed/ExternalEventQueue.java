@@ -22,7 +22,6 @@ import simulator.Config;
 public class ExternalEventQueue extends EventQueue{
 
 	Config config;
-	// TODO: Use TwoWayMessenger for communication
 	EventMessageListener messageListener;
 	QueueSession queueSession;   // for reading incoming messages
 	QueueReceiver queueReceiver;

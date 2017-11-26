@@ -41,22 +41,6 @@ public class TrafficLight {
 		return yellowtime;
 	}
 	
-	public int getxpos()
-	{
-		return xpos;
-	}
-	
-	public int getypos()
-	{
-		return ypos;
-	}
-	
-	public int lightnumber()
-	{
-		if(direction==TrafficDirection.ew || direction==TrafficDirection.we) return 1;
-		else return 2;
-	}
-	
 	public int getcurrentposition(Car c)
 	{
 		int n;
@@ -420,7 +404,7 @@ public class TrafficLight {
 		c.incrementNextLightIndex();
 	}
 	
-	public int removecar(Car c,int time,TrafficGrid grid)
+	public int removecar(Car c,int time)
 	{
 		c.getCurrentLight().decrementCounter();
 		switch(c.getCurrentLane()) //We first remove car from current traffic light's lane.
@@ -446,7 +430,7 @@ public class TrafficLight {
 		else
 		{
 			//c.getCurrentLight().decrementCounter();
-		//	c.path.get(c.getNextLightIndex()).gettrafficlight(grid).addcar(c); //We added car to next traffic light.
+			c.path.get(c.getNextLightIndex()).addcar(c); //We added car to next traffic light.
 		//	System.out.print("At time :"+time+" Car with id:"+c.getId() +" is moving to lane of New Intersection:");
 		//	c.getCurrentLight().printpos();
 		//	System.out.println(" ");

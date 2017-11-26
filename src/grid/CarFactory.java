@@ -27,7 +27,7 @@ public class CarFactory {
 		// We first need to generate the path of the car.
 	//	System.out.println("Number of rows and cols are :"+numavenues+","+numstreets);
 		ArrayList<Intersection> entrys=new ArrayList<Intersection>();
-		ArrayList<PathElement> path=new ArrayList<PathElement>();
+		ArrayList<TrafficLight> path=new ArrayList<TrafficLight>();
 		Lane l1 = null;
 		Lane l2=null;
 		Lane l3=null;
@@ -71,13 +71,11 @@ public class CarFactory {
 			{
 				int i=e.getxpos();
 				int j=e.getypos();
-				//path.add(e.getlight1());
-				path.add(new PathElement(i,j,1));
+				path.add(e.getlight1());
 				j++;
 				while(j<numStreets)
 				{
-					//path.add(trafficgrid.getIntersection(i, j).getlight1());
-					path.add(new PathElement(i,j,1));
+					path.add(trafficgrid.getIntersection(i, j).getlight1());
 					j++;
 				}
 			}
@@ -86,13 +84,11 @@ public class CarFactory {
 			{
 				int i=e.getxpos();
 				int j=e.getypos();
-				//path.add(e.getlight2());
-				path.add(new PathElement(i,j,2));
+				path.add(e.getlight2());
 				i++;
 				while(i<numAvenues)
 				{
-					//path.add(trafficgrid.getIntersection(i, j).getlight2());
-					path.add(new PathElement(i,j,2));
+					path.add(trafficgrid.getIntersection(i, j).getlight2());
 					i++;
 				}
 			}
@@ -100,13 +96,11 @@ public class CarFactory {
 			{
 				int i=e.getxpos();
 				int j=e.getypos();
-				//path.add(e.getlight1());
-				path.add(new PathElement(i,j,1));
+				path.add(e.getlight1());
 				j--;
 				while(j>=0)
 				{
-					//path.add(trafficgrid.getIntersection(i, j).getlight1());
-					path.add(new PathElement(i,j,1));
+					path.add(trafficgrid.getIntersection(i, j).getlight1());
 					j--;
 				}
 			}
@@ -114,13 +108,11 @@ public class CarFactory {
 			{
 				int i=e.getxpos();
 				int j=e.getypos();
-				//path.add(e.getlight2());
-				path.add(new PathElement(i,j,2));
+				path.add(e.getlight2());
 				i++;
 				while(i<numAvenues)
 				{
-					//path.add(trafficgrid.getIntersection(i, j).getlight2());
-					path.add(new PathElement(i,j,2));
+					path.add(trafficgrid.getIntersection(i, j).getlight2());
 					i++;
 				}
 			}
@@ -128,13 +120,11 @@ public class CarFactory {
 			{
 				int i=e.getxpos();
 				int j=e.getypos();
-				//path.add(e.getlight2());
-				path.add(new PathElement(i,j,2));
+				path.add(e.getlight2());
 				i--;
 				while(i>=0)
 				{
-					//path.add(trafficgrid.getIntersection(i, j).getlight2());
-					path.add(new PathElement(i,j,2));
+					path.add(trafficgrid.getIntersection(i, j).getlight2());
 					i--;
 				}
 			}
@@ -142,13 +132,11 @@ public class CarFactory {
 			{
 				int i=e.getxpos();
 				int j=e.getypos();
-				//path.add(e.getlight2());
-				path.add(new PathElement(i,j,2));
+				path.add(e.getlight2());
 				i--;
 				while(i>=0)
 				{
-					//path.add(trafficgrid.getIntersection(i, j).getlight2());
-					path.add(new PathElement(i,j,2));
+					path.add(trafficgrid.getIntersection(i, j).getlight2());
 					i--;
 				}
 			}
@@ -163,27 +151,24 @@ public class CarFactory {
 			{
 				int i=e.getxpos();
 				int j=e.getypos();
-				//path.add(e.getlight1());
-				path.add(new PathElement(i,j,1));
+				path.add(e.getlight1());
 				j++;
 				offset--;
 				while(j<numStreets && offset>=0)
 				{
-					//path.add(trafficgrid.getIntersection(i, j).getlight1());
-					path.add(new PathElement(i,j,1));
+					path.add(trafficgrid.getIntersection(i, j).getlight1());
 					j++;
 					offset--;
 				}
 				turncounter1=path.size();
 				j--;
-				if(path.get(path.size()-1).getotherlighttrafficdirection()==TrafficDirection.ns)
+				if(path.get(path.size()-1).getOtherLight().getTrafficDirection()==TrafficDirection.ns)
 				{
 					l1=Lane.right;
 					i++;
 					while(i<numAvenues)
 					{
-						//path.add(trafficgrid.getIntersection(i, j).getlight2());
-						path.add(new PathElement(i,j,2));
+						path.add(trafficgrid.getIntersection(i, j).getlight2());
 						i++;
 					}
 				}
@@ -194,8 +179,7 @@ public class CarFactory {
 					i--;
 					while(i>=0)
 					{
-						//path.add(trafficgrid.getIntersection(i,j).getlight2());
-						path.add(new PathElement(i,j,2));
+						path.add(trafficgrid.getIntersection(i,j).getlight2());
 						i--;
 					}
 				}
@@ -205,27 +189,24 @@ public class CarFactory {
 			{
 				int i=e.getxpos();
 				int j=e.getypos();
-				//path.add(e.getlight2());
-				path.add(new PathElement(i,j,2));
+				path.add(e.getlight2());
 				i++;
 				offset--;
 				while(i<numAvenues && offset>=0)
 				{
-					//path.add(trafficgrid.getIntersection(i, j).getlight2());
-					path.add(new PathElement(i,j,2));
+					path.add(trafficgrid.getIntersection(i, j).getlight2());
 					i++;
 					offset--;
 				}
 				turncounter1=path.size();
 				i--;
-				if(path.get(path.size()-1).getotherlighttrafficdirection()==TrafficDirection.we)
+				if(path.get(path.size()-1).getOtherLight().getTrafficDirection()==TrafficDirection.we)
 				{
 					l1=Lane.left;
 					j++;
 					while(j<numStreets)
 					{
-						//path.add(trafficgrid.getIntersection(i, j).getlight1());
-						path.add(new PathElement(i,j,1));
+						path.add(trafficgrid.getIntersection(i, j).getlight1());
 						j++;
 					}
 				}
@@ -236,8 +217,7 @@ public class CarFactory {
 					j--;
 					while(j>=0)
 					{
-						//path.add(trafficgrid.getIntersection(i,j).getlight1());
-						path.add(new PathElement(i,j,1));
+						path.add(trafficgrid.getIntersection(i,j).getlight1());
 						j--;
 					}
 				}
@@ -247,27 +227,24 @@ public class CarFactory {
 			{
 				int i=e.getxpos();
 				int j=e.getypos();
-				//path.add(e.getlight1());
-				path.add(new PathElement(i,j,1));
+				path.add(e.getlight1());
 				j--;
 				offset--;
 				while(j>=0 && offset>=0)
 				{
-					//path.add(trafficgrid.getIntersection(i, j).getlight1());
-					path.add(new PathElement(i,j,1));
+					path.add(trafficgrid.getIntersection(i, j).getlight1());
 					j--;
 					offset--;
 				}
 				turncounter1=path.size();
 				j++;
-				if(path.get(path.size()-1).getotherlighttrafficdirection()==TrafficDirection.ns)
+				if(path.get(path.size()-1).getOtherLight().getTrafficDirection()==TrafficDirection.ns)
 				{
 					l1=Lane.left;
 					i++;
 					while(i<numAvenues)
 					{
-						//path.add(trafficgrid.getIntersection(i, j).getlight2());
-						path.add(new PathElement(i,j,2));
+						path.add(trafficgrid.getIntersection(i, j).getlight2());
 						i++;
 					}
 				}
@@ -278,8 +255,7 @@ public class CarFactory {
 					i--;
 					while(i>=0)
 					{
-						//path.add(trafficgrid.getIntersection(i,j).getlight2());
-						path.add(new PathElement(i,j,2));
+						path.add(trafficgrid.getIntersection(i,j).getlight2());
 						i--;
 					}
 				}
@@ -288,27 +264,24 @@ public class CarFactory {
 			{
 				int i=e.getxpos();
 				int j=e.getypos();
-				//path.add(e.getlight2());
-				path.add(new PathElement(i,j,2));
+				path.add(e.getlight2());
 				i++;
 				offset--;
 				while(i<numAvenues && offset>=0)
 				{
-					//path.add(trafficgrid.getIntersection(i, j).getlight2());
-					path.add(new PathElement(i,j,2));
+					path.add(trafficgrid.getIntersection(i, j).getlight2());
 					i++;
 					offset--;
 				}
 				turncounter1=path.size();
 				i--;
-				if(path.get(path.size()-1).getotherlighttrafficdirection()==TrafficDirection.we)
+				if(path.get(path.size()-1).getOtherLight().getTrafficDirection()==TrafficDirection.we)
 				{
 					l1=Lane.left;
 					j++;
 					while(j<numStreets)
 					{
-						//path.add(trafficgrid.getIntersection(i, j).getlight1());
-						path.add(new PathElement(i,j,1));
+						path.add(trafficgrid.getIntersection(i, j).getlight1());
 						j++;
 					}
 				}
@@ -319,8 +292,7 @@ public class CarFactory {
 					j--;
 					while(j>=0)
 					{
-						//path.add(trafficgrid.getIntersection(i,j).getlight1());
-						path.add(new PathElement(i,j,1));
+						path.add(trafficgrid.getIntersection(i,j).getlight1());
 						j--;
 					}
 				}
@@ -329,27 +301,24 @@ public class CarFactory {
 			{
 				int i=e.getxpos();
 				int j=e.getypos();
-				//path.add(e.getlight2());
-				path.add(new PathElement(i,j,2));
+				path.add(e.getlight2());
 				i--;
 				offset--;
 				while(i>=0 && offset>=0)
 				{
-					//path.add(trafficgrid.getIntersection(i, j).getlight2());
-					path.add(new PathElement(i,j,2));
+					path.add(trafficgrid.getIntersection(i, j).getlight2());
 					i--;
 					offset--;
 				}
 				turncounter1=path.size();
 				i++;
-				if(path.get(path.size()-1).getotherlighttrafficdirection()==TrafficDirection.we)
+				if(path.get(path.size()-1).getOtherLight().getTrafficDirection()==TrafficDirection.we)
 				{
 					l1=Lane.right;
 					j++;
 					while(j<numStreets)
 					{
-						//path.add(trafficgrid.getIntersection(i, j).getlight1());
-						path.add(new PathElement(i,j,1));
+						path.add(trafficgrid.getIntersection(i, j).getlight1());
 						j++;
 					}
 				}
@@ -360,8 +329,7 @@ public class CarFactory {
 					j--;
 					while(j>=0)
 					{
-						//path.add(trafficgrid.getIntersection(i,j).getlight1());
-						path.add(new PathElement(i,j,1));
+						path.add(trafficgrid.getIntersection(i,j).getlight1());
 						j--;
 					}
 				}
@@ -370,27 +338,24 @@ public class CarFactory {
 			{
 				int i=e.getxpos();
 				int j=e.getypos();
-				//path.add(e.getlight2());
-				path.add(new PathElement(i,j,2));
+				path.add(e.getlight2());
 				i--;
 				offset--;
 				while(i>=0 && offset>=0)
 				{
-					//path.add(trafficgrid.getIntersection(i, j).getlight2());
-					path.add(new PathElement(i,j,2));
+					path.add(trafficgrid.getIntersection(i, j).getlight2());
 					i--;
 					offset--;
 				}
 				turncounter1=path.size();
 				i++;
-				if(path.get(path.size()-1).getotherlighttrafficdirection()==TrafficDirection.we)
+				if(path.get(path.size()-1).getOtherLight().getTrafficDirection()==TrafficDirection.we)
 				{
 					l1=Lane.right;
 					j++;
 					while(j<numStreets)
 					{
-						//path.add(trafficgrid.getIntersection(i, j).getlight1());
-						path.add(new PathElement(i,j,1));
+						path.add(trafficgrid.getIntersection(i, j).getlight1());
 						j++;
 					}
 				}
@@ -401,8 +366,7 @@ public class CarFactory {
 					j--;
 					while(j>=0)
 					{
-						//path.add(trafficgrid.getIntersection(i,j).getlight1());
-						path.add(new PathElement(i,j,1));
+						path.add(trafficgrid.getIntersection(i,j).getlight1());
 						j--;
 					}
 				}
@@ -420,20 +384,18 @@ public class CarFactory {
 			{
 				int i=e.getxpos();
 				int j=e.getypos();
-				//path.add(e.getlight1());
-				path.add(new PathElement(i,j,1));
+				path.add(e.getlight1());
 				j++;
 				offset--;
 				while(j<numStreets && offset>=0)
 				{
-					//path.add(trafficgrid.getIntersection(i, j).getlight1());
-					path.add(new PathElement(i,j,1));
+					path.add(trafficgrid.getIntersection(i, j).getlight1());
 					j++;
 					offset--;
 				}
 				turncounter1=path.size();
 				j--;
-				if(path.get(path.size()-1).getotherlighttrafficdirection()==TrafficDirection.ns)
+				if(path.get(path.size()-1).getOtherLight().getTrafficDirection()==TrafficDirection.ns)
 				{
 					if(numAvenues-i-1==0)
 						offset1=0;
@@ -443,21 +405,19 @@ public class CarFactory {
 					i++;
 					while(i<numAvenues&&offset1>=0)
 					{
-						//path.add(trafficgrid.getIntersection(i, j).getlight2());
-						path.add(new PathElement(i,j,2));
+						path.add(trafficgrid.getIntersection(i, j).getlight2());
 						i++;
 						offset1--;
 					}
 					turncounter2=path.size();
 					i--;
-					if(path.get(path.size()-1).getotherlighttrafficdirection()==TrafficDirection.we)
+					if(path.get(path.size()-1).getOtherLight().getTrafficDirection()==TrafficDirection.we)
 					{
 						l2=Lane.left;
 						j++;
 						while(j<numStreets)
 						{
-							//path.add(trafficgrid.getIntersection(i, j).getlight1());
-							path.add(new PathElement(i,j,1));
+							path.add(trafficgrid.getIntersection(i, j).getlight1());
 							j++;
 						}
 					}
@@ -467,8 +427,7 @@ public class CarFactory {
 						j--;
 						while(j>=0)
 						{
-							//path.add(trafficgrid.getIntersection(i, j).getlight1());
-							path.add(new PathElement(i,j,1));
+							path.add(trafficgrid.getIntersection(i, j).getlight1());
 							j--;
 						}
 					}
@@ -481,21 +440,19 @@ public class CarFactory {
 					i--;
 					while(i>=0&&offset1>=0)
 					{
-						//path.add(trafficgrid.getIntersection(i,j).getlight2());
-						path.add(new PathElement(i,j,2));
+						path.add(trafficgrid.getIntersection(i,j).getlight2());
 						i--;
 						offset1--;
 					}
 					turncounter2=path.size();
 					i++;
-					if(path.get(path.size()-1).getotherlighttrafficdirection()==TrafficDirection.we)
+					if(path.get(path.size()-1).getOtherLight().getTrafficDirection()==TrafficDirection.we)
 					{
 						l2=Lane.right;
 						j++;
 						while(j<numStreets)
 						{
-							//path.add(trafficgrid.getIntersection(i, j).getlight1());
-							path.add(new PathElement(i,j,1));
+							path.add(trafficgrid.getIntersection(i, j).getlight1());
 							j++;
 						}
 					}
@@ -505,8 +462,7 @@ public class CarFactory {
 						j--;
 						while(j>=0)
 						{
-							//path.add(trafficgrid.getIntersection(i, j).getlight1());
-							path.add(new PathElement(i,j,1));
+							path.add(trafficgrid.getIntersection(i, j).getlight1());
 							j--;
 						}
 					}
@@ -517,41 +473,37 @@ public class CarFactory {
 			{
 				int i=e.getxpos();
 				int j=e.getypos();
-				//path.add(e.getlight2());
-				path.add(new PathElement(i,j,2));
+				path.add(e.getlight2());
 				i++;
 				offset--;
 				while(i<numAvenues && offset>=0)
 				{
-					//path.add(trafficgrid.getIntersection(i, j).getlight2());
-					path.add(new PathElement(i,j,2));
+					path.add(trafficgrid.getIntersection(i, j).getlight2());
 					i++;
 					offset--;
 				}
 				turncounter1=path.size();
 				i--;
-				if(path.get(path.size()-1).getotherlighttrafficdirection()==TrafficDirection.we)
+				if(path.get(path.size()-1).getOtherLight().getTrafficDirection()==TrafficDirection.we)
 				{
 					offset1=r.nextInt(numStreets-1);
 					l1=Lane.left;
 					j++;
 					while(j<numStreets&&offset1>=0)
 					{
-						//path.add(trafficgrid.getIntersection(i, j).getlight1());
-						path.add(new PathElement(i,j,1));
+						path.add(trafficgrid.getIntersection(i, j).getlight1());
 						j++;
 						offset1--;
 					}
 					turncounter2=path.size();
 					j--;
-					if(path.get(path.size()-1).getotherlighttrafficdirection()==TrafficDirection.ns)
+					if(path.get(path.size()-1).getOtherLight().getTrafficDirection()==TrafficDirection.ns)
 					{
 						l2=Lane.right;
 						i++;
 						while(i<numAvenues)
 						{
-							//path.add(trafficgrid.getIntersection(i, j).getlight2());
-							path.add(new PathElement(i,j,2));
+							path.add(trafficgrid.getIntersection(i, j).getlight2());
 							i++;
 						}
 					}
@@ -561,8 +513,7 @@ public class CarFactory {
 						i--;
 						while(i>=0)
 						{
-							//path.add(trafficgrid.getIntersection(i, j).getlight2());
-							path.add(new PathElement(i,j,2));
+							path.add(trafficgrid.getIntersection(i, j).getlight2());
 							i--;
 						}
 					}
@@ -575,8 +526,7 @@ public class CarFactory {
 					j--;
 					while(j>=0&&offset1>=0)
 					{
-						//path.add(trafficgrid.getIntersection(i,j).getlight1());
-						path.add(new PathElement(i,j,1));
+						path.add(trafficgrid.getIntersection(i,j).getlight1());
 						j--;
 						offset1--;
 					}
@@ -587,40 +537,36 @@ public class CarFactory {
 			{
 				int i=e.getxpos();
 				int j=e.getypos();
-				//path.add(e.getlight1());
-				path.add(new PathElement(i,j,1));
+				path.add(e.getlight1());
 				j--;
 				offset--;
 				while(j>=0 && offset>=0)
 				{
-					//path.add(trafficgrid.getIntersection(i, j).getlight1());
-					path.add(new PathElement(i,j,1));
+					path.add(trafficgrid.getIntersection(i, j).getlight1());
 					j--;
 					offset--;
 				}
 				turncounter1=path.size();
 				j++;
-				if(path.get(path.size()-1).getotherlighttrafficdirection()==TrafficDirection.ns)
+				if(path.get(path.size()-1).getOtherLight().getTrafficDirection()==TrafficDirection.ns)
 				{
 					offset1=r.nextInt(numAvenues-i-1);
 					l1=Lane.left;
 					i++;
 					while(i<numAvenues&&offset1>=0)
 					{
-						//path.add(trafficgrid.getIntersection(i, j).getlight2());
-						path.add(new PathElement(i,j,2));
+						path.add(trafficgrid.getIntersection(i, j).getlight2());
 						i++;
 					}
 					turncounter2=path.size();
 					i--;
-					if(path.get(path.size()-1).getotherlighttrafficdirection()==TrafficDirection.we)
+					if(path.get(path.size()-1).getOtherLight().getTrafficDirection()==TrafficDirection.we)
 					{
 						l2=Lane.left;
 						j++;
 						while(j<numStreets)
 						{
-							//path.add(trafficgrid.getIntersection(i, j).getlight1());
-							path.add(new PathElement(i,j,1));
+							path.add(trafficgrid.getIntersection(i, j).getlight1());
 							j++;
 						}
 					}
@@ -630,8 +576,7 @@ public class CarFactory {
 						j--;
 						while(j>=0)
 						{
-							//path.add(trafficgrid.getIntersection(i, j).getlight1());
-							path.add(new PathElement(i,j,1));
+							path.add(trafficgrid.getIntersection(i, j).getlight1());
 							j--;
 						}
 					}
@@ -647,21 +592,19 @@ public class CarFactory {
 					i--;
 					while(i>=0&&offset1>=0)
 					{
-						//path.add(trafficgrid.getIntersection(i,j).getlight2());
-						path.add(new PathElement(i,j,2));
+						path.add(trafficgrid.getIntersection(i,j).getlight2());
 						i--;
 						offset1--;
 					}
 					turncounter2=path.size();
 					i++;
-					if(path.get(path.size()-1).getotherlighttrafficdirection()==TrafficDirection.we)
+					if(path.get(path.size()-1).getOtherLight().getTrafficDirection()==TrafficDirection.we)
 					{
 						l2=Lane.right;
 						j++;
 						while(j<numStreets)
 						{
-							//path.add(trafficgrid.getIntersection(i, j).getlight1());
-							path.add(new PathElement(i,j,1));
+							path.add(trafficgrid.getIntersection(i, j).getlight1());
 							j++;
 						}
 					}
@@ -671,8 +614,7 @@ public class CarFactory {
 						j--;
 						while(j>=0)
 						{
-							//path.add(trafficgrid.getIntersection(i, j).getlight1());
-							path.add(new PathElement(i,j,1));
+							path.add(trafficgrid.getIntersection(i, j).getlight1());
 							j--;
 						}
 					}
@@ -682,41 +624,37 @@ public class CarFactory {
 			{
 				int i=e.getxpos();
 				int j=e.getypos();
-				//path.add(e.getlight2());
-				path.add(new PathElement(i,j,2));
+				path.add(e.getlight2());
 				i++;
 				offset--;
 				while(i<numAvenues && offset>=0)
 				{
-					//path.add(trafficgrid.getIntersection(i, j).getlight2());
-					path.add(new PathElement(i,j,2));
+					path.add(trafficgrid.getIntersection(i, j).getlight2());
 					i++;
 					offset--;
 				}
 				turncounter1=path.size();
 				i--;
-				if(path.get(path.size()-1).getotherlighttrafficdirection()==TrafficDirection.we)
+				if(path.get(path.size()-1).getOtherLight().getTrafficDirection()==TrafficDirection.we)
 				{
 					offset1=r.nextInt(numStreets-j-1);
 					l1=Lane.left;
 					j++;
 					while(j<numStreets&&offset1>=0)
 					{
-						//path.add(trafficgrid.getIntersection(i, j).getlight1());
-						path.add(new PathElement(i,j,1));
+						path.add(trafficgrid.getIntersection(i, j).getlight1());
 						j++;
 						offset1--;
 					}
 					turncounter2=path.size();
 					j--;
-					if(path.get(path.size()-1).getotherlighttrafficdirection()==TrafficDirection.ns)
+					if(path.get(path.size()-1).getOtherLight().getTrafficDirection()==TrafficDirection.ns)
 					{
 						l2=Lane.right;
 						i++;
 						while(i<numAvenues)
 						{
-							//path.add(trafficgrid.getIntersection(i, j).getlight2());
-							path.add(new PathElement(i,j,2));
+							path.add(trafficgrid.getIntersection(i, j).getlight2());
 							i++;
 						}
 					}
@@ -726,8 +664,7 @@ public class CarFactory {
 						i--;
 						while(i>=0)
 						{
-							//path.add(trafficgrid.getIntersection(i, j).getlight2());
-							path.add(new PathElement(i,j,2));
+							path.add(trafficgrid.getIntersection(i, j).getlight2());
 							i--;
 						}
 					}
@@ -739,20 +676,18 @@ public class CarFactory {
 					j--;
 					while(j>=0)
 					{
-						//path.add(trafficgrid.getIntersection(i,j).getlight1());
-						path.add(new PathElement(i,j,1));
+						path.add(trafficgrid.getIntersection(i,j).getlight1());
 						j--;
 					}
 					turncounter2=path.size();
 					j++;
-					if(path.get(path.size()-1).getotherlighttrafficdirection()==TrafficDirection.ns)
+					if(path.get(path.size()-1).getOtherLight().getTrafficDirection()==TrafficDirection.ns)
 					{
 						l2=Lane.left;
 						i++;
 						while(i<numAvenues)
 						{
-							//path.add(trafficgrid.getIntersection(i, j).getlight2());
-							path.add(new PathElement(i,j,2));
+							path.add(trafficgrid.getIntersection(i, j).getlight2());
 							i++;
 						}
 					}
@@ -762,8 +697,7 @@ public class CarFactory {
 						i--;
 						while(i>=0)
 						{
-							//path.add(trafficgrid.getIntersection(i, j).getlight2());
-							path.add(new PathElement(i,j,2));
+							path.add(trafficgrid.getIntersection(i, j).getlight2());
 							i--;
 						}
 					}
@@ -773,20 +707,18 @@ public class CarFactory {
 			{
 				int i=e.getxpos();
 				int j=e.getypos();
-				//path.add(e.getlight2());
-				path.add(new PathElement(i,j,2));
+				path.add(e.getlight2());
 				i--;
 				offset--;
 				while(i>=0 && offset>=0)
 				{
-					//path.add(trafficgrid.getIntersection(i, j).getlight2());
-					path.add(new PathElement(i,j,2));
+					path.add(trafficgrid.getIntersection(i, j).getlight2());
 					i--;
 					offset--;
 				}
 				turncounter1=path.size();
 				i++;
-				if(path.get(path.size()-1).getotherlighttrafficdirection()==TrafficDirection.we)
+				if(path.get(path.size()-1).getOtherLight().getTrafficDirection()==TrafficDirection.we)
 				{
 					if(numStreets-j-1==0)
 						offset1=0;
@@ -796,21 +728,19 @@ public class CarFactory {
 					j++;
 					while(j<numStreets&&offset1>=0)
 					{
-						//path.add(trafficgrid.getIntersection(i, j).getlight1());
-						path.add(new PathElement(i,j,1));
+						path.add(trafficgrid.getIntersection(i, j).getlight1());
 						j++;
 						offset1--;
 					}
 					turncounter2=path.size();
 					j--;
-					if(path.get(path.size()-1).getotherlighttrafficdirection()==TrafficDirection.ns)
+					if(path.get(path.size()-1).getOtherLight().getTrafficDirection()==TrafficDirection.ns)
 					{
 						l2=Lane.right;
 						i++;
 						while(i<numAvenues)
 						{
-							//path.add(trafficgrid.getIntersection(i, j).getlight2());
-							path.add(new PathElement(i,j,2));
+							path.add(trafficgrid.getIntersection(i, j).getlight2());
 							i++;
 						}
 					}
@@ -820,8 +750,7 @@ public class CarFactory {
 						i--;
 						while(i>=0)
 						{
-							//path.add(trafficgrid.getIntersection(i, j).getlight2());
-							path.add(new PathElement(i,j,2));
+							path.add(trafficgrid.getIntersection(i, j).getlight2());
 							i--;
 						}
 					}
@@ -835,21 +764,19 @@ public class CarFactory {
 					j--;
 					while(j>=0&&offset1>=0)
 					{
-						//path.add(trafficgrid.getIntersection(i,j).getlight1());
-						path.add(new PathElement(i,j,1));
+						path.add(trafficgrid.getIntersection(i,j).getlight1());
 						j--;
 						offset1--;
 					}
 					turncounter2=path.size();
 					j++;
-					if(path.get(path.size()-1).getotherlighttrafficdirection()==TrafficDirection.ns)
+					if(path.get(path.size()-1).getOtherLight().getTrafficDirection()==TrafficDirection.ns)
 					{
 						l2=Lane.left;
 						i++;
 						while(i<numAvenues)
 						{
-							//path.add(trafficgrid.getIntersection(i, j).getlight2());
-							path.add(new PathElement(i,j,2));
+							path.add(trafficgrid.getIntersection(i, j).getlight2());
 							i++;
 						}
 					}
@@ -859,8 +786,7 @@ public class CarFactory {
 						i--;
 						while(i>=0)
 						{
-							//path.add(trafficgrid.getIntersection(i, j).getlight2());
-							path.add(new PathElement(i,j,2));
+							path.add(trafficgrid.getIntersection(i, j).getlight2());
 							i--;
 						}
 					}
@@ -871,41 +797,37 @@ public class CarFactory {
 			{
 				int i=e.getxpos();
 				int j=e.getypos();
-				//path.add(e.getlight2());
-				path.add(new PathElement(i,j,2));
+				path.add(e.getlight2());
 				i--;
 				offset--;
 				while(i>=0 && offset>=0)
 				{
-					//path.add(trafficgrid.getIntersection(i, j).getlight2());
-					path.add(new PathElement(i,j,2));
+					path.add(trafficgrid.getIntersection(i, j).getlight2());
 					i--;
 					offset--;
 				}
 				turncounter1=path.size();
 				i++;
-				if(path.get(path.size()-1).getotherlighttrafficdirection()==TrafficDirection.we)
+				if(path.get(path.size()-1).getOtherLight().getTrafficDirection()==TrafficDirection.we)
 				{
 					offset1=r.nextInt(numStreets-j-1);
 					l1=Lane.right;
 					j++;
 					while(j<numStreets&&offset1>=0)
 					{
-						//path.add(trafficgrid.getIntersection(i, j).getlight1());
-						path.add(new PathElement(i,j,1));
+						path.add(trafficgrid.getIntersection(i, j).getlight1());
 						j++;
 						offset1--;
 					}
 					turncounter2=path.size();
 					j--;
-					if(path.get(path.size()-1).getotherlighttrafficdirection()==TrafficDirection.ns)
+					if(path.get(path.size()-1).getOtherLight().getTrafficDirection()==TrafficDirection.ns)
 					{
 						l2=Lane.right;
 						i++;
 						while(i<numAvenues)
 						{
-							//path.add(trafficgrid.getIntersection(i, j).getlight2());
-							path.add(new PathElement(i,j,2));
+							path.add(trafficgrid.getIntersection(i, j).getlight2());
 							i++;
 						}
 					}
@@ -915,8 +837,7 @@ public class CarFactory {
 						i--;
 						while(i>=0)
 						{
-							//path.add(trafficgrid.getIntersection(i, j).getlight2());
-							path.add(new PathElement(i,j,2));
+							path.add(trafficgrid.getIntersection(i, j).getlight2());
 							i--;
 						}
 					}
@@ -929,21 +850,19 @@ public class CarFactory {
 					j--;
 					while(j>=0&&offset1>=0)
 					{
-						//path.add(trafficgrid.getIntersection(i,j).getlight1());
-						path.add(new PathElement(i,j,1));
+						path.add(trafficgrid.getIntersection(i,j).getlight1());
 						j--;
 						offset1--;
 					}
 					turncounter2=path.size();
 					j++;
-					if(path.get(path.size()-1).getotherlighttrafficdirection()==TrafficDirection.ns)
+					if(path.get(path.size()-1).getOtherLight().getTrafficDirection()==TrafficDirection.ns)
 					{
 						l2=Lane.left;
 						i++;
 						while(i<numAvenues)
 						{
-							//path.add(trafficgrid.getIntersection(i, j).getlight2());
-							path.add(new PathElement(i,j,2));
+							path.add(trafficgrid.getIntersection(i, j).getlight2());
 							i++;
 						}
 					}
@@ -953,8 +872,7 @@ public class CarFactory {
 						i--;
 						while(i>=0)
 						{
-							//path.add(trafficgrid.getIntersection(i, j).getlight2());
-							path.add(new PathElement(i,j,2));
+							path.add(trafficgrid.getIntersection(i, j).getlight2());
 							i--;
 						}
 					}

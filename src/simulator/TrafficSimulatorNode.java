@@ -78,7 +78,6 @@ public class TrafficSimulatorNode extends TrafficSimulator{
 		return new TrafficSimulatorNode(config, distributedEventQueue);
 	}
 
-	// TODO: Use TwoWayMessengers with ExternalEventQueues
 	public static ExternalEventQueue buildExternalEventQueue(NodeConfig config,
 			int nodeI, int nodeJ, int connectedI, int connectedJ) {
 
