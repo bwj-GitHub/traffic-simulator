@@ -59,7 +59,14 @@ public class TrafficSimulator {
 		int ccheck=1;  // BJ: What is this?
 		while (currenttime<=config.timelimit)
 		{
-		//	System.out.println("In iteration :"+currenttime);
+//			System.out.println("In iteration :"+currenttime);
+//			System.out.println("Next Event Time: " + eventQueue.peek().getTime());
+
+			// BJ: Quick fix to Issue #36:
+			if (eventQueue.peek() != null && eventQueue.peek().getTime() < currenttime) {
+				currenttime = eventQueue.peek().getTime();
+			}
+			
 			if(eventQueue.peek() != null && currenttime==eventQueue.peek().getTime())
 			{
 				Event currentEvent;
@@ -81,7 +88,7 @@ public class TrafficSimulator {
 						}
 					}
 				}
-				
+
 				else if(currentEvent instanceof AddCarEvent)
 				{
 					AddCarEvent addevent=(AddCarEvent) currentEvent;
