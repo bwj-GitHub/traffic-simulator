@@ -14,9 +14,9 @@ public class Car {
 	//car has 2 states, state=1 means car is moving, state=0 means car is at rest
 	private int state=1;
 	private int lane;
-	public ArrayList<TrafficLight> path;
+	public ArrayList<PathElement> path;
 	private TrafficLight currentlight;
-	private ArrayList<TrafficLight> turns;
+	//private ArrayList<TrafficLight> turns;
 	private int pos; //position in lane
 	private int size=5;
 	private int carsgap=1;
@@ -35,10 +35,7 @@ public class Car {
 	private boolean exited=false;
 	
 	
-	public Car(String args) {
-		// TODO: Write me!
-	}
-	public  Car(int time,ArrayList<TrafficLight> p,int i,Config config)
+	public  Car(int time,ArrayList<PathElement> p,int i,Config config)
 	{
 		entrytime=time;
 		path=p;
@@ -52,7 +49,7 @@ public class Car {
 		this.intersectionlength=config.distrows;
 	}
 	
-	public  Car(int time,ArrayList<TrafficLight> p,int i,int turns,Lane l1,Lane l2,int count,Config config)
+	public  Car(int time,ArrayList<PathElement> p,int i,int turns,Lane l1,Lane l2,int count,Config config)
 	{
 		entrytime=time;
 		path=p;
@@ -70,7 +67,7 @@ public class Car {
 		this.intersectionlength=config.distrows;
 	}
 	
-	public  Car(int time,ArrayList<TrafficLight> p,int i,int turns,Lane l1,Lane l2,Lane l3,int count1,int count2,Config config)
+	public  Car(int time,ArrayList<PathElement> p,int i,int turns,Lane l1,Lane l2,Lane l3,int count1,int count2,Config config)
 	{
 		entrytime=time;
 		path=p;
@@ -88,10 +85,6 @@ public class Car {
 		this.acceleration=config.caracceleration;
 		this.carlength=config.carsize;
 		this.intersectionlength=config.distrows;
-	}
-	
-	public String getStringRepresentation() {
-		// TODO: Write me!
 	}
 	
 	public int getTurnCount1()
