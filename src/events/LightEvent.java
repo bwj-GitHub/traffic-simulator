@@ -1,18 +1,34 @@
 package events;
 
+import grid.PathElement;
 import grid.TrafficLight;
 
 public class LightEvent extends Event {
 	
-	TrafficLight t;
+	PathElement t;
 	
-	public LightEvent(TrafficLight light, int time) 
+	public LightEvent(PathElement light, int time)  
 	{
 		super(time);
 		t=light;
 	}
 	
-	public TrafficLight getLight()
+	
+	/*
+	@Override
+	public int compareTo(Event e) {
+		
+			if(time==e.time)
+				return 0;
+			else if(time > e.time)
+				return 1;
+			else return -1;
+		
+	}
+	*/
+	
+	
+	public PathElement getLight()
 	{
 		return t;
 	}
