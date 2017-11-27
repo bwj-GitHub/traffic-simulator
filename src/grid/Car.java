@@ -92,6 +92,7 @@ public class Car {
 	
 	public String getStringRepresentation() {
 		// TODO: Write me!
+		return "";
 	}
 	
 	public int getTurnCount1()

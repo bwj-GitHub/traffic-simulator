@@ -148,28 +148,30 @@ public class TrafficSimulator {
 
 
 	public void printStatistics() {
-		//	System.out.println("Simulation complete with #cars:"+s.carslist.size());
-		// Calculate the average time spent in grid for cars that exited:
-		int count=0;
-		int sum=0;
-		float avg=0;
-		for(Car c: carslist)
-		{
-			if (c.hasCarExited())
-			{
-				count++;
-				sum += c.getTimeInGrid();
-			}
-		}
-		if (count != 0)
-		{
-			avg=(float)sum/count;
-		}
-		System.out.println("The number of cars which exited grid are :"
-				+ count + "; The avg time spent in grid is:" + avg);
+		float avg = getMeanTimeInGrid();
+		float std = this.getStDevOfTimeInGrid(avg);
+		
+		System.out.println(String.format("%d Cars exited the grid, with an average time in " +
+				"grid of %f (stdev=%f).", carslist.size(), avg, std));
 		System.out.println("Number of traffic light update events are :" + lighteventcounter);
 		avg=(float) total_wait_time / carslist.size();
 		System.out.println("The avg time spent by cars at traffic light is:"+avg);
+	}
+	
+	private float getMeanTimeInGrid() {
+		float sum = 0;
+		for (Car c: carslist) {
+			sum += c.getTimeInGrid();
+		}
+		return sum / carslist.size();
+	}
+	
+	private float getStDevOfTimeInGrid(float meanTimeInGrid) {
+        float squaredSum = 0.0f;
+ 
+        for (Car c: carslist)
+            squaredSum += Math.pow((c.getTimeInGrid() - meanTimeInGrid), 2);
+        return (float) Math.sqrt(squaredSum / (carslist.size()));
 	}
 
 
