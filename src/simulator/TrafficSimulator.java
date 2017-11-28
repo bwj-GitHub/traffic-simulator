@@ -26,6 +26,7 @@ public class TrafficSimulator {
 	private int numstreets;
 	private CarFactory carFactory;
 	private boolean debug;
+	private long startTimeInMillis;
 
 	// BJ: Don't initialize when declaring attributes
 	private int id=0;
@@ -55,10 +56,12 @@ public class TrafficSimulator {
 		carFactory = new CarFactory(config);
 		carslist = new ArrayList<Car>();
 		numCarsExited = 0;
-
+		this.startTimeInMillis = System.currentTimeMillis();
+		
 		// Generate all CarSpawnEvents
 		CarSpawnEvent[] carSpawnEvents = carFactory.generateCarSpawnEvent(config);
 		eventQueue.add(carSpawnEvents);
+		
 	}
 
 
@@ -175,27 +178,45 @@ public class TrafficSimulator {
 		float avg = getMeanTimeInGrid();
 		float std = this.getStDevOfTimeInGrid(avg);
 		
+		int count = 0;
+		for (Car c: carslist) {
+			if (c.hasCarExited()) {
+				count += 1;
+			}
+		}
+		
 		System.out.println(String.format("%d Cars exited the grid, with an average time in " +
-				"grid of %f (stdev=%f).", carslist.size(), avg, std));
+				"grid of %f (stdev=%f).", count, avg, std));
 		System.out.println("Number of traffic light update events are :" + lighteventcounter);
 		avg=(float) total_wait_time / carslist.size();
 		System.out.println("The avg time spent by cars at traffic light is:"+avg);
+		long stopTimeInMillis = System.currentTimeMillis();
+		long executionTime = stopTimeInMillis - this.startTimeInMillis;
+		System.out.println("Execution time: " + executionTime / 1000 + "s");
 	}
-	
+
 	private float getMeanTimeInGrid() {
+		int count = 0;
 		float sum = 0;
 		for (Car c: carslist) {
-			sum += c.getTimeInGrid();
+			if (c.hasCarExited()) {
+				sum += c.getTimeInGrid();
+				count += 1;
+			}
 		}
-		return sum / carslist.size();
+		return sum / count;
 	}
 	
 	private float getStDevOfTimeInGrid(float meanTimeInGrid) {
         float squaredSum = 0.0f;
+        int count = 0;
  
         for (Car c: carslist)
-            squaredSum += Math.pow((c.getTimeInGrid() - meanTimeInGrid), 2);
-        return (float) Math.sqrt(squaredSum / (carslist.size()));
+        	if (c.hasCarExited()) {
+        		squaredSum += Math.pow((c.getTimeInGrid() - meanTimeInGrid), 2);
+        		count += 1;
+        	}
+        return (float) Math.sqrt(squaredSum / count);
 	}
 
 
