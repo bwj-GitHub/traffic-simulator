@@ -26,7 +26,6 @@ public class TrafficSimulator {
 	private int numstreets;
 	private CarFactory carFactory;
 	private boolean debug;
-	private long startTimeInMillis;
 
 	// BJ: Don't initialize when declaring attributes
 	private int id=0;
@@ -56,8 +55,6 @@ public class TrafficSimulator {
 		carFactory = new CarFactory(config);
 		carslist = new ArrayList<Car>();
 		numCarsExited = 0;
-		
-		this.startTimeInMillis = System.currentTimeMillis();
 
 		// Generate all CarSpawnEvents
 		CarSpawnEvent[] carSpawnEvents = carFactory.generateCarSpawnEvent(config);
@@ -99,12 +96,8 @@ public class TrafficSimulator {
 					// Code for self managed scheduling. change light to green , other light to red.
 					//System.out.println("We are in traffic light update event");
 					LightEvent le= (LightEvent) currentEvent;
-					if(debug)
+					if(algorithm!=4)
 					{
-					System.out.println("Setting light at the following position to green:");
-					le.getLight().printpos();
-					System.out.println(" ");
-					}
 					if(le.getLight().getCurrentLightColor()!=LightColor.green) // For coordinated scheduling.
 					{
 					le.getLight().setlighttogreenevent(carspeed,carlength,carspacing,algorithm);
@@ -115,6 +108,22 @@ public class TrafficSimulator {
 					System.out.println(" ");
 					}
 					le.getLight().getOtherLight().setlighttored();
+					}
+					}
+					else
+					{
+						if(le.getLight().getCurrentLightColor()!=LightColor.green && le.getLight().getOtherLight().getCurrentLightColor()!=LightColor.green) // For coordinated scheduling.
+						{
+						//lighteventcounter++;
+						le.getLight().setlighttogreenevent(carspeed,carlength,carspacing,algorithm);
+						if(debug)
+						{
+						System.out.println("Setting other light at following position to red:");
+						le.getLight().printpos();
+						System.out.println(" ");
+						}
+						le.getLight().getOtherLight().setlighttored();
+						}
 					}
 				}
 			}
@@ -165,45 +174,28 @@ public class TrafficSimulator {
 	public void printStatistics() {
 		float avg = getMeanTimeInGrid();
 		float std = this.getStDevOfTimeInGrid(avg);
-		int count = 0;
-		for (Car c: carslist) {
-			if (c.hasCarExited()) {
-				count += 1;
-			}
-		}
-
+		
 		System.out.println(String.format("%d Cars exited the grid, with an average time in " +
-				"grid of %f (stdev=%f).", count, avg, std));
+				"grid of %f (stdev=%f).", carslist.size(), avg, std));
 		System.out.println("Number of traffic light update events are :" + lighteventcounter);
 		avg=(float) total_wait_time / carslist.size();
 		System.out.println("The avg time spent by cars at traffic light is:"+avg);
-		long stopTimeInMillis = System.currentTimeMillis();
-		long executionTime = stopTimeInMillis - this.startTimeInMillis;
-		System.out.println("Execution time: " + executionTime / 1000 + "s");
 	}
-
+	
 	private float getMeanTimeInGrid() {
 		float sum = 0;
-		int count = 0;
 		for (Car c: carslist) {
-			if (c.hasCarExited()) {
-				sum += c.getTimeInGrid();
-				count += 1;
-			}
+			sum += c.getTimeInGrid();
 		}
-		return sum / count;
+		return sum / carslist.size();
 	}
 	
 	private float getStDevOfTimeInGrid(float meanTimeInGrid) {
         float squaredSum = 0.0f;
-        int count = 0;
  
         for (Car c: carslist)
-        	if (c.hasCarExited()) {
-        		squaredSum += Math.pow((c.getTimeInGrid() - meanTimeInGrid), 2);
-        		count += 1;
-        	}
-        return (float) Math.sqrt(squaredSum / (count));
+            squaredSum += Math.pow((c.getTimeInGrid() - meanTimeInGrid), 2);
+        return (float) Math.sqrt(squaredSum / (carslist.size()));
 	}
 
 
