@@ -917,7 +917,7 @@ public class CarFactory {
 			time+=rate.getNextArrivalTime();
 			carSpawnEvents[i] = new CarSpawnEvent((int)time);
 		}
-		System.out.println("Genetared number of car spawn events are :" + n);
+		System.out.println("Generated number of car spawn events are :" + n);
 		return carSpawnEvents;
 	}
 }
