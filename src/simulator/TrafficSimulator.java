@@ -25,6 +25,7 @@ public class TrafficSimulator {
 	private int numavenues;
 	private int numstreets;
 	private CarFactory carFactory;
+	private boolean debug;
 
 	// BJ: Don't initialize when declaring attributes
 	private int id=0;
@@ -47,6 +48,8 @@ public class TrafficSimulator {
 		this.carlength=config.carsize;
 		this.carspacing=config.carspacing;
 		this.eventQueue = eventQueue;
+		this.algorithm=config.algorithm;
+		this.debug=config.debug;
 		trafficGrid = new TrafficGrid(config);
 		trafficLightScheduler = new TrafficLightScheduler();
 		carFactory = new CarFactory(config);
@@ -77,7 +80,7 @@ public class TrafficSimulator {
 				else if(currentEvent instanceof CarUpdateEvent)
 				{ // When we see car update event in queue.
 					CarUpdateEvent update= (CarUpdateEvent) currentEvent;
-					ArrayList<Event> list=trafficGrid.handleCarUpdateEvent(update,currenttime,eventQueue,4);
+					ArrayList<Event> list=trafficGrid.handleCarUpdateEvent(update,currenttime,eventQueue,algorithm);
 					if(!list.isEmpty())
 					{
 						for(Event ev:list)
@@ -93,15 +96,21 @@ public class TrafficSimulator {
 					// Code for self managed scheduling. change light to green , other light to red.
 					//System.out.println("We are in traffic light update event");
 					LightEvent le= (LightEvent) currentEvent;
-					//System.out.println("Setting light at the following position to green:");
-					//le.getLight().printpos();
-					//System.out.println(" ");
+					if(debug)
+					{
+					System.out.println("Setting light at the following position to green:");
+					le.getLight().printpos();
+					System.out.println(" ");
+					}
 					if(le.getLight().getCurrentLightColor()!=LightColor.green) // For coordinated scheduling.
 					{
-					le.getLight().setlighttogreenevent(carspeed,carlength,carspacing,4);
-					//System.out.println("Setting other light at following position to red:");
-					//le.getLight().printpos();
-					//System.out.println(" ");
+					le.getLight().setlighttogreenevent(carspeed,carlength,carspacing,algorithm);
+					if(debug)
+					{
+					System.out.println("Setting other light at following position to red:");
+					le.getLight().printpos();
+					System.out.println(" ");
+					}
 					le.getLight().getOtherLight().setlighttored();
 					}
 				}
@@ -112,10 +121,13 @@ public class TrafficSimulator {
 				for(Car car:carslist)
 				{
 					if(car.getState()==0)
+					{
+						car.incrementwaittime();
 						total_wait_time++;
+					}
 				}
 				// We need to update the traffic lights states.
-				trafficLightScheduler.UpdateTrafficLights(trafficGrid,numavenues,numstreets,carlength,carspacing,carspeed,currenttime,eventQueue,ccheck,4);
+				trafficLightScheduler.UpdateTrafficLights(trafficGrid,numavenues,numstreets,carlength,carspacing,carspeed,currenttime,eventQueue,ccheck,algorithm,debug);
 				ccheck++;
 			}
 		}
@@ -205,8 +217,15 @@ public class TrafficSimulator {
 
 		TrafficSimulator s = new TrafficSimulator(configuration);
 		//System.out.println("We are executing self managed scheduling");
-		System.out.println("We are executing Coordinated scheduling");
-		s.algorithm=1;
+		if(configuration.algorithm==1)
+			System.out.println("We are executing Dumb Scheduling Algorithm");
+		else if(configuration.algorithm==2)
+			System.out.println("We are executing Self Managed Scheduling Algorithm");
+		else if(configuration.algorithm==3)
+		System.out.println("We are executing Coordinated Scheduling Algorithm");
+		else
+			System.out.println("We are executing Convoy Scheduling Algorithm");
+		//	s.algorithm=1;
 
 		//System.out.println("The time of first event is:"+s.eventqueue.peek().getTime());
 		// We have generated car creation events , Now we can start with the simulation.

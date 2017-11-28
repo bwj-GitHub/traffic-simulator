@@ -46,11 +46,14 @@ public class TrafficGrid  {
 		int n; //Number of cars ahead it at lane.
 		ArrayList<Event> futureEvents=new ArrayList<Event>();
 		Car c=event.getCar();
-	//	System.out.println("Car with id:"+c.getId()+" has reached intersection and we are handling its car update event at time :"+ currenttime);
-	//	System.out.println("Intersection is:");
-	//	c.getCurrentLight().printpos();
-	//	System.out.println("");
-	//	System.out.println("The current light color is: "+c.getCurrentLight().getCurrentLightColor()+" Remaining light time is :"+c.getCurrentLight().getRemainingTime());
+		if(config.debug)
+		{
+		System.out.println("Car with id:"+c.getId()+" has reached intersection and we are handling its car update event at time :"+ currenttime);
+		System.out.println("Intersection is:");
+		c.getCurrentLight().printpos();
+		System.out.println("");
+		System.out.println("The current light color is: "+c.getCurrentLight().getCurrentLightColor()+" Remaining light time is :"+c.getCurrentLight().getRemainingTime());
+		}
 		c.rest(); // Setting car to rest state.
 		int n1=c.getCurrentLight().getcurrentposition(c);
 		int distance;
@@ -135,7 +138,8 @@ public class TrafficGrid  {
 			if(currentlight.getFlag()==false && currentlight.getCurrentLightColor()!=LightColor.green)
 			{
 			// Create traffic light update event with current time.
-			//	System.out.println("Creating traffic light update event and number of cars at that light are :"+currentlight.getCounter());
+				if(config.debug)
+				System.out.println("Creating traffic light update event and number of cars at that light are :"+currentlight.getCounter());
 				Event lightevent=new LightEvent(currentlight, currenttime);
 				futureEvents.add(lightevent);
 				currentlight.getOtherLight().setFlag();
@@ -143,7 +147,8 @@ public class TrafficGrid  {
 			}
 			else if((currentlight.getFlag()==true && (currentlight.getCounter()>currentlight.getOtherLight().getCounter())) && currentlight.getCurrentLightColor()!=LightColor.green)
 			{
-			//	System.out.println("Creating traffic light update event and number of cars at that light are :"+currentlight.getCounter());
+				if(config.debug)
+				System.out.println("Creating traffic light update event and number of cars at that light are :"+currentlight.getCounter());
 				futureEvents.add(new LightEvent(currentlight, currenttime));
 			// By the current event creation if previous traffic light update event of other light is executed then we need to remove that event from eventqueue.
 				eq.remove(currentlight.getOtherLightEvent()); //Remove event if it is present.

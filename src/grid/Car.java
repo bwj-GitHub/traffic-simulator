@@ -31,6 +31,7 @@ public class Car {
 	private int carlength=5;
 	private int intersectionlength=100;
 	private int carspacing=1;
+	private int waittime=0;
 	private Lane currentlane;
 	private boolean exited=false;
 	
@@ -92,7 +93,17 @@ public class Car {
 	
 	public String getStringRepresentation() {
 		// TODO: Write me!
-		return "";
+		 return "";
+	}
+	
+	public int getwaittime()
+	{
+		return waittime;
+	}
+	
+	public void incrementwaittime()
+	{
+		waittime++;
 	}
 	
 	public int getTurnCount1()
