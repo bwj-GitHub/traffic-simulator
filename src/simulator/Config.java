@@ -5,7 +5,7 @@ import java.util.Scanner;
 
 public class Config {
 	public long randomSeed;
-	public int numrows=50;  // if distributed, numrows per node
+	public int numrows=50;
 	public int numcol=50;
 	public float lambda;
 	public int timelimit=5000;
@@ -19,52 +19,28 @@ public class Config {
 	public int redtime;
 	public int greentime;
 	public int yellowtime;
+	public boolean debug;
+	public int threshold_selfmanaged;
+	public int threshold_coordinated;
+	public int threshold_convoy;
+	public int algorithm;
+	/*
+	public int nRows;  // n in project description
+	public int nCols;  // m in project description
+	float timeLimit;  // TODO: Read timelimit?
+
+	float lambda;  // parameter for car arrival
+	public float acceleration;
+	float maxVelocity;
+
+	public int[] dRows;  // Distance between rows i and i+1 (in units c)
+	public int[] dCols;  // Distance between cols i and i+1
+
+	int[] nAvenueLanes;  // number of lanes in each avenue
+	int[] nStreetLanes;  // number of lanes in each street
+	*/
 	
-	// Parameters for a distributed system (node specific parameters in NodeConfig):
-	public int nNodeRows;
-	public int nNodeCols;
-
-	public Config(String[] args) {
-		// args: n, m, time, lambda, nCars, roadGapSize [,nNnodeRows, nNodeCols]
-		this.numrows = Integer.parseInt(args[0]);
-		this.numcol = Integer.parseInt(args[1]);
-		this.timelimit = Integer.parseInt(args[2]);
-		this.lambda = Float.parseFloat(args[3]);
-		this.numcars = Integer.parseInt(args[4]);
-
-		// All row and col gaps are the same size:
-		int gap = Integer.parseInt(args[5]);
-		this.distrows = gap;
-		this.distcols = gap;
-
-		// Check if the simulation should be distributed:
-		if (args.length > 6) {
-			this.nNodeRows = Integer.parseInt(args[6]);
-			this.nNodeCols = Integer.parseInt(args[7]);
-		} else {
-			this.nNodeRows = 1;
-			this.nNodeCols = 1;
-		}
-
-		// Other config. attributes get default values:
-		this.carspeed = 5;
-		this.caracceleration = 0;
-		this.carsize = 5;
-		this.carspacing = 1;
-		this.redtime = 8;
-		this.greentime = 5;
-		this.yellowtime = 3;
-	}
-
-	public Config(String args) {
-		// NOTE: constructor should ignore additional args (for distributed config)
-		// args: n, m, time, lambda, nCars, roadGapSize
-		this(args.split(" "));
-	}
-
-	public Config(int rows,int columns,int time,float lambda,int rowgap,int colgap,
-			int speed,int acceleration,int size,int spacing,int numcars,int redtime,
-			int greentime,int yellowtime)
+	public Config(int rows,int columns,int time,float lambda,int rowgap,int colgap,int speed,int acceleration,int size,int spacing,int numcars,int redtime,int greentime,int yellowtime,boolean debug,int threshold_selfmanaged,int threshold_coordinated,int threshold_convoy,int algorithm)
 	{
 		this.numrows=rows;
 		this.numcol=columns;
@@ -80,6 +56,11 @@ public class Config {
 		this.redtime=redtime;
 		this.greentime=greentime;
 		this.yellowtime=yellowtime;
+		this.debug=debug;
+		this.threshold_selfmanaged=threshold_selfmanaged;
+		this.threshold_coordinated=threshold_coordinated;
+		this.threshold_convoy=threshold_convoy;
+		this.algorithm=algorithm;
 	}
 	
 	public static Config readConfigFile(String filename)throws FileNotFoundException
@@ -100,7 +81,15 @@ public class Config {
 		int redtime=sc.nextInt();
 		int greentime=sc.nextInt();
 		int yellowtime=sc.nextInt();
+		int debug_value=sc.nextInt();
+		int threshold_selfmanaged=sc.nextInt();
+		int threshold_coordinated=sc.nextInt();
+		int threshold_convoy=sc.nextInt();
+		int algorithm=sc.nextInt();
+		boolean debug;
+		if(debug_value==1) debug=true;
+		else debug=false;
 		sc.close();
-		return new Config(rows, columns, time, lambda, rowgap, colgap,speed, acceleration, size, spacing,numcars,redtime,greentime,yellowtime);
+		return new Config(rows, columns, time, lambda, rowgap, colgap,speed, acceleration, size, spacing,numcars,redtime,greentime,yellowtime,debug,threshold_selfmanaged,threshold_coordinated,threshold_convoy,algorithm);
 	}
 }
