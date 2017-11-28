@@ -11,7 +11,7 @@ public class TrafficLight {
 	private int redtime=8;
 	private int greentime=5;
 	private int yellowtime=3;
-	private int threshold=5000;//Number of cars which turn light to green for traffic light.
+	private int threshold=4;//Number of cars which turn light to green for traffic light.
 	private int counter=0; // Number of cars at intersection at that current traffic light. 
 	private int lanelimit=10;
 	private int threshold_coordinated=2;//Number of cars leaving lane which turn next traffic light to green.
@@ -181,6 +181,26 @@ public class TrafficLight {
 		this.redtime=c.redtime;
 		this.greentime=c.greentime;
 		this.yellowtime=c.yellowtime;
+		if(c.algorithm==1)
+		{
+			threshold=config.numcars;
+			threshold_coordinated=config.numcars;
+		}
+		else if(c.algorithm==2)
+		{
+			threshold=config.threshold_selfmanaged;
+			threshold_coordinated=config.numcars;
+		}
+		else if(c.algorithm==3)
+		{
+			threshold=config.numcars;
+			threshold_coordinated=config.threshold_coordinated;
+		}
+		else
+		{
+			threshold=config.numcars;
+			threshold_coordinated=config.threshold_convoy;
+		}
 	}
 	
 	//initialize  light to green
@@ -422,7 +442,8 @@ public class TrafficLight {
 			// Exit grid event.
 			//time+10 because it needs to travel 100 units distance after crossing last intersection before leaving grid.
 			//c.getCurrentLight().decrementCounter();
-		//	System.out.println("Car with id :"+c.getId()+" exited.");
+			if(config.debug)
+			System.out.println("Car with id :"+c.getId()+" exited.");
 			c.setExitTime(time+10);
 			c.carExited(); // Set exited flag of car to true.
 			return 0; // Return 0 if car exited.
@@ -431,9 +452,12 @@ public class TrafficLight {
 		{
 			//c.getCurrentLight().decrementCounter();
 			c.path.get(c.getNextLightIndex()).addcar(c); //We added car to next traffic light.
-		//	System.out.print("At time :"+time+" Car with id:"+c.getId() +" is moving to lane of New Intersection:");
-		//	c.getCurrentLight().printpos();
-		//	System.out.println(" ");
+			if(config.debug)
+			{
+			System.out.print("At time :"+time+" Car with id:"+c.getId() +" is moving to lane of New Intersection:");
+			c.getCurrentLight().printpos();
+			System.out.println(" ");
+			}
 			return 1;// Return 1 if car did not complete its path.
 		}
 		
