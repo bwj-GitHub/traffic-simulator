@@ -26,6 +26,7 @@ public class TrafficSimulator {
 	private int numstreets;
 	private CarFactory carFactory;
 	private boolean debug;
+	private long startTimeInMillis;
 
 	// BJ: Don't initialize when declaring attributes
 	private int id=0;
@@ -55,6 +56,8 @@ public class TrafficSimulator {
 		carFactory = new CarFactory(config);
 		carslist = new ArrayList<Car>();
 		numCarsExited = 0;
+		
+		this.startTimeInMillis = System.currentTimeMillis();
 
 		// Generate all CarSpawnEvents
 		CarSpawnEvent[] carSpawnEvents = carFactory.generateCarSpawnEvent(config);
@@ -174,6 +177,9 @@ public class TrafficSimulator {
 		System.out.println("Number of traffic light update events are :" + lighteventcounter);
 		avg=(float) total_wait_time / carslist.size();
 		System.out.println("The avg time spent by cars at traffic light is:"+avg);
+		long stopTimeInMillis = System.currentTimeMillis();
+		long executionTime = stopTimeInMillis - this.startTimeInMillis;
+		System.out.println("Execution time: " + executionTime / 1000 + "s");
 	}
 
 	private float getMeanTimeInGrid() {
